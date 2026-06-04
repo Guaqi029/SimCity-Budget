@@ -1,6 +1,7 @@
 import { BottomTabBar, TabItem } from '../components/BottomTabBar'
 import { HomePage } from './HomePage'
 import { BillListPage } from './BillListPage'
+import { AssetPage } from './AssetPage'
 import { AnalyticsPage } from './AnalyticsPage'
 import { AccountPage } from './AccountPage'
 import { AddBillPage } from './AddBillPage'
@@ -9,21 +10,28 @@ import { BillDetailPage } from './BillDetailPage'
 @Entry
 @Component
 struct Index {
+  // 当前选中的底部 Tab，下标与 tabs 数组保持一致。
   @State currentTab: number = 0
+
+  // 临时覆盖当前 Tab 的独立页面；为空时展示普通 Tab 页面。
   @State overlayPage: string = ''
 
+  // 底部导航配置：中间的“资产”是主功能入口之一。
   private readonly tabs: TabItem[] = [
     { label: '首页' },
     { label: '账单' },
+    { label: '资产' },
     { label: '统计' },
     { label: '我的' }
   ]
 
   @Builder
   renderCurrentPage() {
+    // overlayPage 优先级高于 currentTab，用于从任意 Tab 临时打开独立流程页。
     if (this.overlayPage === 'add') {
       AddBillPage({
         onBack: () => {
+          // 关闭新增账单页后回到首页。
           this.overlayPage = ''
           this.currentTab = 0
         }
@@ -31,6 +39,7 @@ struct Index {
     } else if (this.overlayPage === 'detail') {
       BillDetailPage({
         onBack: () => {
+          // 关闭账单详情页后回到账单列表。
           this.overlayPage = ''
           this.currentTab = 1
         }
@@ -38,19 +47,23 @@ struct Index {
     } else if (this.currentTab === 0) {
       HomePage({
         onAddBill: () => {
+          // 新增账单是独立页面，不占用底部 Tab 的一个位置。
           this.overlayPage = 'add'
         },
         onOpenAccount: () => {
-          this.currentTab = 3
+          this.currentTab = 4
         }
       })
     } else if (this.currentTab === 1) {
       BillListPage({
         onOpenDetail: () => {
+          // 详情页同样作为覆盖页打开，避免改变当前 Tab 语义。
           this.overlayPage = 'detail'
         }
       })
     } else if (this.currentTab === 2) {
+      AssetPage()
+    } else if (this.currentTab === 3) {
       AnalyticsPage()
     } else {
       AccountPage()
@@ -59,6 +72,7 @@ struct Index {
 
   build() {
     Column() {
+      // 主内容统一放在 Scroll 中，避免页面内容超过屏幕时被截断。
       Scroll() {
         Column() {
           this.renderCurrentPage()
@@ -74,6 +88,7 @@ struct Index {
       .scrollBar(BarState.Off)
       .layoutWeight(1)
 
+      // 覆盖页打开时隐藏底部导航，让新增/详情流程更像完整页面。
       if (this.overlayPage === '') {
         Column() {
           BottomTabBar({
@@ -86,12 +101,11 @@ struct Index {
           })
         }
         .width('100%')
-        .padding({ left: 12, right: 12, top: 8, bottom: 8 })
       }
     }
     .width('100%')
     .height('100%')
     .backgroundColor('#EEF6FF')
-    .expandSafeArea([SafeAreaType.SYSTEM], [SafeAreaEdge.TOP, SafeAreaEdge.BOTTOM])
+    .expandSafeArea([SafeAreaType.SYSTEM], [SafeAreaEdge.TOP])
   }
 }
