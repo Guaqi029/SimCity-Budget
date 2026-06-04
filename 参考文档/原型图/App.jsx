@@ -23,7 +23,6 @@ import {
   Mail,
   MoreHorizontal,
   Pencil,
-  PieChart,
   PlusCircle,
   Save,
   Settings,
@@ -282,7 +281,7 @@ function SceneStat({ label, value, icon: Icon, sub, accent = "bg-sky-100", bars 
   );
 }
 
-function TownScene({ level, warning, stats, totalBudget, setPage }) {
+function TownScene({ level, warning, stats, totalBudget, setPage, onQuickAdd }) {
   const meta = healthMeta[level];
   const WeatherIcon = meta.icon;
   const scene = {
@@ -650,7 +649,7 @@ function TownScene({ level, warning, stats, totalBudget, setPage }) {
           </div>
 
           <div className="mt-4 grid grid-cols-2 gap-3">
-            <Button onClick={() => setPage("add")} className="h-14 rounded-[1.55rem] bg-slate-950 text-base shadow-[0_18px_36px_rgba(15,23,42,0.2)]">
+            <Button onClick={onQuickAdd} className="h-14 rounded-[1.55rem] bg-slate-950 text-base shadow-[0_18px_36px_rgba(15,23,42,0.2)]">
               <PlusCircle className="h-5 w-5" />
               记一笔
             </Button>
@@ -673,15 +672,7 @@ function TownScene({ level, warning, stats, totalBudget, setPage }) {
   );
 }
 
-function HomePage({ stats, setPage, healthLevel, warning, totalBudget }) {
-  return (
-    <div className="relative pb-28">
-      <TownScene level={healthLevel} warning={warning} stats={stats} totalBudget={totalBudget} setPage={setPage} />
-    </div>
-  );
-}
-
-function AddBillPage({ onBack, onSave }) {
+function BillComposer({ onSave, title = "快速记一笔", subtitle = "首页直接完成记账，不再单独跳转页面" }) {
   const [type, setType] = useState("expense");
   const [amount, setAmount] = useState("600");
   const [categoryId, setCategoryId] = useState("entertainment");
@@ -689,98 +680,123 @@ function AddBillPage({ onBack, onSave }) {
   const [remark, setRemark] = useState("游戏充值");
 
   return (
+    <Card className="mx-5">
+      <CardContent className="space-y-5 p-5">
+        <div className="flex items-start justify-between gap-4">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-[0.24em] text-slate-400">Quick Add</p>
+            <h2 className="mt-2 text-xl font-black text-slate-900">{title}</h2>
+            <p className="mt-1 text-sm text-slate-500">{subtitle}</p>
+          </div>
+          <div className="rounded-2xl bg-sky-100 p-3">
+            <PlusCircle className="h-5 w-5 text-sky-700" />
+          </div>
+        </div>
+
+        <div>
+          <label className="text-sm font-semibold text-slate-700">收支类型</label>
+          <div className="mt-2 grid grid-cols-2 gap-3">
+            <Button variant={type === "expense" ? "default" : "secondary"} className="rounded-2xl" onClick={() => setType("expense")}>
+              支出
+            </Button>
+            <Button variant={type === "income" ? "default" : "secondary"} className="rounded-2xl" onClick={() => setType("income")}>
+              收入
+            </Button>
+          </div>
+        </div>
+
+        <div>
+          <label className="text-sm font-semibold text-slate-700">金额</label>
+          <div className="mt-2 rounded-3xl bg-slate-50 px-5 py-4 text-4xl font-black text-slate-900">
+            <span className="text-xl">¥</span>
+            <input
+              type="number"
+              min="0"
+              step="0.01"
+              value={amount}
+              onChange={(e) => setAmount(e.target.value)}
+              className="ml-2 w-48 bg-transparent outline-none"
+            />
+          </div>
+        </div>
+
+        <div>
+          <label className="text-sm font-semibold text-slate-700">消费类别</label>
+          <div className="mt-3 grid grid-cols-4 gap-3">
+            {categories.map((cat) => {
+              const Icon = cat.icon;
+              const active = categoryId === cat.id;
+              return (
+                <button
+                  key={cat.id}
+                  type="button"
+                  onClick={() => setCategoryId(cat.id)}
+                  className={cn(
+                    "rounded-2xl p-3 text-center transition",
+                    active ? "bg-slate-900 text-white shadow" : "bg-slate-50 text-slate-600",
+                  )}
+                >
+                  <Icon className="mx-auto h-5 w-5" />
+                  <p className="mt-1 text-xs">{cat.name}</p>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+          <div>
+            <label className="text-sm font-semibold text-slate-700">日期</label>
+            <input
+              type="date"
+              value={date}
+              onChange={(e) => setDate(e.target.value)}
+              className="mt-2 w-full rounded-2xl bg-slate-50 px-4 py-3 outline-none"
+            />
+          </div>
+          <div>
+            <label className="text-sm font-semibold text-slate-700">备注</label>
+            <input
+              value={remark}
+              onChange={(e) => setRemark(e.target.value)}
+              className="mt-2 w-full rounded-2xl bg-slate-50 px-4 py-3 outline-none"
+            />
+          </div>
+        </div>
+
+        <Button
+          className="h-14 w-full rounded-2xl text-base"
+          onClick={() =>
+            onSave({
+              amount: Number(amount || 0),
+              type,
+              categoryId,
+              date,
+              remark,
+            })
+          }
+        >
+          <Save className="h-5 w-5" />
+          保存账单并刷新首页
+        </Button>
+      </CardContent>
+    </Card>
+  );
+}
+
+function HomePage({ stats, setPage, healthLevel, warning, totalBudget }) {
+  return (
+    <div className="relative pb-28">
+      <TownScene level={healthLevel} warning={warning} stats={stats} totalBudget={totalBudget} setPage={setPage} onQuickAdd={() => setPage("add")} />
+    </div>
+  );
+}
+
+function AddBillPage({ onBack, onSave }) {
+  return (
     <div className="pb-28">
-      <PageHeader title="新增账单" subtitle="记录金额、类型、类别与日期" onBack={onBack} />
-      <Card className="mx-5">
-        <CardContent className="space-y-5 p-5">
-          <div>
-            <label className="text-sm font-semibold text-slate-700">收支类型</label>
-            <div className="mt-2 grid grid-cols-2 gap-3">
-              <Button variant={type === "expense" ? "default" : "secondary"} className="rounded-2xl" onClick={() => setType("expense")}>
-                支出
-              </Button>
-              <Button variant={type === "income" ? "default" : "secondary"} className="rounded-2xl" onClick={() => setType("income")}>
-                收入
-              </Button>
-            </div>
-          </div>
-
-          <div>
-            <label className="text-sm font-semibold text-slate-700">金额</label>
-            <div className="mt-2 rounded-3xl bg-slate-50 px-5 py-4 text-4xl font-black text-slate-900">
-              <span className="text-xl">¥</span>
-              <input
-                type="number"
-                min="0"
-                step="0.01"
-                value={amount}
-                onChange={(e) => setAmount(e.target.value)}
-                className="ml-2 w-48 bg-transparent outline-none"
-              />
-            </div>
-          </div>
-
-          <div>
-            <label className="text-sm font-semibold text-slate-700">消费类别</label>
-            <div className="mt-3 grid grid-cols-4 gap-3">
-              {categories.map((cat) => {
-                const Icon = cat.icon;
-                const active = categoryId === cat.id;
-                return (
-                  <button
-                    key={cat.id}
-                    type="button"
-                    onClick={() => setCategoryId(cat.id)}
-                    className={cn(
-                      "rounded-2xl p-3 text-center transition",
-                      active ? "bg-slate-900 text-white shadow" : "bg-slate-50 text-slate-600",
-                    )}
-                  >
-                    <Icon className="mx-auto h-5 w-5" />
-                    <p className="mt-1 text-xs">{cat.name}</p>
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-            <div>
-              <label className="text-sm font-semibold text-slate-700">日期</label>
-              <input
-                type="date"
-                value={date}
-                onChange={(e) => setDate(e.target.value)}
-                className="mt-2 w-full rounded-2xl bg-slate-50 px-4 py-3 outline-none"
-              />
-            </div>
-            <div>
-              <label className="text-sm font-semibold text-slate-700">备注</label>
-              <input
-                value={remark}
-                onChange={(e) => setRemark(e.target.value)}
-                className="mt-2 w-full rounded-2xl bg-slate-50 px-4 py-3 outline-none"
-              />
-            </div>
-          </div>
-
-          <Button
-            className="h-14 w-full rounded-2xl text-base"
-            onClick={() =>
-              onSave({
-                amount: Number(amount || 0),
-                type,
-                categoryId,
-                date,
-                remark,
-              })
-            }
-          >
-            <Save className="h-5 w-5" />
-            保存账单并刷新小镇
-          </Button>
-        </CardContent>
-      </Card>
+      <PageHeader title="新增账单" subtitle="完成一笔新的收入或支出记录" onBack={onBack} />
+      <BillComposer onSave={onSave} title="快速记一笔" subtitle="独立页面完成记账，更符合常见的使用习惯" />
     </div>
   );
 }
@@ -1170,90 +1186,88 @@ function AccountPage({ totalBudget, setTotalBudget, account, setAccount }) {
   );
 }
 
-function CategoryBoardPage({ bills }) {
+function AnalyticsPage({ stats, bills, totalBudget }) {
   const expenseBills = bills.filter((bill) => bill.type === "expense");
-
-  return (
-    <div className="pb-28">
-      <PageHeader title="分类看板" subtitle="查看各消费类别的预算消耗进度" />
-      <div className="mx-5 space-y-3">
-        {categories.map((cat) => {
-          const Icon = cat.icon;
-          const spent = expenseBills
-            .filter((bill) => bill.categoryId === cat.id)
-            .reduce((sum, bill) => sum + bill.amount, 0);
-          const hasBudget = cat.budget > 0;
-          const percent = hasBudget ? Math.round((spent / cat.budget) * 100) : 0;
-          const status = !hasBudget ? "未设置预算" : percent > 100 ? "已超支" : percent >= 70 ? "接近上限" : "正常";
-
-          return (
-            <Card key={cat.id}>
-              <CardContent className="p-4">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <div className="rounded-2xl bg-slate-100 p-3">
-                      <Icon className="h-5 w-5 text-slate-700" />
-                    </div>
-                    <div>
-                      <p className="font-bold text-slate-900">{cat.name}</p>
-                      <p className="text-xs text-slate-500">
-                        已消费 {money(spent)} {hasBudget ? `/ 预算 ${money(cat.budget)}` : ""}
-                      </p>
-                    </div>
-                  </div>
-                  <span
-                    className={cn(
-                      "rounded-full px-3 py-1 text-xs font-semibold",
-                      percent > 100
-                        ? "bg-rose-100 text-rose-700"
-                        : percent >= 70
-                          ? "bg-amber-100 text-amber-700"
-                          : "bg-emerald-100 text-emerald-700",
-                    )}
-                  >
-                    {status}
-                  </span>
-                </div>
-                <div className="mt-4 h-3 overflow-hidden rounded-full bg-slate-100">
-                  <motion.div
-                    initial={{ width: 0 }}
-                    animate={{ width: `${hasBudget ? Math.min(percent, 130) : 0}%` }}
-                    className="h-full rounded-full bg-slate-800"
-                  />
-                </div>
-                <div className="mt-2 flex justify-between text-xs text-slate-400">
-                  <span>0%</span>
-                  <span>{hasBudget ? `${percent}%` : "未参与预算预警"}</span>
-                </div>
-              </CardContent>
-            </Card>
-          );
-        })}
-      </div>
-    </div>
-  );
-}
-
-function StatisticsPage({ stats, bills }) {
-  const expense = bills.filter((bill) => bill.type === "expense");
   const income = bills.filter((bill) => bill.type === "income").reduce((sum, bill) => sum + bill.amount, 0);
   const ranked = categories
     .map((cat) => ({
       ...cat,
-      spent: expense.filter((bill) => bill.categoryId === cat.id).reduce((sum, bill) => sum + bill.amount, 0),
+      spent: expenseBills.filter((bill) => bill.categoryId === cat.id).reduce((sum, bill) => sum + bill.amount, 0),
     }))
     .sort((a, b) => b.spent - a.spent);
   const max = Math.max(...ranked.map((item) => item.spent), 1);
 
   return (
     <div className="pb-28">
-      <PageHeader title="月度统计" subtitle="汇总收入、支出、剩余预算与分类占比" />
+      <PageHeader title="统计分析" subtitle="分类看板与月度统计合并展示" />
       <div className="mx-5 grid grid-cols-2 gap-3">
         <StatCard icon={BarChart3} label="本月总支出" value={money(stats.total)} sub="只统计支出" />
         <StatCard icon={Wallet} label="本月总收入" value={money(income)} sub="不抵扣健康度" />
         <StatCard icon={Sun} label="日均预算" value={money(stats.daily)} sub="月预算 / 月天数" />
-        <StatCard icon={Landmark} label="合理消费线" value={money(stats.line)} sub={`当前第 ${DEMO_DAY} 天`} />
+        <StatCard icon={Landmark} label="剩余预算" value={money(totalBudget - stats.total)} sub={`合理线 ${money(stats.line)}`} />
       </div>
+
+      <Card className="mx-5 mt-5">
+        <CardContent className="p-5">
+          <div className="flex items-center justify-between">
+            <p className="font-bold text-slate-900">分类预算看板</p>
+            <span className="text-xs text-slate-400">预算消耗与超支状态</span>
+          </div>
+          <div className="mt-4 space-y-3">
+            {categories.map((cat) => {
+              const Icon = cat.icon;
+              const spent = expenseBills
+                .filter((bill) => bill.categoryId === cat.id)
+                .reduce((sum, bill) => sum + bill.amount, 0);
+              const hasBudget = cat.budget > 0;
+              const percent = hasBudget ? Math.round((spent / cat.budget) * 100) : 0;
+              const status = !hasBudget ? "未设置预算" : percent > 100 ? "已超支" : percent >= 70 ? "接近上限" : "正常";
+
+              return (
+                <div key={cat.id} className="rounded-2xl bg-slate-50 p-4">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <div className="rounded-2xl bg-white p-3">
+                        <Icon className="h-5 w-5 text-slate-700" />
+                      </div>
+                      <div>
+                        <p className="font-bold text-slate-900">{cat.name}</p>
+                        <p className="text-xs text-slate-500">
+                          已消费 {money(spent)} {hasBudget ? `/ 预算 ${money(cat.budget)}` : ""}
+                        </p>
+                      </div>
+                    </div>
+                    <span
+                      className={cn(
+                        "rounded-full px-3 py-1 text-xs font-semibold",
+                        percent > 100
+                          ? "bg-rose-100 text-rose-700"
+                          : percent >= 70
+                            ? "bg-amber-100 text-amber-700"
+                            : "bg-emerald-100 text-emerald-700",
+                      )}
+                    >
+                      {status}
+                    </span>
+                  </div>
+                  <div className="mt-4 h-3 overflow-hidden rounded-full bg-white">
+                    <motion.div
+                      initial={{ width: 0 }}
+                      animate={{ width: `${hasBudget ? Math.min(percent, 130) : 0}%` }}
+                      className="h-full rounded-full bg-slate-800"
+                    />
+                  </div>
+                  <div className="mt-2 flex justify-between text-xs text-slate-400">
+                    <span>0%</span>
+                    <span>{hasBudget ? `${percent}%` : "未参与预算预警"}</span>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </CardContent>
+      </Card>
+
       <Card className="mx-5 mt-5">
         <CardContent className="p-5">
           <p className="font-bold text-slate-900">分类支出排行</p>
@@ -1284,14 +1298,13 @@ function BottomNav({ page, setPage }) {
   const items = [
     { id: "home", label: "首页", icon: Home },
     { id: "list", label: "账单", icon: ListChecks },
-    { id: "board", label: "看板", icon: PieChart },
-    { id: "stats", label: "统计", icon: BarChart3 },
+    { id: "analytics", label: "统计", icon: BarChart3 },
     { id: "account", label: "我的", icon: User },
   ];
 
   return (
     <div className="fixed bottom-4 left-1/2 z-50 w-[min(94%,460px)] -translate-x-1/2 rounded-[2.2rem] border border-white/75 bg-white/[0.92] p-3 shadow-[0_24px_70px_rgba(111,154,206,0.22)] backdrop-blur-xl">
-      <div className="grid grid-cols-5 gap-2">
+      <div className="grid grid-cols-4 gap-2">
         {items.map((item) => {
           const Icon = item.icon;
           const active = page === item.id;
@@ -1378,8 +1391,7 @@ function App() {
             {page === "add" && <AddBillPage onBack={() => setPage("home")} onSave={saveBill} />}
             {page === "list" && <BillListPage bills={bills} setPage={setPage} setEditingBill={setEditingBill} />}
             {page === "detail" && <BillDetailPage bill={editingBill} onBack={() => setPage("list")} onDelete={deleteBill} />}
-            {page === "board" && <CategoryBoardPage bills={bills} />}
-            {page === "stats" && <StatisticsPage stats={stats} bills={bills} />}
+            {page === "analytics" && <AnalyticsPage stats={stats} bills={bills} totalBudget={totalBudget} />}
             {page === "account" && <AccountPage totalBudget={totalBudget} setTotalBudget={updateBudget} account={account} setAccount={setAccount} />}
           </motion.div>
         </AnimatePresence>

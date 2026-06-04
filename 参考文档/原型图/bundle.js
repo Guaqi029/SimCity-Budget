@@ -32552,45 +32552,32 @@ var __iconNode6 = [
 ];
 var ChartColumn = createLucideIcon("chart-column", __iconNode6);
 
-// node_modules/lucide-react/dist/esm/icons/chart-pie.js
-var __iconNode7 = [
-  [
-    "path",
-    {
-      d: "M21 12c.552 0 1.005-.449.95-.998a10 10 0 0 0-8.953-8.951c-.55-.055-.998.398-.998.95v8a1 1 0 0 0 1 1z",
-      key: "pzmjnu"
-    }
-  ],
-  ["path", { d: "M21.21 15.89A10 10 0 1 1 8 2.83", key: "k2fpak" }]
-];
-var ChartPie = createLucideIcon("chart-pie", __iconNode7);
-
 // node_modules/lucide-react/dist/esm/icons/circle-check.js
-var __iconNode8 = [
+var __iconNode7 = [
   ["circle", { cx: "12", cy: "12", r: "10", key: "1mglay" }],
   ["path", { d: "m9 12 2 2 4-4", key: "dzmm74" }]
 ];
-var CircleCheck = createLucideIcon("circle-check", __iconNode8);
+var CircleCheck = createLucideIcon("circle-check", __iconNode7);
 
 // node_modules/lucide-react/dist/esm/icons/circle-plus.js
-var __iconNode9 = [
+var __iconNode8 = [
   ["circle", { cx: "12", cy: "12", r: "10", key: "1mglay" }],
   ["path", { d: "M8 12h8", key: "1wcyev" }],
   ["path", { d: "M12 8v8", key: "napkw2" }]
 ];
-var CirclePlus = createLucideIcon("circle-plus", __iconNode9);
+var CirclePlus = createLucideIcon("circle-plus", __iconNode8);
 
 // node_modules/lucide-react/dist/esm/icons/cloud-rain.js
-var __iconNode10 = [
+var __iconNode9 = [
   ["path", { d: "M4 14.899A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.242", key: "1pljnt" }],
   ["path", { d: "M16 14v6", key: "1j4efv" }],
   ["path", { d: "M8 14v6", key: "17c4r9" }],
   ["path", { d: "M12 16v6", key: "c8a4gj" }]
 ];
-var CloudRain = createLucideIcon("cloud-rain", __iconNode10);
+var CloudRain = createLucideIcon("cloud-rain", __iconNode9);
 
 // node_modules/lucide-react/dist/esm/icons/cloud-sun.js
-var __iconNode11 = [
+var __iconNode10 = [
   ["path", { d: "M12 2v2", key: "tus03m" }],
   ["path", { d: "m4.93 4.93 1.41 1.41", key: "149t6j" }],
   ["path", { d: "M20 12h2", key: "1q8mjw" }],
@@ -32598,10 +32585,10 @@ var __iconNode11 = [
   ["path", { d: "M15.947 12.65a4 4 0 0 0-5.925-4.128", key: "dpwdj0" }],
   ["path", { d: "M13 22H7a5 5 0 1 1 4.9-6H13a3 3 0 0 1 0 6Z", key: "s09mg5" }]
 ];
-var CloudSun = createLucideIcon("cloud-sun", __iconNode11);
+var CloudSun = createLucideIcon("cloud-sun", __iconNode10);
 
 // node_modules/lucide-react/dist/esm/icons/crown.js
-var __iconNode12 = [
+var __iconNode11 = [
   [
     "path",
     {
@@ -32611,18 +32598,18 @@ var __iconNode12 = [
   ],
   ["path", { d: "M5 21h14", key: "11awu3" }]
 ];
-var Crown = createLucideIcon("crown", __iconNode12);
+var Crown = createLucideIcon("crown", __iconNode11);
 
 // node_modules/lucide-react/dist/esm/icons/ellipsis.js
-var __iconNode13 = [
+var __iconNode12 = [
   ["circle", { cx: "12", cy: "12", r: "1", key: "41hilf" }],
   ["circle", { cx: "19", cy: "12", r: "1", key: "1wjl8i" }],
   ["circle", { cx: "5", cy: "12", r: "1", key: "1pcz8c" }]
 ];
-var Ellipsis = createLucideIcon("ellipsis", __iconNode13);
+var Ellipsis = createLucideIcon("ellipsis", __iconNode12);
 
 // node_modules/lucide-react/dist/esm/icons/gamepad-2.js
-var __iconNode14 = [
+var __iconNode13 = [
   ["line", { x1: "6", x2: "10", y1: "11", y2: "11", key: "1gktln" }],
   ["line", { x1: "8", x2: "8", y1: "9", y2: "13", key: "qnk9ow" }],
   ["line", { x1: "15", x2: "15.01", y1: "12", y2: "12", key: "krot7o" }],
@@ -32635,10 +32622,10 @@ var __iconNode14 = [
     }
   ]
 ];
-var Gamepad2 = createLucideIcon("gamepad-2", __iconNode14);
+var Gamepad2 = createLucideIcon("gamepad-2", __iconNode13);
 
 // node_modules/lucide-react/dist/esm/icons/heart-pulse.js
-var __iconNode15 = [
+var __iconNode14 = [
   [
     "path",
     {
@@ -32648,10 +32635,10 @@ var __iconNode15 = [
   ],
   ["path", { d: "M3.22 12H9.5l.5-1 2 4.5 2-7 1.5 3.5h5.27", key: "1uw2ng" }]
 ];
-var HeartPulse = createLucideIcon("heart-pulse", __iconNode15);
+var HeartPulse = createLucideIcon("heart-pulse", __iconNode14);
 
 // node_modules/lucide-react/dist/esm/icons/house.js
-var __iconNode16 = [
+var __iconNode15 = [
   ["path", { d: "M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8", key: "5wwlr5" }],
   [
     "path",
@@ -32661,10 +32648,10 @@ var __iconNode16 = [
     }
   ]
 ];
-var House = createLucideIcon("house", __iconNode16);
+var House = createLucideIcon("house", __iconNode15);
 
 // node_modules/lucide-react/dist/esm/icons/landmark.js
-var __iconNode17 = [
+var __iconNode16 = [
   ["path", { d: "M10 18v-7", key: "wt116b" }],
   [
     "path",
@@ -32678,51 +32665,51 @@ var __iconNode17 = [
   ["path", { d: "M3 22h18", key: "8prr45" }],
   ["path", { d: "M6 18v-7", key: "1ivflk" }]
 ];
-var Landmark = createLucideIcon("landmark", __iconNode17);
+var Landmark = createLucideIcon("landmark", __iconNode16);
 
 // node_modules/lucide-react/dist/esm/icons/list-checks.js
-var __iconNode18 = [
+var __iconNode17 = [
   ["path", { d: "m3 17 2 2 4-4", key: "1jhpwq" }],
   ["path", { d: "m3 7 2 2 4-4", key: "1obspn" }],
   ["path", { d: "M13 6h8", key: "15sg57" }],
   ["path", { d: "M13 12h8", key: "h98zly" }],
   ["path", { d: "M13 18h8", key: "oe0vm4" }]
 ];
-var ListChecks = createLucideIcon("list-checks", __iconNode18);
+var ListChecks = createLucideIcon("list-checks", __iconNode17);
 
 // node_modules/lucide-react/dist/esm/icons/lock-keyhole.js
-var __iconNode19 = [
+var __iconNode18 = [
   ["circle", { cx: "12", cy: "16", r: "1", key: "1au0dj" }],
   ["rect", { x: "3", y: "10", width: "18", height: "12", rx: "2", key: "6s8ecr" }],
   ["path", { d: "M7 10V7a5 5 0 0 1 10 0v3", key: "1pqi11" }]
 ];
-var LockKeyhole = createLucideIcon("lock-keyhole", __iconNode19);
+var LockKeyhole = createLucideIcon("lock-keyhole", __iconNode18);
 
 // node_modules/lucide-react/dist/esm/icons/log-in.js
-var __iconNode20 = [
+var __iconNode19 = [
   ["path", { d: "m10 17 5-5-5-5", key: "1bsop3" }],
   ["path", { d: "M15 12H3", key: "6jk70r" }],
   ["path", { d: "M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4", key: "u53s6r" }]
 ];
-var LogIn = createLucideIcon("log-in", __iconNode20);
+var LogIn = createLucideIcon("log-in", __iconNode19);
 
 // node_modules/lucide-react/dist/esm/icons/log-out.js
-var __iconNode21 = [
+var __iconNode20 = [
   ["path", { d: "m16 17 5-5-5-5", key: "1bji2h" }],
   ["path", { d: "M21 12H9", key: "dn1m92" }],
   ["path", { d: "M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4", key: "1uf3rs" }]
 ];
-var LogOut = createLucideIcon("log-out", __iconNode21);
+var LogOut = createLucideIcon("log-out", __iconNode20);
 
 // node_modules/lucide-react/dist/esm/icons/mail.js
-var __iconNode22 = [
+var __iconNode21 = [
   ["path", { d: "m22 7-8.991 5.727a2 2 0 0 1-2.009 0L2 7", key: "132q7q" }],
   ["rect", { x: "2", y: "4", width: "20", height: "16", rx: "2", key: "izxlao" }]
 ];
-var Mail = createLucideIcon("mail", __iconNode22);
+var Mail = createLucideIcon("mail", __iconNode21);
 
 // node_modules/lucide-react/dist/esm/icons/pencil.js
-var __iconNode23 = [
+var __iconNode22 = [
   [
     "path",
     {
@@ -32732,10 +32719,10 @@ var __iconNode23 = [
   ],
   ["path", { d: "m15 5 4 4", key: "1mk7zo" }]
 ];
-var Pencil = createLucideIcon("pencil", __iconNode23);
+var Pencil = createLucideIcon("pencil", __iconNode22);
 
 // node_modules/lucide-react/dist/esm/icons/save.js
-var __iconNode24 = [
+var __iconNode23 = [
   [
     "path",
     {
@@ -32746,10 +32733,10 @@ var __iconNode24 = [
   ["path", { d: "M17 21v-7a1 1 0 0 0-1-1H8a1 1 0 0 0-1 1v7", key: "1ydtos" }],
   ["path", { d: "M7 3v4a1 1 0 0 0 1 1h7", key: "t51u73" }]
 ];
-var Save = createLucideIcon("save", __iconNode24);
+var Save = createLucideIcon("save", __iconNode23);
 
 // node_modules/lucide-react/dist/esm/icons/settings.js
-var __iconNode25 = [
+var __iconNode24 = [
   [
     "path",
     {
@@ -32759,10 +32746,10 @@ var __iconNode25 = [
   ],
   ["circle", { cx: "12", cy: "12", r: "3", key: "1v7zrd" }]
 ];
-var Settings = createLucideIcon("settings", __iconNode25);
+var Settings = createLucideIcon("settings", __iconNode24);
 
 // node_modules/lucide-react/dist/esm/icons/shirt.js
-var __iconNode26 = [
+var __iconNode25 = [
   [
     "path",
     {
@@ -32771,18 +32758,18 @@ var __iconNode26 = [
     }
   ]
 ];
-var Shirt = createLucideIcon("shirt", __iconNode26);
+var Shirt = createLucideIcon("shirt", __iconNode25);
 
 // node_modules/lucide-react/dist/esm/icons/shopping-bag.js
-var __iconNode27 = [
+var __iconNode26 = [
   ["path", { d: "M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z", key: "hou9p0" }],
   ["path", { d: "M3 6h18", key: "d0wm0j" }],
   ["path", { d: "M16 10a4 4 0 0 1-8 0", key: "1ltviw" }]
 ];
-var ShoppingBag = createLucideIcon("shopping-bag", __iconNode27);
+var ShoppingBag = createLucideIcon("shopping-bag", __iconNode26);
 
 // node_modules/lucide-react/dist/esm/icons/sun.js
-var __iconNode28 = [
+var __iconNode27 = [
   ["circle", { cx: "12", cy: "12", r: "4", key: "4exip2" }],
   ["path", { d: "M12 2v2", key: "tus03m" }],
   ["path", { d: "M12 20v2", key: "1lh1kg" }],
@@ -32793,44 +32780,44 @@ var __iconNode28 = [
   ["path", { d: "m6.34 17.66-1.41 1.41", key: "1m8zz5" }],
   ["path", { d: "m19.07 4.93-1.41 1.41", key: "1shlcs" }]
 ];
-var Sun = createLucideIcon("sun", __iconNode28);
+var Sun = createLucideIcon("sun", __iconNode27);
 
 // node_modules/lucide-react/dist/esm/icons/trash-2.js
-var __iconNode29 = [
+var __iconNode28 = [
   ["path", { d: "M3 6h18", key: "d0wm0j" }],
   ["path", { d: "M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6", key: "4alrt4" }],
   ["path", { d: "M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2", key: "v07s0e" }],
   ["line", { x1: "10", x2: "10", y1: "11", y2: "17", key: "1uufr5" }],
   ["line", { x1: "14", x2: "14", y1: "11", y2: "17", key: "xtxkd" }]
 ];
-var Trash2 = createLucideIcon("trash-2", __iconNode29);
+var Trash2 = createLucideIcon("trash-2", __iconNode28);
 
 // node_modules/lucide-react/dist/esm/icons/user-plus.js
-var __iconNode30 = [
+var __iconNode29 = [
   ["path", { d: "M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2", key: "1yyitq" }],
   ["circle", { cx: "9", cy: "7", r: "4", key: "nufk8" }],
   ["line", { x1: "19", x2: "19", y1: "8", y2: "14", key: "1bvyxn" }],
   ["line", { x1: "22", x2: "16", y1: "11", y2: "11", key: "1shjgl" }]
 ];
-var UserPlus = createLucideIcon("user-plus", __iconNode30);
+var UserPlus = createLucideIcon("user-plus", __iconNode29);
 
 // node_modules/lucide-react/dist/esm/icons/user.js
-var __iconNode31 = [
+var __iconNode30 = [
   ["path", { d: "M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2", key: "975kel" }],
   ["circle", { cx: "12", cy: "7", r: "4", key: "17ys0d" }]
 ];
-var User = createLucideIcon("user", __iconNode31);
+var User = createLucideIcon("user", __iconNode30);
 
 // node_modules/lucide-react/dist/esm/icons/utensils.js
-var __iconNode32 = [
+var __iconNode31 = [
   ["path", { d: "M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2", key: "cjf0a3" }],
   ["path", { d: "M7 2v20", key: "1473qp" }],
   ["path", { d: "M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7", key: "j28e5" }]
 ];
-var Utensils = createLucideIcon("utensils", __iconNode32);
+var Utensils = createLucideIcon("utensils", __iconNode31);
 
 // node_modules/lucide-react/dist/esm/icons/wallet.js
-var __iconNode33 = [
+var __iconNode32 = [
   [
     "path",
     {
@@ -32840,10 +32827,10 @@ var __iconNode33 = [
   ],
   ["path", { d: "M3 5v14a2 2 0 0 0 2 2h15a1 1 0 0 0 1-1v-4", key: "xoc0q4" }]
 ];
-var Wallet = createLucideIcon("wallet", __iconNode33);
+var Wallet = createLucideIcon("wallet", __iconNode32);
 
 // node_modules/lucide-react/dist/esm/icons/zap.js
-var __iconNode34 = [
+var __iconNode33 = [
   [
     "path",
     {
@@ -32852,7 +32839,7 @@ var __iconNode34 = [
     }
   ]
 ];
-var Zap = createLucideIcon("zap", __iconNode34);
+var Zap = createLucideIcon("zap", __iconNode33);
 
 // App.jsx
 var STORAGE_KEY = "simcity-budget-prototype-v1";
@@ -33020,7 +33007,7 @@ function StatCard({ icon: Icon2, label, value, sub }) {
 function SceneStat({ label, value, icon: Icon2, sub, accent = "bg-sky-100", bars = "bg-sky-300/85" }) {
   return /* @__PURE__ */ import_react26.default.createElement("div", { className: "relative overflow-hidden rounded-[1.55rem] border border-white/65 bg-white/86 p-4 text-slate-900 shadow-[0_18px_45px_rgba(93,135,189,0.14)] backdrop-blur" }, /* @__PURE__ */ import_react26.default.createElement("div", { className: "flex items-start justify-between gap-3" }, /* @__PURE__ */ import_react26.default.createElement("div", { className: "min-w-0" }, /* @__PURE__ */ import_react26.default.createElement("p", { className: "text-sm font-semibold text-slate-500" }, label), /* @__PURE__ */ import_react26.default.createElement("p", { className: "mt-2 truncate text-[1.15rem] font-black tracking-tight text-slate-900" }, value), sub && /* @__PURE__ */ import_react26.default.createElement("p", { className: "mt-1 text-xs text-slate-400" }, sub)), /* @__PURE__ */ import_react26.default.createElement("div", { className: cn("rounded-2xl p-2.5", accent) }, /* @__PURE__ */ import_react26.default.createElement(Icon2, { className: "h-[1.125rem] w-[1.125rem] text-slate-700" }))), /* @__PURE__ */ import_react26.default.createElement("div", { className: "mt-4 flex h-8 items-end gap-1.5 opacity-75" }, [10, 18, 12, 26, 14, 22, 16, 11].map((height, idx) => /* @__PURE__ */ import_react26.default.createElement("span", { key: `${label}-${idx}`, className: cn("w-2 rounded-full", bars), style: { height } }))));
 }
-function TownScene({ level, warning: warning2, stats, totalBudget, setPage }) {
+function TownScene({ level, warning: warning2, stats, totalBudget, setPage, onQuickAdd }) {
   const meta = healthMeta[level];
   const WeatherIcon = meta.icon;
   const scene = {
@@ -33239,7 +33226,7 @@ function TownScene({ level, warning: warning2, stats, totalBudget, setPage }) {
     /* @__PURE__ */ import_react26.default.createElement("div", { className: "absolute left-[-2%] bottom-[8%] h-16 w-10 rounded-full bg-white/70 blur-sm" }),
     /* @__PURE__ */ import_react26.default.createElement("div", { className: "absolute left-[5%] bottom-[6%] h-8 w-20 rounded-full bg-cyan-100/90" }),
     /* @__PURE__ */ import_react26.default.createElement("div", { className: "absolute left-[10%] bottom-[4%] h-8 w-8 rounded-full bg-white/88 shadow" }, /* @__PURE__ */ import_react26.default.createElement("span", { className: "absolute left-1/2 top-1/2 h-0 w-0 -translate-x-1/2 -translate-y-1/2 border-x-[8px] border-b-[10px] border-x-transparent border-b-orange-200/95" }))
-  ), /* @__PURE__ */ import_react26.default.createElement("div", { className: "absolute left-7 bottom-[29%] z-30 rounded-[1.5rem] border border-white/70 bg-white/84 px-4 py-3 text-slate-800 shadow-[0_18px_36px_rgba(111,154,206,0.16)] backdrop-blur" }, /* @__PURE__ */ import_react26.default.createElement("p", { className: "text-sm font-bold" }, "\u4ECA\u65E5\u6D88\u8D39"), /* @__PURE__ */ import_react26.default.createElement("p", { className: "mt-1 text-xs text-slate-500" }, "\u{1F642} \u5408\u7406\u8303\u56F4\u5185")), /* @__PURE__ */ import_react26.default.createElement("div", { className: "absolute right-6 bottom-[25%] z-30 rounded-[1.5rem] border border-white/70 bg-white/84 px-4 py-3 text-right text-slate-800 shadow-[0_18px_36px_rgba(111,154,206,0.16)] backdrop-blur" }, /* @__PURE__ */ import_react26.default.createElement("p", { className: "text-sm font-bold" }, "\u5EFA\u8BBE\u8FDB\u5EA6"), /* @__PURE__ */ import_react26.default.createElement("p", { className: "mt-1 text-2xl font-black text-slate-900" }, budgetProgress.toFixed(0), "%"))), /* @__PURE__ */ import_react26.default.createElement("div", { className: "absolute inset-x-3 bottom-28 z-40" }, /* @__PURE__ */ import_react26.default.createElement("div", { className: "rounded-[2.25rem] border border-white/70 bg-white/70 p-4 shadow-[0_28px_80px_rgba(111,154,206,0.24)] backdrop-blur-xl" }, /* @__PURE__ */ import_react26.default.createElement("div", { className: "grid grid-cols-2 gap-3" }, /* @__PURE__ */ import_react26.default.createElement(SceneStat, { label: "\u4ECA\u65E5\u652F\u51FA", value: money(stats.today), icon: Wallet, sub: "\u5408\u7406\u8303\u56F4\u5185", accent: scene.cards[0], bars: scene.bars[0] }), /* @__PURE__ */ import_react26.default.createElement(SceneStat, { label: "\u672C\u6708\u7D2F\u8BA1", value: money(stats.total), icon: Landmark, sub: `\u5408\u7406\u7EBF ${money(stats.line)}`, accent: scene.cards[1], bars: scene.bars[1] }), /* @__PURE__ */ import_react26.default.createElement(SceneStat, { label: "\u5269\u4F59\u9884\u7B97", value: money(stats.remain), icon: CircleCheck, sub: `\u603B\u9884\u7B97 ${money(totalBudget)}`, accent: scene.cards[2], bars: scene.bars[2] }), /* @__PURE__ */ import_react26.default.createElement(SceneStat, { label: "\u57CE\u5E02\u7B49\u7EA7", value: meta.name, icon: Crown, sub: meta.title, accent: scene.cards[3], bars: scene.bars[3] })), /* @__PURE__ */ import_react26.default.createElement("div", { className: "mt-4 grid grid-cols-2 gap-3" }, /* @__PURE__ */ import_react26.default.createElement(Button, { onClick: () => setPage("add"), className: "h-14 rounded-[1.55rem] bg-slate-950 text-base shadow-[0_18px_36px_rgba(15,23,42,0.2)]" }, /* @__PURE__ */ import_react26.default.createElement(CirclePlus, { className: "h-5 w-5" }), "\u8BB0\u4E00\u7B14"), /* @__PURE__ */ import_react26.default.createElement(Button, { onClick: () => setPage("account"), variant: "secondary", className: "h-14 rounded-[1.55rem] border border-slate-200 bg-white/92 text-base text-slate-900 shadow-[0_18px_36px_rgba(111,154,206,0.12)]" }, /* @__PURE__ */ import_react26.default.createElement(User, { className: "h-5 w-5" }), "\u8D26\u53F7\u7BA1\u7406")), /* @__PURE__ */ import_react26.default.createElement("div", { className: "mt-4 h-2 overflow-hidden rounded-full bg-slate-200/80" }, /* @__PURE__ */ import_react26.default.createElement(
+  ), /* @__PURE__ */ import_react26.default.createElement("div", { className: "absolute left-7 bottom-[29%] z-30 rounded-[1.5rem] border border-white/70 bg-white/84 px-4 py-3 text-slate-800 shadow-[0_18px_36px_rgba(111,154,206,0.16)] backdrop-blur" }, /* @__PURE__ */ import_react26.default.createElement("p", { className: "text-sm font-bold" }, "\u4ECA\u65E5\u6D88\u8D39"), /* @__PURE__ */ import_react26.default.createElement("p", { className: "mt-1 text-xs text-slate-500" }, "\u{1F642} \u5408\u7406\u8303\u56F4\u5185")), /* @__PURE__ */ import_react26.default.createElement("div", { className: "absolute right-6 bottom-[25%] z-30 rounded-[1.5rem] border border-white/70 bg-white/84 px-4 py-3 text-right text-slate-800 shadow-[0_18px_36px_rgba(111,154,206,0.16)] backdrop-blur" }, /* @__PURE__ */ import_react26.default.createElement("p", { className: "text-sm font-bold" }, "\u5EFA\u8BBE\u8FDB\u5EA6"), /* @__PURE__ */ import_react26.default.createElement("p", { className: "mt-1 text-2xl font-black text-slate-900" }, budgetProgress.toFixed(0), "%"))), /* @__PURE__ */ import_react26.default.createElement("div", { className: "absolute inset-x-3 bottom-28 z-40" }, /* @__PURE__ */ import_react26.default.createElement("div", { className: "rounded-[2.25rem] border border-white/70 bg-white/70 p-4 shadow-[0_28px_80px_rgba(111,154,206,0.24)] backdrop-blur-xl" }, /* @__PURE__ */ import_react26.default.createElement("div", { className: "grid grid-cols-2 gap-3" }, /* @__PURE__ */ import_react26.default.createElement(SceneStat, { label: "\u4ECA\u65E5\u652F\u51FA", value: money(stats.today), icon: Wallet, sub: "\u5408\u7406\u8303\u56F4\u5185", accent: scene.cards[0], bars: scene.bars[0] }), /* @__PURE__ */ import_react26.default.createElement(SceneStat, { label: "\u672C\u6708\u7D2F\u8BA1", value: money(stats.total), icon: Landmark, sub: `\u5408\u7406\u7EBF ${money(stats.line)}`, accent: scene.cards[1], bars: scene.bars[1] }), /* @__PURE__ */ import_react26.default.createElement(SceneStat, { label: "\u5269\u4F59\u9884\u7B97", value: money(stats.remain), icon: CircleCheck, sub: `\u603B\u9884\u7B97 ${money(totalBudget)}`, accent: scene.cards[2], bars: scene.bars[2] }), /* @__PURE__ */ import_react26.default.createElement(SceneStat, { label: "\u57CE\u5E02\u7B49\u7EA7", value: meta.name, icon: Crown, sub: meta.title, accent: scene.cards[3], bars: scene.bars[3] })), /* @__PURE__ */ import_react26.default.createElement("div", { className: "mt-4 grid grid-cols-2 gap-3" }, /* @__PURE__ */ import_react26.default.createElement(Button, { onClick: onQuickAdd, className: "h-14 rounded-[1.55rem] bg-slate-950 text-base shadow-[0_18px_36px_rgba(15,23,42,0.2)]" }, /* @__PURE__ */ import_react26.default.createElement(CirclePlus, { className: "h-5 w-5" }), "\u8BB0\u4E00\u7B14"), /* @__PURE__ */ import_react26.default.createElement(Button, { onClick: () => setPage("account"), variant: "secondary", className: "h-14 rounded-[1.55rem] border border-slate-200 bg-white/92 text-base text-slate-900 shadow-[0_18px_36px_rgba(111,154,206,0.12)]" }, /* @__PURE__ */ import_react26.default.createElement(User, { className: "h-5 w-5" }), "\u8D26\u53F7\u7BA1\u7406")), /* @__PURE__ */ import_react26.default.createElement("div", { className: "mt-4 h-2 overflow-hidden rounded-full bg-slate-200/80" }, /* @__PURE__ */ import_react26.default.createElement(
     motion.div,
     {
       initial: { width: 0 },
@@ -33248,16 +33235,13 @@ function TownScene({ level, warning: warning2, stats, totalBudget, setPage }) {
     }
   )))));
 }
-function HomePage({ stats, setPage, healthLevel, warning: warning2, totalBudget }) {
-  return /* @__PURE__ */ import_react26.default.createElement("div", { className: "relative pb-28" }, /* @__PURE__ */ import_react26.default.createElement(TownScene, { level: healthLevel, warning: warning2, stats, totalBudget, setPage }));
-}
-function AddBillPage({ onBack, onSave }) {
+function BillComposer({ onSave, title = "\u5FEB\u901F\u8BB0\u4E00\u7B14", subtitle = "\u9996\u9875\u76F4\u63A5\u5B8C\u6210\u8BB0\u8D26\uFF0C\u4E0D\u518D\u5355\u72EC\u8DF3\u8F6C\u9875\u9762" }) {
   const [type, setType] = (0, import_react26.useState)("expense");
   const [amount, setAmount] = (0, import_react26.useState)("600");
   const [categoryId, setCategoryId] = (0, import_react26.useState)("entertainment");
   const [date, setDate] = (0, import_react26.useState)(DEMO_DATE);
   const [remark, setRemark] = (0, import_react26.useState)("\u6E38\u620F\u5145\u503C");
-  return /* @__PURE__ */ import_react26.default.createElement("div", { className: "pb-28" }, /* @__PURE__ */ import_react26.default.createElement(PageHeader, { title: "\u65B0\u589E\u8D26\u5355", subtitle: "\u8BB0\u5F55\u91D1\u989D\u3001\u7C7B\u578B\u3001\u7C7B\u522B\u4E0E\u65E5\u671F", onBack }), /* @__PURE__ */ import_react26.default.createElement(Card, { className: "mx-5" }, /* @__PURE__ */ import_react26.default.createElement(CardContent, { className: "space-y-5 p-5" }, /* @__PURE__ */ import_react26.default.createElement("div", null, /* @__PURE__ */ import_react26.default.createElement("label", { className: "text-sm font-semibold text-slate-700" }, "\u6536\u652F\u7C7B\u578B"), /* @__PURE__ */ import_react26.default.createElement("div", { className: "mt-2 grid grid-cols-2 gap-3" }, /* @__PURE__ */ import_react26.default.createElement(Button, { variant: type === "expense" ? "default" : "secondary", className: "rounded-2xl", onClick: () => setType("expense") }, "\u652F\u51FA"), /* @__PURE__ */ import_react26.default.createElement(Button, { variant: type === "income" ? "default" : "secondary", className: "rounded-2xl", onClick: () => setType("income") }, "\u6536\u5165"))), /* @__PURE__ */ import_react26.default.createElement("div", null, /* @__PURE__ */ import_react26.default.createElement("label", { className: "text-sm font-semibold text-slate-700" }, "\u91D1\u989D"), /* @__PURE__ */ import_react26.default.createElement("div", { className: "mt-2 rounded-3xl bg-slate-50 px-5 py-4 text-4xl font-black text-slate-900" }, /* @__PURE__ */ import_react26.default.createElement("span", { className: "text-xl" }, "\xA5"), /* @__PURE__ */ import_react26.default.createElement(
+  return /* @__PURE__ */ import_react26.default.createElement(Card, { className: "mx-5" }, /* @__PURE__ */ import_react26.default.createElement(CardContent, { className: "space-y-5 p-5" }, /* @__PURE__ */ import_react26.default.createElement("div", { className: "flex items-start justify-between gap-4" }, /* @__PURE__ */ import_react26.default.createElement("div", null, /* @__PURE__ */ import_react26.default.createElement("p", { className: "text-xs font-semibold uppercase tracking-[0.24em] text-slate-400" }, "Quick Add"), /* @__PURE__ */ import_react26.default.createElement("h2", { className: "mt-2 text-xl font-black text-slate-900" }, title), /* @__PURE__ */ import_react26.default.createElement("p", { className: "mt-1 text-sm text-slate-500" }, subtitle)), /* @__PURE__ */ import_react26.default.createElement("div", { className: "rounded-2xl bg-sky-100 p-3" }, /* @__PURE__ */ import_react26.default.createElement(CirclePlus, { className: "h-5 w-5 text-sky-700" }))), /* @__PURE__ */ import_react26.default.createElement("div", null, /* @__PURE__ */ import_react26.default.createElement("label", { className: "text-sm font-semibold text-slate-700" }, "\u6536\u652F\u7C7B\u578B"), /* @__PURE__ */ import_react26.default.createElement("div", { className: "mt-2 grid grid-cols-2 gap-3" }, /* @__PURE__ */ import_react26.default.createElement(Button, { variant: type === "expense" ? "default" : "secondary", className: "rounded-2xl", onClick: () => setType("expense") }, "\u652F\u51FA"), /* @__PURE__ */ import_react26.default.createElement(Button, { variant: type === "income" ? "default" : "secondary", className: "rounded-2xl", onClick: () => setType("income") }, "\u6536\u5165"))), /* @__PURE__ */ import_react26.default.createElement("div", null, /* @__PURE__ */ import_react26.default.createElement("label", { className: "text-sm font-semibold text-slate-700" }, "\u91D1\u989D"), /* @__PURE__ */ import_react26.default.createElement("div", { className: "mt-2 rounded-3xl bg-slate-50 px-5 py-4 text-4xl font-black text-slate-900" }, /* @__PURE__ */ import_react26.default.createElement("span", { className: "text-xl" }, "\xA5"), /* @__PURE__ */ import_react26.default.createElement(
     "input",
     {
       type: "number",
@@ -33312,8 +33296,14 @@ function AddBillPage({ onBack, onSave }) {
       })
     },
     /* @__PURE__ */ import_react26.default.createElement(Save, { className: "h-5 w-5" }),
-    "\u4FDD\u5B58\u8D26\u5355\u5E76\u5237\u65B0\u5C0F\u9547"
-  ))));
+    "\u4FDD\u5B58\u8D26\u5355\u5E76\u5237\u65B0\u9996\u9875"
+  )));
+}
+function HomePage({ stats, setPage, healthLevel, warning: warning2, totalBudget }) {
+  return /* @__PURE__ */ import_react26.default.createElement("div", { className: "relative pb-28" }, /* @__PURE__ */ import_react26.default.createElement(TownScene, { level: healthLevel, warning: warning2, stats, totalBudget, setPage, onQuickAdd: () => setPage("add") }));
+}
+function AddBillPage({ onBack, onSave }) {
+  return /* @__PURE__ */ import_react26.default.createElement("div", { className: "pb-28" }, /* @__PURE__ */ import_react26.default.createElement(PageHeader, { title: "\u65B0\u589E\u8D26\u5355", subtitle: "\u5B8C\u6210\u4E00\u7B14\u65B0\u7684\u6536\u5165\u6216\u652F\u51FA\u8BB0\u5F55", onBack }), /* @__PURE__ */ import_react26.default.createElement(BillComposer, { onSave, title: "\u5FEB\u901F\u8BB0\u4E00\u7B14", subtitle: "\u72EC\u7ACB\u9875\u9762\u5B8C\u6210\u8BB0\u8D26\uFF0C\u66F4\u7B26\u5408\u5E38\u89C1\u7684\u4F7F\u7528\u4E60\u60EF" }));
 }
 function BillRow({ bill, onEdit }) {
   const cat = categoryOf(bill.categoryId);
@@ -33430,15 +33420,21 @@ function AccountPage({ totalBudget, setTotalBudget, account, setAccount }) {
     return /* @__PURE__ */ import_react26.default.createElement("div", { key: cat.id, className: "flex items-center justify-between rounded-2xl bg-slate-50 p-3" }, /* @__PURE__ */ import_react26.default.createElement("div", { className: "flex items-center gap-3" }, /* @__PURE__ */ import_react26.default.createElement(Icon2, { className: "h-5 w-5 text-slate-600" }), /* @__PURE__ */ import_react26.default.createElement("span", { className: "font-semibold text-slate-700" }, cat.name)), /* @__PURE__ */ import_react26.default.createElement("div", { className: "w-28 rounded-xl bg-white px-3 py-2 text-right text-sm font-bold text-slate-800" }, "\xA5", cat.budget));
   }))), /* @__PURE__ */ import_react26.default.createElement(Button, { className: "h-14 w-full rounded-2xl text-base", onClick: handleSaveBudget }, "\u4FDD\u5B58\u9884\u7B97\u914D\u7F6E"))));
 }
-function CategoryBoardPage({ bills }) {
+function AnalyticsPage({ stats, bills, totalBudget }) {
   const expenseBills = bills.filter((bill) => bill.type === "expense");
-  return /* @__PURE__ */ import_react26.default.createElement("div", { className: "pb-28" }, /* @__PURE__ */ import_react26.default.createElement(PageHeader, { title: "\u5206\u7C7B\u770B\u677F", subtitle: "\u67E5\u770B\u5404\u6D88\u8D39\u7C7B\u522B\u7684\u9884\u7B97\u6D88\u8017\u8FDB\u5EA6" }), /* @__PURE__ */ import_react26.default.createElement("div", { className: "mx-5 space-y-3" }, categories.map((cat) => {
+  const income = bills.filter((bill) => bill.type === "income").reduce((sum, bill) => sum + bill.amount, 0);
+  const ranked = categories.map((cat) => ({
+    ...cat,
+    spent: expenseBills.filter((bill) => bill.categoryId === cat.id).reduce((sum, bill) => sum + bill.amount, 0)
+  })).sort((a, b) => b.spent - a.spent);
+  const max = Math.max(...ranked.map((item) => item.spent), 1);
+  return /* @__PURE__ */ import_react26.default.createElement("div", { className: "pb-28" }, /* @__PURE__ */ import_react26.default.createElement(PageHeader, { title: "\u7EDF\u8BA1\u5206\u6790", subtitle: "\u5206\u7C7B\u770B\u677F\u4E0E\u6708\u5EA6\u7EDF\u8BA1\u5408\u5E76\u5C55\u793A" }), /* @__PURE__ */ import_react26.default.createElement("div", { className: "mx-5 grid grid-cols-2 gap-3" }, /* @__PURE__ */ import_react26.default.createElement(StatCard, { icon: ChartColumn, label: "\u672C\u6708\u603B\u652F\u51FA", value: money(stats.total), sub: "\u53EA\u7EDF\u8BA1\u652F\u51FA" }), /* @__PURE__ */ import_react26.default.createElement(StatCard, { icon: Wallet, label: "\u672C\u6708\u603B\u6536\u5165", value: money(income), sub: "\u4E0D\u62B5\u6263\u5065\u5EB7\u5EA6" }), /* @__PURE__ */ import_react26.default.createElement(StatCard, { icon: Sun, label: "\u65E5\u5747\u9884\u7B97", value: money(stats.daily), sub: "\u6708\u9884\u7B97 / \u6708\u5929\u6570" }), /* @__PURE__ */ import_react26.default.createElement(StatCard, { icon: Landmark, label: "\u5269\u4F59\u9884\u7B97", value: money(totalBudget - stats.total), sub: `\u5408\u7406\u7EBF ${money(stats.line)}` })), /* @__PURE__ */ import_react26.default.createElement(Card, { className: "mx-5 mt-5" }, /* @__PURE__ */ import_react26.default.createElement(CardContent, { className: "p-5" }, /* @__PURE__ */ import_react26.default.createElement("div", { className: "flex items-center justify-between" }, /* @__PURE__ */ import_react26.default.createElement("p", { className: "font-bold text-slate-900" }, "\u5206\u7C7B\u9884\u7B97\u770B\u677F"), /* @__PURE__ */ import_react26.default.createElement("span", { className: "text-xs text-slate-400" }, "\u9884\u7B97\u6D88\u8017\u4E0E\u8D85\u652F\u72B6\u6001")), /* @__PURE__ */ import_react26.default.createElement("div", { className: "mt-4 space-y-3" }, categories.map((cat) => {
     const Icon2 = cat.icon;
     const spent = expenseBills.filter((bill) => bill.categoryId === cat.id).reduce((sum, bill) => sum + bill.amount, 0);
     const hasBudget = cat.budget > 0;
     const percent2 = hasBudget ? Math.round(spent / cat.budget * 100) : 0;
     const status = !hasBudget ? "\u672A\u8BBE\u7F6E\u9884\u7B97" : percent2 > 100 ? "\u5DF2\u8D85\u652F" : percent2 >= 70 ? "\u63A5\u8FD1\u4E0A\u9650" : "\u6B63\u5E38";
-    return /* @__PURE__ */ import_react26.default.createElement(Card, { key: cat.id }, /* @__PURE__ */ import_react26.default.createElement(CardContent, { className: "p-4" }, /* @__PURE__ */ import_react26.default.createElement("div", { className: "flex items-center justify-between" }, /* @__PURE__ */ import_react26.default.createElement("div", { className: "flex items-center gap-3" }, /* @__PURE__ */ import_react26.default.createElement("div", { className: "rounded-2xl bg-slate-100 p-3" }, /* @__PURE__ */ import_react26.default.createElement(Icon2, { className: "h-5 w-5 text-slate-700" })), /* @__PURE__ */ import_react26.default.createElement("div", null, /* @__PURE__ */ import_react26.default.createElement("p", { className: "font-bold text-slate-900" }, cat.name), /* @__PURE__ */ import_react26.default.createElement("p", { className: "text-xs text-slate-500" }, "\u5DF2\u6D88\u8D39 ", money(spent), " ", hasBudget ? `/ \u9884\u7B97 ${money(cat.budget)}` : ""))), /* @__PURE__ */ import_react26.default.createElement(
+    return /* @__PURE__ */ import_react26.default.createElement("div", { key: cat.id, className: "rounded-2xl bg-slate-50 p-4" }, /* @__PURE__ */ import_react26.default.createElement("div", { className: "flex items-center justify-between" }, /* @__PURE__ */ import_react26.default.createElement("div", { className: "flex items-center gap-3" }, /* @__PURE__ */ import_react26.default.createElement("div", { className: "rounded-2xl bg-white p-3" }, /* @__PURE__ */ import_react26.default.createElement(Icon2, { className: "h-5 w-5 text-slate-700" })), /* @__PURE__ */ import_react26.default.createElement("div", null, /* @__PURE__ */ import_react26.default.createElement("p", { className: "font-bold text-slate-900" }, cat.name), /* @__PURE__ */ import_react26.default.createElement("p", { className: "text-xs text-slate-500" }, "\u5DF2\u6D88\u8D39 ", money(spent), " ", hasBudget ? `/ \u9884\u7B97 ${money(cat.budget)}` : ""))), /* @__PURE__ */ import_react26.default.createElement(
       "span",
       {
         className: cn(
@@ -33447,25 +33443,15 @@ function CategoryBoardPage({ bills }) {
         )
       },
       status
-    )), /* @__PURE__ */ import_react26.default.createElement("div", { className: "mt-4 h-3 overflow-hidden rounded-full bg-slate-100" }, /* @__PURE__ */ import_react26.default.createElement(
+    )), /* @__PURE__ */ import_react26.default.createElement("div", { className: "mt-4 h-3 overflow-hidden rounded-full bg-white" }, /* @__PURE__ */ import_react26.default.createElement(
       motion.div,
       {
         initial: { width: 0 },
         animate: { width: `${hasBudget ? Math.min(percent2, 130) : 0}%` },
         className: "h-full rounded-full bg-slate-800"
       }
-    )), /* @__PURE__ */ import_react26.default.createElement("div", { className: "mt-2 flex justify-between text-xs text-slate-400" }, /* @__PURE__ */ import_react26.default.createElement("span", null, "0%"), /* @__PURE__ */ import_react26.default.createElement("span", null, hasBudget ? `${percent2}%` : "\u672A\u53C2\u4E0E\u9884\u7B97\u9884\u8B66"))));
-  })));
-}
-function StatisticsPage({ stats, bills }) {
-  const expense = bills.filter((bill) => bill.type === "expense");
-  const income = bills.filter((bill) => bill.type === "income").reduce((sum, bill) => sum + bill.amount, 0);
-  const ranked = categories.map((cat) => ({
-    ...cat,
-    spent: expense.filter((bill) => bill.categoryId === cat.id).reduce((sum, bill) => sum + bill.amount, 0)
-  })).sort((a, b) => b.spent - a.spent);
-  const max = Math.max(...ranked.map((item) => item.spent), 1);
-  return /* @__PURE__ */ import_react26.default.createElement("div", { className: "pb-28" }, /* @__PURE__ */ import_react26.default.createElement(PageHeader, { title: "\u6708\u5EA6\u7EDF\u8BA1", subtitle: "\u6C47\u603B\u6536\u5165\u3001\u652F\u51FA\u3001\u5269\u4F59\u9884\u7B97\u4E0E\u5206\u7C7B\u5360\u6BD4" }), /* @__PURE__ */ import_react26.default.createElement("div", { className: "mx-5 grid grid-cols-2 gap-3" }, /* @__PURE__ */ import_react26.default.createElement(StatCard, { icon: ChartColumn, label: "\u672C\u6708\u603B\u652F\u51FA", value: money(stats.total), sub: "\u53EA\u7EDF\u8BA1\u652F\u51FA" }), /* @__PURE__ */ import_react26.default.createElement(StatCard, { icon: Wallet, label: "\u672C\u6708\u603B\u6536\u5165", value: money(income), sub: "\u4E0D\u62B5\u6263\u5065\u5EB7\u5EA6" }), /* @__PURE__ */ import_react26.default.createElement(StatCard, { icon: Sun, label: "\u65E5\u5747\u9884\u7B97", value: money(stats.daily), sub: "\u6708\u9884\u7B97 / \u6708\u5929\u6570" }), /* @__PURE__ */ import_react26.default.createElement(StatCard, { icon: Landmark, label: "\u5408\u7406\u6D88\u8D39\u7EBF", value: money(stats.line), sub: `\u5F53\u524D\u7B2C ${DEMO_DAY} \u5929` })), /* @__PURE__ */ import_react26.default.createElement(Card, { className: "mx-5 mt-5" }, /* @__PURE__ */ import_react26.default.createElement(CardContent, { className: "p-5" }, /* @__PURE__ */ import_react26.default.createElement("p", { className: "font-bold text-slate-900" }, "\u5206\u7C7B\u652F\u51FA\u6392\u884C"), /* @__PURE__ */ import_react26.default.createElement("div", { className: "mt-4 space-y-4" }, ranked.slice(0, 6).map((item) => /* @__PURE__ */ import_react26.default.createElement("div", { key: item.id }, /* @__PURE__ */ import_react26.default.createElement("div", { className: "mb-1 flex justify-between text-sm" }, /* @__PURE__ */ import_react26.default.createElement("span", { className: "font-semibold text-slate-700" }, item.name), /* @__PURE__ */ import_react26.default.createElement("span", { className: "text-slate-500" }, money(item.spent))), /* @__PURE__ */ import_react26.default.createElement("div", { className: "h-3 overflow-hidden rounded-full bg-slate-100" }, /* @__PURE__ */ import_react26.default.createElement(
+    )), /* @__PURE__ */ import_react26.default.createElement("div", { className: "mt-2 flex justify-between text-xs text-slate-400" }, /* @__PURE__ */ import_react26.default.createElement("span", null, "0%"), /* @__PURE__ */ import_react26.default.createElement("span", null, hasBudget ? `${percent2}%` : "\u672A\u53C2\u4E0E\u9884\u7B97\u9884\u8B66")));
+  })))), /* @__PURE__ */ import_react26.default.createElement(Card, { className: "mx-5 mt-5" }, /* @__PURE__ */ import_react26.default.createElement(CardContent, { className: "p-5" }, /* @__PURE__ */ import_react26.default.createElement("p", { className: "font-bold text-slate-900" }, "\u5206\u7C7B\u652F\u51FA\u6392\u884C"), /* @__PURE__ */ import_react26.default.createElement("div", { className: "mt-4 space-y-4" }, ranked.slice(0, 6).map((item) => /* @__PURE__ */ import_react26.default.createElement("div", { key: item.id }, /* @__PURE__ */ import_react26.default.createElement("div", { className: "mb-1 flex justify-between text-sm" }, /* @__PURE__ */ import_react26.default.createElement("span", { className: "font-semibold text-slate-700" }, item.name), /* @__PURE__ */ import_react26.default.createElement("span", { className: "text-slate-500" }, money(item.spent))), /* @__PURE__ */ import_react26.default.createElement("div", { className: "h-3 overflow-hidden rounded-full bg-slate-100" }, /* @__PURE__ */ import_react26.default.createElement(
     motion.div,
     {
       initial: { width: 0 },
@@ -33478,11 +33464,10 @@ function BottomNav({ page, setPage }) {
   const items = [
     { id: "home", label: "\u9996\u9875", icon: House },
     { id: "list", label: "\u8D26\u5355", icon: ListChecks },
-    { id: "board", label: "\u770B\u677F", icon: ChartPie },
-    { id: "stats", label: "\u7EDF\u8BA1", icon: ChartColumn },
+    { id: "analytics", label: "\u7EDF\u8BA1", icon: ChartColumn },
     { id: "account", label: "\u6211\u7684", icon: User }
   ];
-  return /* @__PURE__ */ import_react26.default.createElement("div", { className: "fixed bottom-4 left-1/2 z-50 w-[min(94%,460px)] -translate-x-1/2 rounded-[2.2rem] border border-white/75 bg-white/[0.92] p-3 shadow-[0_24px_70px_rgba(111,154,206,0.22)] backdrop-blur-xl" }, /* @__PURE__ */ import_react26.default.createElement("div", { className: "grid grid-cols-5 gap-2" }, items.map((item) => {
+  return /* @__PURE__ */ import_react26.default.createElement("div", { className: "fixed bottom-4 left-1/2 z-50 w-[min(94%,460px)] -translate-x-1/2 rounded-[2.2rem] border border-white/75 bg-white/[0.92] p-3 shadow-[0_24px_70px_rgba(111,154,206,0.22)] backdrop-blur-xl" }, /* @__PURE__ */ import_react26.default.createElement("div", { className: "grid grid-cols-4 gap-2" }, items.map((item) => {
     const Icon2 = item.icon;
     const active = page === item.id;
     return /* @__PURE__ */ import_react26.default.createElement(
@@ -33553,8 +33538,7 @@ function App() {
     page === "add" && /* @__PURE__ */ import_react26.default.createElement(AddBillPage, { onBack: () => setPage("home"), onSave: saveBill }),
     page === "list" && /* @__PURE__ */ import_react26.default.createElement(BillListPage, { bills, setPage, setEditingBill }),
     page === "detail" && /* @__PURE__ */ import_react26.default.createElement(BillDetailPage, { bill: editingBill, onBack: () => setPage("list"), onDelete: deleteBill }),
-    page === "board" && /* @__PURE__ */ import_react26.default.createElement(CategoryBoardPage, { bills }),
-    page === "stats" && /* @__PURE__ */ import_react26.default.createElement(StatisticsPage, { stats, bills }),
+    page === "analytics" && /* @__PURE__ */ import_react26.default.createElement(AnalyticsPage, { stats, bills, totalBudget }),
     page === "account" && /* @__PURE__ */ import_react26.default.createElement(AccountPage, { totalBudget, setTotalBudget: updateBudget, account, setAccount })
   )), /* @__PURE__ */ import_react26.default.createElement(BottomNav, { page, setPage })));
 }
@@ -33634,7 +33618,6 @@ lucide-react/dist/esm/icons/book-open.js:
 lucide-react/dist/esm/icons/bus.js:
 lucide-react/dist/esm/icons/calendar-days.js:
 lucide-react/dist/esm/icons/chart-column.js:
-lucide-react/dist/esm/icons/chart-pie.js:
 lucide-react/dist/esm/icons/circle-check.js:
 lucide-react/dist/esm/icons/circle-plus.js:
 lucide-react/dist/esm/icons/cloud-rain.js:
