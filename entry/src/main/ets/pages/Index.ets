@@ -18,11 +18,11 @@ struct Index {
 
   // 底部导航配置：中间的“资产”是主功能入口之一。
   private readonly tabs: TabItem[] = [
-    { label: '首页' },
-    { label: '账单' },
-    { label: '资产' },
-    { label: '统计' },
-    { label: '我的' }
+    { label: '首页', icon: $r('app.media.home'), selectedIcon: $r('app.media.home_selected') },
+    { label: '账单', icon: $r('app.media.calendar'), selectedIcon: $r('app.media.calendar_selected') },
+    { label: '资产', icon: $r('app.media.wallet'), selectedIcon: $r('app.media.wallet_selected') },
+    { label: '统计', icon: $r('app.media.calculate'), selectedIcon: $r('app.media.calculate_selected') },
+    { label: '我的', icon: $r('app.media.my'), selectedIcon: $r('app.media.my_selected') }
   ]
 
   @Builder
