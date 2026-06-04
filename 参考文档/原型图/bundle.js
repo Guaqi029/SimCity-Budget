@@ -32484,8 +32484,21 @@ var __iconNode = [
 ];
 var ArrowLeft = createLucideIcon("arrow-left", __iconNode);
 
-// node_modules/lucide-react/dist/esm/icons/book-open.js
+// node_modules/lucide-react/dist/esm/icons/bell.js
 var __iconNode2 = [
+  ["path", { d: "M10.268 21a2 2 0 0 0 3.464 0", key: "vwvbt9" }],
+  [
+    "path",
+    {
+      d: "M3.262 15.326A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.673C19.41 13.956 18 12.499 18 8A6 6 0 0 0 6 8c0 4.499-1.411 5.956-2.738 7.326",
+      key: "11g9vi"
+    }
+  ]
+];
+var Bell = createLucideIcon("bell", __iconNode2);
+
+// node_modules/lucide-react/dist/esm/icons/book-open.js
+var __iconNode3 = [
   ["path", { d: "M12 7v14", key: "1akyts" }],
   [
     "path",
@@ -32495,10 +32508,10 @@ var __iconNode2 = [
     }
   ]
 ];
-var BookOpen = createLucideIcon("book-open", __iconNode2);
+var BookOpen = createLucideIcon("book-open", __iconNode3);
 
 // node_modules/lucide-react/dist/esm/icons/bus.js
-var __iconNode3 = [
+var __iconNode4 = [
   ["path", { d: "M8 6v6", key: "18i7km" }],
   ["path", { d: "M15 6v6", key: "1sg6z9" }],
   ["path", { d: "M2 12h19.6", key: "de5uta" }],
@@ -32513,10 +32526,10 @@ var __iconNode3 = [
   ["path", { d: "M9 18h5", key: "lrx6i" }],
   ["circle", { cx: "16", cy: "18", r: "2", key: "1v4tcr" }]
 ];
-var Bus = createLucideIcon("bus", __iconNode3);
+var Bus = createLucideIcon("bus", __iconNode4);
 
 // node_modules/lucide-react/dist/esm/icons/calendar-days.js
-var __iconNode4 = [
+var __iconNode5 = [
   ["path", { d: "M8 2v4", key: "1cmpym" }],
   ["path", { d: "M16 2v4", key: "4m81vk" }],
   ["rect", { width: "18", height: "18", x: "3", y: "4", rx: "2", key: "1hopcy" }],
@@ -32528,19 +32541,19 @@ var __iconNode4 = [
   ["path", { d: "M12 18h.01", key: "mhygvu" }],
   ["path", { d: "M16 18h.01", key: "kzsmim" }]
 ];
-var CalendarDays = createLucideIcon("calendar-days", __iconNode4);
+var CalendarDays = createLucideIcon("calendar-days", __iconNode5);
 
 // node_modules/lucide-react/dist/esm/icons/chart-column.js
-var __iconNode5 = [
+var __iconNode6 = [
   ["path", { d: "M3 3v16a2 2 0 0 0 2 2h16", key: "c24i48" }],
   ["path", { d: "M18 17V9", key: "2bz60n" }],
   ["path", { d: "M13 17V5", key: "1frdt8" }],
   ["path", { d: "M8 17v-3", key: "17ska0" }]
 ];
-var ChartColumn = createLucideIcon("chart-column", __iconNode5);
+var ChartColumn = createLucideIcon("chart-column", __iconNode6);
 
 // node_modules/lucide-react/dist/esm/icons/chart-pie.js
-var __iconNode6 = [
+var __iconNode7 = [
   [
     "path",
     {
@@ -32550,34 +32563,34 @@ var __iconNode6 = [
   ],
   ["path", { d: "M21.21 15.89A10 10 0 1 1 8 2.83", key: "k2fpak" }]
 ];
-var ChartPie = createLucideIcon("chart-pie", __iconNode6);
+var ChartPie = createLucideIcon("chart-pie", __iconNode7);
 
 // node_modules/lucide-react/dist/esm/icons/circle-check.js
-var __iconNode7 = [
+var __iconNode8 = [
   ["circle", { cx: "12", cy: "12", r: "10", key: "1mglay" }],
   ["path", { d: "m9 12 2 2 4-4", key: "dzmm74" }]
 ];
-var CircleCheck = createLucideIcon("circle-check", __iconNode7);
+var CircleCheck = createLucideIcon("circle-check", __iconNode8);
 
 // node_modules/lucide-react/dist/esm/icons/circle-plus.js
-var __iconNode8 = [
+var __iconNode9 = [
   ["circle", { cx: "12", cy: "12", r: "10", key: "1mglay" }],
   ["path", { d: "M8 12h8", key: "1wcyev" }],
   ["path", { d: "M12 8v8", key: "napkw2" }]
 ];
-var CirclePlus = createLucideIcon("circle-plus", __iconNode8);
+var CirclePlus = createLucideIcon("circle-plus", __iconNode9);
 
 // node_modules/lucide-react/dist/esm/icons/cloud-rain.js
-var __iconNode9 = [
+var __iconNode10 = [
   ["path", { d: "M4 14.899A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.242", key: "1pljnt" }],
   ["path", { d: "M16 14v6", key: "1j4efv" }],
   ["path", { d: "M8 14v6", key: "17c4r9" }],
   ["path", { d: "M12 16v6", key: "c8a4gj" }]
 ];
-var CloudRain = createLucideIcon("cloud-rain", __iconNode9);
+var CloudRain = createLucideIcon("cloud-rain", __iconNode10);
 
 // node_modules/lucide-react/dist/esm/icons/cloud-sun.js
-var __iconNode10 = [
+var __iconNode11 = [
   ["path", { d: "M12 2v2", key: "tus03m" }],
   ["path", { d: "m4.93 4.93 1.41 1.41", key: "149t6j" }],
   ["path", { d: "M20 12h2", key: "1q8mjw" }],
@@ -32585,18 +32598,31 @@ var __iconNode10 = [
   ["path", { d: "M15.947 12.65a4 4 0 0 0-5.925-4.128", key: "dpwdj0" }],
   ["path", { d: "M13 22H7a5 5 0 1 1 4.9-6H13a3 3 0 0 1 0 6Z", key: "s09mg5" }]
 ];
-var CloudSun = createLucideIcon("cloud-sun", __iconNode10);
+var CloudSun = createLucideIcon("cloud-sun", __iconNode11);
+
+// node_modules/lucide-react/dist/esm/icons/crown.js
+var __iconNode12 = [
+  [
+    "path",
+    {
+      d: "M11.562 3.266a.5.5 0 0 1 .876 0L15.39 8.87a1 1 0 0 0 1.516.294L21.183 5.5a.5.5 0 0 1 .798.519l-2.834 10.246a1 1 0 0 1-.956.734H5.81a1 1 0 0 1-.957-.734L2.02 6.02a.5.5 0 0 1 .798-.519l4.276 3.664a1 1 0 0 0 1.516-.294z",
+      key: "1vdc57"
+    }
+  ],
+  ["path", { d: "M5 21h14", key: "11awu3" }]
+];
+var Crown = createLucideIcon("crown", __iconNode12);
 
 // node_modules/lucide-react/dist/esm/icons/ellipsis.js
-var __iconNode11 = [
+var __iconNode13 = [
   ["circle", { cx: "12", cy: "12", r: "1", key: "41hilf" }],
   ["circle", { cx: "19", cy: "12", r: "1", key: "1wjl8i" }],
   ["circle", { cx: "5", cy: "12", r: "1", key: "1pcz8c" }]
 ];
-var Ellipsis = createLucideIcon("ellipsis", __iconNode11);
+var Ellipsis = createLucideIcon("ellipsis", __iconNode13);
 
 // node_modules/lucide-react/dist/esm/icons/gamepad-2.js
-var __iconNode12 = [
+var __iconNode14 = [
   ["line", { x1: "6", x2: "10", y1: "11", y2: "11", key: "1gktln" }],
   ["line", { x1: "8", x2: "8", y1: "9", y2: "13", key: "qnk9ow" }],
   ["line", { x1: "15", x2: "15.01", y1: "12", y2: "12", key: "krot7o" }],
@@ -32609,10 +32635,10 @@ var __iconNode12 = [
     }
   ]
 ];
-var Gamepad2 = createLucideIcon("gamepad-2", __iconNode12);
+var Gamepad2 = createLucideIcon("gamepad-2", __iconNode14);
 
 // node_modules/lucide-react/dist/esm/icons/heart-pulse.js
-var __iconNode13 = [
+var __iconNode15 = [
   [
     "path",
     {
@@ -32622,10 +32648,10 @@ var __iconNode13 = [
   ],
   ["path", { d: "M3.22 12H9.5l.5-1 2 4.5 2-7 1.5 3.5h5.27", key: "1uw2ng" }]
 ];
-var HeartPulse = createLucideIcon("heart-pulse", __iconNode13);
+var HeartPulse = createLucideIcon("heart-pulse", __iconNode15);
 
 // node_modules/lucide-react/dist/esm/icons/house.js
-var __iconNode14 = [
+var __iconNode16 = [
   ["path", { d: "M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8", key: "5wwlr5" }],
   [
     "path",
@@ -32635,10 +32661,10 @@ var __iconNode14 = [
     }
   ]
 ];
-var House = createLucideIcon("house", __iconNode14);
+var House = createLucideIcon("house", __iconNode16);
 
 // node_modules/lucide-react/dist/esm/icons/landmark.js
-var __iconNode15 = [
+var __iconNode17 = [
   ["path", { d: "M10 18v-7", key: "wt116b" }],
   [
     "path",
@@ -32652,20 +32678,51 @@ var __iconNode15 = [
   ["path", { d: "M3 22h18", key: "8prr45" }],
   ["path", { d: "M6 18v-7", key: "1ivflk" }]
 ];
-var Landmark = createLucideIcon("landmark", __iconNode15);
+var Landmark = createLucideIcon("landmark", __iconNode17);
 
 // node_modules/lucide-react/dist/esm/icons/list-checks.js
-var __iconNode16 = [
+var __iconNode18 = [
   ["path", { d: "m3 17 2 2 4-4", key: "1jhpwq" }],
   ["path", { d: "m3 7 2 2 4-4", key: "1obspn" }],
   ["path", { d: "M13 6h8", key: "15sg57" }],
   ["path", { d: "M13 12h8", key: "h98zly" }],
   ["path", { d: "M13 18h8", key: "oe0vm4" }]
 ];
-var ListChecks = createLucideIcon("list-checks", __iconNode16);
+var ListChecks = createLucideIcon("list-checks", __iconNode18);
+
+// node_modules/lucide-react/dist/esm/icons/lock-keyhole.js
+var __iconNode19 = [
+  ["circle", { cx: "12", cy: "16", r: "1", key: "1au0dj" }],
+  ["rect", { x: "3", y: "10", width: "18", height: "12", rx: "2", key: "6s8ecr" }],
+  ["path", { d: "M7 10V7a5 5 0 0 1 10 0v3", key: "1pqi11" }]
+];
+var LockKeyhole = createLucideIcon("lock-keyhole", __iconNode19);
+
+// node_modules/lucide-react/dist/esm/icons/log-in.js
+var __iconNode20 = [
+  ["path", { d: "m10 17 5-5-5-5", key: "1bsop3" }],
+  ["path", { d: "M15 12H3", key: "6jk70r" }],
+  ["path", { d: "M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4", key: "u53s6r" }]
+];
+var LogIn = createLucideIcon("log-in", __iconNode20);
+
+// node_modules/lucide-react/dist/esm/icons/log-out.js
+var __iconNode21 = [
+  ["path", { d: "m16 17 5-5-5-5", key: "1bji2h" }],
+  ["path", { d: "M21 12H9", key: "dn1m92" }],
+  ["path", { d: "M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4", key: "1uf3rs" }]
+];
+var LogOut = createLucideIcon("log-out", __iconNode21);
+
+// node_modules/lucide-react/dist/esm/icons/mail.js
+var __iconNode22 = [
+  ["path", { d: "m22 7-8.991 5.727a2 2 0 0 1-2.009 0L2 7", key: "132q7q" }],
+  ["rect", { x: "2", y: "4", width: "20", height: "16", rx: "2", key: "izxlao" }]
+];
+var Mail = createLucideIcon("mail", __iconNode22);
 
 // node_modules/lucide-react/dist/esm/icons/pencil.js
-var __iconNode17 = [
+var __iconNode23 = [
   [
     "path",
     {
@@ -32675,10 +32732,10 @@ var __iconNode17 = [
   ],
   ["path", { d: "m15 5 4 4", key: "1mk7zo" }]
 ];
-var Pencil = createLucideIcon("pencil", __iconNode17);
+var Pencil = createLucideIcon("pencil", __iconNode23);
 
 // node_modules/lucide-react/dist/esm/icons/save.js
-var __iconNode18 = [
+var __iconNode24 = [
   [
     "path",
     {
@@ -32689,10 +32746,10 @@ var __iconNode18 = [
   ["path", { d: "M17 21v-7a1 1 0 0 0-1-1H8a1 1 0 0 0-1 1v7", key: "1ydtos" }],
   ["path", { d: "M7 3v4a1 1 0 0 0 1 1h7", key: "t51u73" }]
 ];
-var Save = createLucideIcon("save", __iconNode18);
+var Save = createLucideIcon("save", __iconNode24);
 
 // node_modules/lucide-react/dist/esm/icons/settings.js
-var __iconNode19 = [
+var __iconNode25 = [
   [
     "path",
     {
@@ -32702,10 +32759,10 @@ var __iconNode19 = [
   ],
   ["circle", { cx: "12", cy: "12", r: "3", key: "1v7zrd" }]
 ];
-var Settings = createLucideIcon("settings", __iconNode19);
+var Settings = createLucideIcon("settings", __iconNode25);
 
 // node_modules/lucide-react/dist/esm/icons/shirt.js
-var __iconNode20 = [
+var __iconNode26 = [
   [
     "path",
     {
@@ -32714,18 +32771,18 @@ var __iconNode20 = [
     }
   ]
 ];
-var Shirt = createLucideIcon("shirt", __iconNode20);
+var Shirt = createLucideIcon("shirt", __iconNode26);
 
 // node_modules/lucide-react/dist/esm/icons/shopping-bag.js
-var __iconNode21 = [
+var __iconNode27 = [
   ["path", { d: "M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z", key: "hou9p0" }],
   ["path", { d: "M3 6h18", key: "d0wm0j" }],
   ["path", { d: "M16 10a4 4 0 0 1-8 0", key: "1ltviw" }]
 ];
-var ShoppingBag = createLucideIcon("shopping-bag", __iconNode21);
+var ShoppingBag = createLucideIcon("shopping-bag", __iconNode27);
 
 // node_modules/lucide-react/dist/esm/icons/sun.js
-var __iconNode22 = [
+var __iconNode28 = [
   ["circle", { cx: "12", cy: "12", r: "4", key: "4exip2" }],
   ["path", { d: "M12 2v2", key: "tus03m" }],
   ["path", { d: "M12 20v2", key: "1lh1kg" }],
@@ -32736,42 +32793,44 @@ var __iconNode22 = [
   ["path", { d: "m6.34 17.66-1.41 1.41", key: "1m8zz5" }],
   ["path", { d: "m19.07 4.93-1.41 1.41", key: "1shlcs" }]
 ];
-var Sun = createLucideIcon("sun", __iconNode22);
+var Sun = createLucideIcon("sun", __iconNode28);
 
 // node_modules/lucide-react/dist/esm/icons/trash-2.js
-var __iconNode23 = [
+var __iconNode29 = [
   ["path", { d: "M3 6h18", key: "d0wm0j" }],
   ["path", { d: "M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6", key: "4alrt4" }],
   ["path", { d: "M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2", key: "v07s0e" }],
   ["line", { x1: "10", x2: "10", y1: "11", y2: "17", key: "1uufr5" }],
   ["line", { x1: "14", x2: "14", y1: "11", y2: "17", key: "xtxkd" }]
 ];
-var Trash2 = createLucideIcon("trash-2", __iconNode23);
+var Trash2 = createLucideIcon("trash-2", __iconNode29);
 
-// node_modules/lucide-react/dist/esm/icons/triangle-alert.js
-var __iconNode24 = [
-  [
-    "path",
-    {
-      d: "m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3",
-      key: "wmoenq"
-    }
-  ],
-  ["path", { d: "M12 9v4", key: "juzpu7" }],
-  ["path", { d: "M12 17h.01", key: "p32p05" }]
+// node_modules/lucide-react/dist/esm/icons/user-plus.js
+var __iconNode30 = [
+  ["path", { d: "M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2", key: "1yyitq" }],
+  ["circle", { cx: "9", cy: "7", r: "4", key: "nufk8" }],
+  ["line", { x1: "19", x2: "19", y1: "8", y2: "14", key: "1bvyxn" }],
+  ["line", { x1: "22", x2: "16", y1: "11", y2: "11", key: "1shjgl" }]
 ];
-var TriangleAlert = createLucideIcon("triangle-alert", __iconNode24);
+var UserPlus = createLucideIcon("user-plus", __iconNode30);
+
+// node_modules/lucide-react/dist/esm/icons/user.js
+var __iconNode31 = [
+  ["path", { d: "M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2", key: "975kel" }],
+  ["circle", { cx: "12", cy: "7", r: "4", key: "17ys0d" }]
+];
+var User = createLucideIcon("user", __iconNode31);
 
 // node_modules/lucide-react/dist/esm/icons/utensils.js
-var __iconNode25 = [
+var __iconNode32 = [
   ["path", { d: "M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2", key: "cjf0a3" }],
   ["path", { d: "M7 2v20", key: "1473qp" }],
   ["path", { d: "M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7", key: "j28e5" }]
 ];
-var Utensils = createLucideIcon("utensils", __iconNode25);
+var Utensils = createLucideIcon("utensils", __iconNode32);
 
 // node_modules/lucide-react/dist/esm/icons/wallet.js
-var __iconNode26 = [
+var __iconNode33 = [
   [
     "path",
     {
@@ -32781,10 +32840,10 @@ var __iconNode26 = [
   ],
   ["path", { d: "M3 5v14a2 2 0 0 0 2 2h15a1 1 0 0 0 1-1v-4", key: "xoc0q4" }]
 ];
-var Wallet = createLucideIcon("wallet", __iconNode26);
+var Wallet = createLucideIcon("wallet", __iconNode33);
 
 // node_modules/lucide-react/dist/esm/icons/zap.js
-var __iconNode27 = [
+var __iconNode34 = [
   [
     "path",
     {
@@ -32793,7 +32852,7 @@ var __iconNode27 = [
     }
   ]
 ];
-var Zap = createLucideIcon("zap", __iconNode27);
+var Zap = createLucideIcon("zap", __iconNode34);
 
 // App.jsx
 var STORAGE_KEY = "simcity-budget-prototype-v1";
@@ -32819,6 +32878,11 @@ var initialBills = [
   { id: 6, amount: 62, type: "expense", categoryId: "daily", date: "2026-05-18", remark: "\u751F\u6D3B\u7528\u54C1" },
   { id: 7, amount: 46, type: "expense", categoryId: "food", date: "2026-05-17", remark: "\u5348\u9910" }
 ];
+var defaultAccount = {
+  isLoggedIn: false,
+  username: "",
+  email: ""
+};
 var healthMeta = {
   1: {
     name: "\u7E41\u8363",
@@ -32896,7 +32960,14 @@ function loadStoredState() {
     if (!Array.isArray(parsed?.bills) || typeof parsed?.totalBudget !== "number") {
       return null;
     }
-    return parsed;
+    return {
+      ...parsed,
+      account: parsed?.account && typeof parsed.account === "object" && typeof parsed.account.isLoggedIn === "boolean" ? {
+        isLoggedIn: parsed.account.isLoggedIn,
+        username: String(parsed.account.username || ""),
+        email: String(parsed.account.email || "")
+      } : defaultAccount
+    };
   } catch {
     return null;
   }
@@ -32946,25 +33017,109 @@ function PageHeader({ title, subtitle, onBack }) {
 function StatCard({ icon: Icon2, label, value, sub }) {
   return /* @__PURE__ */ import_react26.default.createElement(Card, { className: "rounded-[1.5rem]" }, /* @__PURE__ */ import_react26.default.createElement(CardContent, { className: "p-4" }, /* @__PURE__ */ import_react26.default.createElement("div", { className: "flex items-center gap-3" }, /* @__PURE__ */ import_react26.default.createElement("div", { className: "rounded-2xl bg-slate-100 p-2.5" }, /* @__PURE__ */ import_react26.default.createElement(Icon2, { className: "h-5 w-5 text-slate-700" })), /* @__PURE__ */ import_react26.default.createElement("div", { className: "min-w-0" }, /* @__PURE__ */ import_react26.default.createElement("p", { className: "text-xs text-slate-500" }, label), /* @__PURE__ */ import_react26.default.createElement("p", { className: "truncate text-lg font-black text-slate-900" }, value), sub && /* @__PURE__ */ import_react26.default.createElement("p", { className: "line-clamp-2 text-xs text-slate-400" }, sub)))));
 }
-function TownScene({ level, warning: warning2 }) {
+function SceneStat({ label, value, icon: Icon2, sub, accent = "bg-sky-100", bars = "bg-sky-300/85" }) {
+  return /* @__PURE__ */ import_react26.default.createElement("div", { className: "relative overflow-hidden rounded-[1.55rem] border border-white/65 bg-white/86 p-4 text-slate-900 shadow-[0_18px_45px_rgba(93,135,189,0.14)] backdrop-blur" }, /* @__PURE__ */ import_react26.default.createElement("div", { className: "flex items-start justify-between gap-3" }, /* @__PURE__ */ import_react26.default.createElement("div", { className: "min-w-0" }, /* @__PURE__ */ import_react26.default.createElement("p", { className: "text-sm font-semibold text-slate-500" }, label), /* @__PURE__ */ import_react26.default.createElement("p", { className: "mt-2 truncate text-[1.15rem] font-black tracking-tight text-slate-900" }, value), sub && /* @__PURE__ */ import_react26.default.createElement("p", { className: "mt-1 text-xs text-slate-400" }, sub)), /* @__PURE__ */ import_react26.default.createElement("div", { className: cn("rounded-2xl p-2.5", accent) }, /* @__PURE__ */ import_react26.default.createElement(Icon2, { className: "h-[1.125rem] w-[1.125rem] text-slate-700" }))), /* @__PURE__ */ import_react26.default.createElement("div", { className: "mt-4 flex h-8 items-end gap-1.5 opacity-75" }, [10, 18, 12, 26, 14, 22, 16, 11].map((height, idx) => /* @__PURE__ */ import_react26.default.createElement("span", { key: `${label}-${idx}`, className: cn("w-2 rounded-full", bars), style: { height } }))));
+}
+function TownScene({ level, warning: warning2, stats, totalBudget, setPage }) {
   const meta = healthMeta[level];
-  const Icon2 = meta.icon;
-  const buildings = {
-    1: ["h-24", "h-32", "h-20", "h-28", "h-36"],
-    2: ["h-[4.5rem]", "h-24", "h-16", "h-[5.5rem]", "h-20"],
-    3: ["h-14", "h-20", "h-12", "h-16", "h-10"],
-    4: ["h-8", "h-12", "h-6", "h-10", "h-7"]
+  const WeatherIcon = meta.icon;
+  const scene = {
+    1: {
+      towerTone: "from-sky-200 to-sky-50",
+      roofTone: "bg-amber-300/90",
+      windowTone: "bg-sky-100/95",
+      landTone: "from-lime-200 via-emerald-200 to-lime-100",
+      cliffTone: "from-stone-300 to-stone-200",
+      roadTone: "bg-slate-600/78",
+      stripeTone: "bg-white/85",
+      waterTone: "from-cyan-300 via-sky-200 to-blue-100",
+      cloudTone: "bg-white/88",
+      weatherLabel: "\u6674\u7A7A\u4E07\u91CC",
+      temp: "26\xB0C",
+      progressTone: "bg-emerald-400",
+      cards: ["bg-sky-100", "bg-amber-100", "bg-emerald-100", "bg-violet-100"],
+      bars: ["bg-sky-300/85", "bg-orange-300/85", "bg-emerald-300/85", "bg-amber-300/85"],
+      birds: true,
+      drizzle: false,
+      lightning: false
+    },
+    2: {
+      towerTone: "from-sky-100 to-white",
+      roofTone: "bg-slate-300/90",
+      windowTone: "bg-sky-50/85",
+      landTone: "from-lime-100 via-emerald-100 to-lime-50",
+      cliffTone: "from-stone-300 to-stone-100",
+      roadTone: "bg-slate-500/72",
+      stripeTone: "bg-white/75",
+      waterTone: "from-sky-300 via-cyan-100 to-blue-50",
+      cloudTone: "bg-white/92",
+      weatherLabel: "\u5FAE\u98CE\u591A\u4E91",
+      temp: "24\xB0C",
+      progressTone: "bg-sky-400",
+      cards: ["bg-sky-100", "bg-orange-100", "bg-emerald-100", "bg-violet-100"],
+      bars: ["bg-sky-300/85", "bg-orange-300/85", "bg-emerald-300/85", "bg-violet-300/85"],
+      birds: false,
+      drizzle: false,
+      lightning: false
+    },
+    3: {
+      towerTone: "from-slate-200 to-slate-50",
+      roofTone: "bg-stone-400/90",
+      windowTone: "bg-slate-200/65",
+      landTone: "from-lime-100 via-stone-100 to-amber-50",
+      cliffTone: "from-stone-400 to-stone-200",
+      roadTone: "bg-slate-600/76",
+      stripeTone: "bg-white/70",
+      waterTone: "from-slate-300 via-sky-100 to-white",
+      cloudTone: "bg-slate-100/92",
+      weatherLabel: "\u9634\u5929\u6709\u98CE",
+      temp: "21\xB0C",
+      progressTone: "bg-amber-400",
+      cards: ["bg-slate-100", "bg-amber-100", "bg-lime-100", "bg-stone-100"],
+      bars: ["bg-slate-300/85", "bg-amber-300/85", "bg-lime-300/85", "bg-stone-300/85"],
+      birds: false,
+      drizzle: true,
+      lightning: false
+    },
+    4: {
+      towerTone: "from-slate-500 to-stone-500",
+      roofTone: "bg-stone-700/95",
+      windowTone: "bg-rose-200/25",
+      landTone: "from-stone-300 via-stone-200 to-zinc-100",
+      cliffTone: "from-stone-500 to-stone-300",
+      roadTone: "bg-slate-700/80",
+      stripeTone: "bg-white/55",
+      waterTone: "from-slate-500 via-sky-200 to-slate-100",
+      cloudTone: "bg-slate-200/85",
+      weatherLabel: "\u96F7\u9635\u66B4\u96E8",
+      temp: "18\xB0C",
+      progressTone: "bg-rose-400",
+      cards: ["bg-slate-100", "bg-stone-100", "bg-rose-100", "bg-amber-100"],
+      bars: ["bg-slate-300/85", "bg-stone-300/85", "bg-rose-300/85", "bg-amber-300/85"],
+      birds: false,
+      drizzle: true,
+      lightning: true
+    }
   }[level];
-  return /* @__PURE__ */ import_react26.default.createElement("div", { className: cn("relative mx-5 overflow-hidden rounded-[2rem] bg-gradient-to-br p-5 shadow-[0_22px_60px_rgba(15,23,42,0.18)]", meta.sky) }, /* @__PURE__ */ import_react26.default.createElement("div", { className: "absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(255,255,255,0.55),transparent_40%)]" }), /* @__PURE__ */ import_react26.default.createElement("div", { className: "absolute right-5 top-5 rounded-full bg-white/75 p-3 shadow-sm backdrop-blur" }, /* @__PURE__ */ import_react26.default.createElement(Icon2, { className: "h-7 w-7 text-slate-700" })), /* @__PURE__ */ import_react26.default.createElement(AnimatePresence, null, warning2 && /* @__PURE__ */ import_react26.default.createElement(
+  const budgetProgress = totalBudget > 0 ? Math.min(100, Math.max(0, stats.total / totalBudget * 100)) : 0;
+  return /* @__PURE__ */ import_react26.default.createElement("div", { className: cn("relative min-h-[calc(100vh-3rem)] overflow-hidden bg-gradient-to-b", meta.sky) }, /* @__PURE__ */ import_react26.default.createElement("div", { className: "absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(255,255,255,0.65),transparent_22%),radial-gradient(circle_at_top_right,rgba(255,255,255,0.28),transparent_28%),linear-gradient(180deg,rgba(255,255,255,0.22),transparent_28%)]" }), /* @__PURE__ */ import_react26.default.createElement("div", { className: "absolute inset-x-0 top-0 h-56 bg-[radial-gradient(circle_at_10%_0%,rgba(255,255,255,0.95),transparent_18%),radial-gradient(circle_at_90%_5%,rgba(255,255,255,0.4),transparent_15%)]" }), /* @__PURE__ */ import_react26.default.createElement("div", { className: "absolute left-5 right-5 top-6 z-30 flex items-start justify-between gap-4" }, /* @__PURE__ */ import_react26.default.createElement("div", { className: "max-w-[62%] text-slate-900" }, /* @__PURE__ */ import_react26.default.createElement("p", { className: "text-[0.7rem] font-semibold uppercase tracking-[0.34em] text-slate-500" }, "SimCity Budget"), /* @__PURE__ */ import_react26.default.createElement("h1", { className: "mt-3 text-[2.15rem] font-black leading-tight tracking-tight text-slate-900" }, "\u6A21\u62DF\u57CE\u5E02\u8BB0\u8D26\u672C"), /* @__PURE__ */ import_react26.default.createElement("p", { className: "mt-2 text-sm leading-6 text-slate-500" }, "\u8BA9\u6BCF\u4E00\u7B14\u6D88\u8D39\u90FD\u5F71\u54CD\u4F60\u7684\u5C0F\u9547\u547D\u8FD0")), /* @__PURE__ */ import_react26.default.createElement("div", { className: "flex items-center gap-3" }, /* @__PURE__ */ import_react26.default.createElement("div", { className: "rounded-[1.75rem] border border-white/70 bg-white/80 px-4 py-3 shadow-[0_18px_38px_rgba(111,154,206,0.16)] backdrop-blur" }, /* @__PURE__ */ import_react26.default.createElement("div", { className: "flex items-center gap-3" }, /* @__PURE__ */ import_react26.default.createElement("div", { className: "rounded-2xl bg-amber-100 p-2.5" }, /* @__PURE__ */ import_react26.default.createElement(WeatherIcon, { className: "h-5 w-5 text-amber-500" })), /* @__PURE__ */ import_react26.default.createElement("div", null, /* @__PURE__ */ import_react26.default.createElement("p", { className: "text-sm font-bold text-slate-700" }, scene.weatherLabel), /* @__PURE__ */ import_react26.default.createElement("p", { className: "text-sm font-semibold text-slate-500" }, scene.temp)))), /* @__PURE__ */ import_react26.default.createElement(
+    "button",
+    {
+      type: "button",
+      className: "relative rounded-[1.4rem] border border-white/70 bg-white/80 p-4 shadow-[0_18px_38px_rgba(111,154,206,0.16)] backdrop-blur"
+    },
+    /* @__PURE__ */ import_react26.default.createElement(Bell, { className: "h-5 w-5 text-slate-700" }),
+    /* @__PURE__ */ import_react26.default.createElement("span", { className: "absolute right-3 top-3 h-2.5 w-2.5 rounded-full bg-rose-500" })
+  ))), /* @__PURE__ */ import_react26.default.createElement(AnimatePresence, null, warning2 && /* @__PURE__ */ import_react26.default.createElement(
     motion.div,
     {
       initial: { opacity: 0 },
       animate: { opacity: [0, 1, 0.45, 1, 0] },
       exit: { opacity: 0 },
       transition: { duration: 1.5 },
-      className: "absolute inset-0 z-20 flex items-center justify-center bg-slate-900/45 text-white"
+      className: "absolute inset-0 z-50 flex items-center justify-center bg-slate-950/30 text-white"
     },
-    /* @__PURE__ */ import_react26.default.createElement("div", { className: "rounded-3xl bg-white/20 px-5 py-3 backdrop-blur" }, /* @__PURE__ */ import_react26.default.createElement("div", { className: "flex items-center gap-2 text-sm font-semibold" }, /* @__PURE__ */ import_react26.default.createElement(Zap, { className: "h-5 w-5" }), "\u5206\u7C7B\u9884\u7B97\u5355\u7B14\u9884\u8B66"))
+    /* @__PURE__ */ import_react26.default.createElement("div", { className: "rounded-3xl border border-white/15 bg-white/16 px-5 py-3 backdrop-blur" }, /* @__PURE__ */ import_react26.default.createElement("div", { className: "flex items-center gap-2 text-sm font-semibold" }, /* @__PURE__ */ import_react26.default.createElement(Zap, { className: "h-5 w-5" }), "\u5206\u7C7B\u9884\u7B97\u5355\u7B14\u9884\u8B66"))
   )), level === 4 && /* @__PURE__ */ import_react26.default.createElement(
     motion.div,
     {
@@ -32972,28 +33127,66 @@ function TownScene({ level, warning: warning2 }) {
       transition: { repeat: Infinity, duration: 1.1 },
       className: "absolute inset-0 pointer-events-none"
     }
-  ), /* @__PURE__ */ import_react26.default.createElement("div", { className: "relative mb-8 mt-4 max-w-[72%]" }, /* @__PURE__ */ import_react26.default.createElement("p", { className: "text-sm font-medium text-slate-600" }, "\u5F53\u524D\u5C0F\u9547\u72B6\u6001"), /* @__PURE__ */ import_react26.default.createElement("h2", { className: "mt-1 text-3xl font-black text-slate-900" }, meta.name), /* @__PURE__ */ import_react26.default.createElement("p", { className: "mt-2 text-sm leading-6 text-slate-600" }, meta.title)), /* @__PURE__ */ import_react26.default.createElement("div", { className: "relative h-44 rounded-3xl bg-white/35 p-4 backdrop-blur-sm" }, /* @__PURE__ */ import_react26.default.createElement("div", { className: "absolute inset-x-0 bottom-0 h-12 rounded-b-3xl bg-emerald-200/65" }), level === 1 && /* @__PURE__ */ import_react26.default.createElement(
+  ), /* @__PURE__ */ import_react26.default.createElement("div", { className: "absolute inset-0" }, /* @__PURE__ */ import_react26.default.createElement(
+    motion.div,
+    {
+      animate: { y: [0, -6, 0] },
+      transition: { repeat: Infinity, duration: 9, ease: "easeInOut" },
+      className: cn("absolute left-[10%] top-[10%] h-20 w-20 rounded-full blur-[1px]", level === 4 ? "bg-amber-100/20" : "bg-amber-100/90")
+    }
+  ), [0, 1, 2].map((idx) => /* @__PURE__ */ import_react26.default.createElement(
+    motion.div,
+    {
+      key: `cloud-${idx}`,
+      animate: { x: idx % 2 === 0 ? [0, 18, 0] : [0, -14, 0] },
+      transition: { repeat: Infinity, duration: 7 + idx * 1.5, ease: "easeInOut" },
+      className: cn(
+        "absolute rounded-full blur-sm",
+        scene.cloudTone,
+        idx === 0 && "left-[8%] top-[23%] h-9 w-24",
+        idx === 1 && "right-[10%] top-[17%] h-12 w-28",
+        idx === 2 && "right-[30%] top-[28%] h-8 w-20"
+      )
+    }
+  )), scene.birds && /* @__PURE__ */ import_react26.default.createElement(
     motion.div,
     {
       animate: { x: [0, 220] },
       transition: { repeat: Infinity, duration: 8, ease: "linear" },
-      className: "absolute left-6 top-8 text-2xl"
+      className: "absolute left-10 top-[20%] text-2xl"
     },
     "\u{1F54A}\uFE0F"
-  ), level === 3 && /* @__PURE__ */ import_react26.default.createElement(
+  ), /* @__PURE__ */ import_react26.default.createElement(
     motion.div,
     {
-      animate: { y: [0, 60], rotate: [0, 40] },
-      transition: { repeat: Infinity, duration: 3 },
-      className: "absolute left-16 top-12 text-xl"
+      animate: { x: [0, 16, 0], y: [0, -8, 0], rotate: [0, 2, 0] },
+      transition: { repeat: Infinity, duration: 7, ease: "easeInOut" },
+      className: "absolute left-[8%] top-[19%] hidden rounded-full border border-white/60 bg-white/82 px-4 py-2 text-sm font-bold text-slate-600 shadow-[0_18px_35px_rgba(111,154,206,0.18)] backdrop-blur md:block"
     },
-    "\u{1F342}"
-  ), level === 4 && /* @__PURE__ */ import_react26.default.createElement(import_react26.default.Fragment, null, /* @__PURE__ */ import_react26.default.createElement(
+    "\u8BB0\u8D26\u6539\u53D8\u751F\u6D3B"
+  ), /* @__PURE__ */ import_react26.default.createElement(
+    motion.div,
+    {
+      animate: { y: [0, -10, 0] },
+      transition: { repeat: Infinity, duration: 5.5, ease: "easeInOut" },
+      className: "absolute right-[6%] top-[24%] text-5xl"
+    },
+    "\u{1F388}"
+  ), scene.drizzle && [0, 1, 2, 3, 4].map((idx) => /* @__PURE__ */ import_react26.default.createElement(
+    motion.span,
+    {
+      key: `rain-${idx}`,
+      animate: { y: [-10, 150], opacity: [0, 0.6, 0] },
+      transition: { repeat: Infinity, duration: 1.2 + idx * 0.15, delay: idx * 0.16, ease: "linear" },
+      className: "absolute top-[28%] h-10 w-[2px] rounded-full bg-white/40",
+      style: { left: `${22 + idx * 13}%` }
+    }
+  )), scene.lightning && /* @__PURE__ */ import_react26.default.createElement(import_react26.default.Fragment, null, /* @__PURE__ */ import_react26.default.createElement(
     motion.div,
     {
       animate: { opacity: [0, 1, 0] },
       transition: { repeat: Infinity, duration: 1 },
-      className: "absolute right-20 top-5 text-3xl"
+      className: "absolute right-20 top-[24%] text-3xl"
     },
     "\u26A1"
   ), /* @__PURE__ */ import_react26.default.createElement(
@@ -33001,28 +33194,62 @@ function TownScene({ level, warning: warning2 }) {
     {
       animate: { y: [0, 80] },
       transition: { repeat: Infinity, duration: 1.2 },
-      className: "absolute left-28 top-4 text-2xl"
+      className: "absolute left-28 top-[25%] text-2xl"
     },
     "\u{1F327}\uFE0F"
-  )), /* @__PURE__ */ import_react26.default.createElement("div", { className: "absolute bottom-8 left-6 right-6 flex items-end justify-center gap-3" }, buildings.map((height, idx) => /* @__PURE__ */ import_react26.default.createElement(
+  )), /* @__PURE__ */ import_react26.default.createElement("div", { className: cn("absolute inset-x-0 bottom-[20%] top-[34%] bg-gradient-to-b", scene.waterTone) }, /* @__PURE__ */ import_react26.default.createElement("div", { className: "absolute left-[-10%] bottom-[-3%] h-44 w-40 rounded-full bg-white/32 blur-xl" }), /* @__PURE__ */ import_react26.default.createElement("div", { className: "absolute right-[-8%] top-[28%] h-36 w-36 rounded-full bg-white/18 blur-xl" })), /* @__PURE__ */ import_react26.default.createElement(
     motion.div,
     {
-      key: `${level}-${idx}`,
-      initial: { opacity: 0, y: 20 },
-      animate: { opacity: 1, y: 0 },
-      transition: { delay: idx * 0.06 },
-      className: cn(
-        "w-10 rounded-t-xl shadow-sm",
-        height,
-        level === 1 ? "bg-white/92" : level === 2 ? "bg-slate-100/90" : level === 3 ? "bg-stone-300/90" : "bg-stone-500/80"
-      )
+      initial: { opacity: 0, y: 24, scale: 0.98 },
+      animate: { opacity: 1, y: 0, scale: 1 },
+      transition: { duration: 0.45 },
+      className: "absolute left-1/2 top-[17%] z-20 h-[52%] w-[92%] -translate-x-1/2"
     },
-    /* @__PURE__ */ import_react26.default.createElement("div", { className: "mx-auto mt-3 grid w-6 grid-cols-2 gap-1" }, [0, 1, 2, 3].map((i) => /* @__PURE__ */ import_react26.default.createElement("span", { key: i, className: "h-2 rounded-sm bg-slate-400/50" })))
-  )))), /* @__PURE__ */ import_react26.default.createElement("div", { className: "mt-4 grid grid-cols-2 gap-3 text-xs text-slate-600" }, /* @__PURE__ */ import_react26.default.createElement("div", { className: "rounded-2xl bg-white/55 p-3" }, /* @__PURE__ */ import_react26.default.createElement("p", { className: "font-semibold text-slate-800" }, "\u5EFA\u7B51\u56FE\u5C42"), /* @__PURE__ */ import_react26.default.createElement("p", { className: "mt-1" }, meta.town)), /* @__PURE__ */ import_react26.default.createElement("div", { className: "rounded-2xl bg-white/55 p-3" }, /* @__PURE__ */ import_react26.default.createElement("p", { className: "font-semibold text-slate-800" }, "\u5929\u6C14\u52A8\u6548"), /* @__PURE__ */ import_react26.default.createElement("p", { className: "mt-1" }, meta.weather))));
+    /* @__PURE__ */ import_react26.default.createElement("div", { className: cn("absolute inset-x-0 bottom-0 h-[22%] rounded-[38%] bg-gradient-to-b shadow-[0_28px_60px_rgba(15,23,42,0.15)]", scene.cliffTone) }),
+    /* @__PURE__ */ import_react26.default.createElement("div", { className: cn("absolute inset-x-[2%] bottom-[10%] top-[6%] rounded-[38%] bg-gradient-to-b shadow-[0_24px_50px_rgba(111,154,206,0.2)]", scene.landTone) }),
+    /* @__PURE__ */ import_react26.default.createElement("div", { className: "absolute inset-x-[8%] bottom-[16%] top-[16%]" }, /* @__PURE__ */ import_react26.default.createElement("div", { className: cn("absolute left-[4%] top-[44%] h-7 w-[90%] rounded-full rotate-[-22deg] shadow-sm", scene.roadTone) }), /* @__PURE__ */ import_react26.default.createElement("div", { className: cn("absolute left-[12%] top-[42%] h-2 w-[74%] rounded-full rotate-[-22deg]", scene.stripeTone) }), /* @__PURE__ */ import_react26.default.createElement("div", { className: cn("absolute left-[16%] top-[24%] h-[60%] w-7 rounded-full rotate-[18deg] shadow-sm", scene.roadTone) }), /* @__PURE__ */ import_react26.default.createElement("div", { className: cn("absolute left-[19%] top-[26%] h-[52%] w-2 rounded-full rotate-[18deg]", scene.stripeTone) }), /* @__PURE__ */ import_react26.default.createElement("div", { className: cn("absolute left-[40%] top-[38%] h-24 w-24 rounded-full shadow-[0_18px_30px_rgba(15,23,42,0.12)]", scene.roadTone) }), /* @__PURE__ */ import_react26.default.createElement("div", { className: "absolute left-[44%] top-[42%] h-16 w-16 rounded-full bg-white/80" }, /* @__PURE__ */ import_react26.default.createElement("div", { className: "absolute left-1/2 top-1/2 h-9 w-9 -translate-x-1/2 -translate-y-1/2 rounded-full bg-cyan-300/80" }), /* @__PURE__ */ import_react26.default.createElement("div", { className: "absolute left-1/2 top-[28%] h-7 w-1.5 -translate-x-1/2 rounded-full bg-cyan-50/90" }), /* @__PURE__ */ import_react26.default.createElement("div", { className: "absolute left-[38%] top-[42%] h-1.5 w-7 rounded-full bg-cyan-50/90" }))),
+    /* @__PURE__ */ import_react26.default.createElement("div", { className: "absolute left-[40%] top-[20%] h-40 w-24" }, /* @__PURE__ */ import_react26.default.createElement("div", { className: cn("absolute inset-0 rounded-t-[1.4rem] bg-gradient-to-b shadow-[0_20px_38px_rgba(76,118,176,0.18)]", scene.towerTone) }), /* @__PURE__ */ import_react26.default.createElement("div", { className: cn("absolute inset-x-2 top-3 h-3 rounded-full", scene.roofTone) }), /* @__PURE__ */ import_react26.default.createElement("div", { className: "absolute left-1/2 top-[-9%] h-12 w-12 -translate-x-1/2 rounded-full bg-amber-200/85 shadow-[0_0_18px_rgba(255,196,85,0.55)]" }, /* @__PURE__ */ import_react26.default.createElement("span", { className: "absolute inset-0 flex items-center justify-center text-xl" }, "\u{1F4B0}")), /* @__PURE__ */ import_react26.default.createElement("div", { className: "absolute inset-x-4 top-8 grid grid-cols-2 gap-1.5" }, Array.from({ length: 10 }).map((_, idx) => /* @__PURE__ */ import_react26.default.createElement("span", { key: `tower-window-${idx}`, className: cn("h-3 rounded-sm", scene.windowTone) }))), /* @__PURE__ */ import_react26.default.createElement("div", { className: "absolute inset-x-[-12%] bottom-0 h-8 rounded-[1rem] bg-white/85 shadow-md" })),
+    /* @__PURE__ */ import_react26.default.createElement("div", { className: "absolute left-[30%] top-[34%] h-24 w-16 rounded-t-[1rem] bg-white/88 shadow-[0_18px_34px_rgba(76,118,176,0.15)]" }, /* @__PURE__ */ import_react26.default.createElement("div", { className: cn("absolute inset-x-2 top-2 h-2 rounded-full", scene.roofTone) }), /* @__PURE__ */ import_react26.default.createElement("div", { className: "absolute inset-x-3 top-7 grid grid-cols-2 gap-1" }, Array.from({ length: 6 }).map((_, idx) => /* @__PURE__ */ import_react26.default.createElement("span", { key: `left-window-${idx}`, className: cn("h-2.5 rounded-sm", scene.windowTone) })))),
+    /* @__PURE__ */ import_react26.default.createElement("div", { className: "absolute left-[56%] top-[33%] h-28 w-20 rounded-t-[1rem] bg-white/88 shadow-[0_18px_34px_rgba(76,118,176,0.15)]" }, /* @__PURE__ */ import_react26.default.createElement("div", { className: cn("absolute inset-x-2 top-2 h-2 rounded-full", scene.roofTone) }), /* @__PURE__ */ import_react26.default.createElement("div", { className: "absolute inset-x-3 top-7 grid grid-cols-2 gap-1" }, Array.from({ length: 8 }).map((_, idx) => /* @__PURE__ */ import_react26.default.createElement("span", { key: `right-window-${idx}`, className: cn("h-2.5 rounded-sm", scene.windowTone) })))),
+    /* @__PURE__ */ import_react26.default.createElement("div", { className: "absolute left-[63%] top-[44%] h-[4.5rem] w-14 rounded-t-[0.9rem] bg-white/88 shadow-[0_18px_34px_rgba(76,118,176,0.15)]" }, /* @__PURE__ */ import_react26.default.createElement("div", { className: cn("absolute inset-x-2 top-2 h-2 rounded-full", scene.roofTone) }), /* @__PURE__ */ import_react26.default.createElement("div", { className: "absolute inset-x-3 top-7 grid grid-cols-2 gap-1" }, Array.from({ length: 4 }).map((_, idx) => /* @__PURE__ */ import_react26.default.createElement("span", { key: `mall-window-${idx}`, className: cn("h-2 rounded-sm", scene.windowTone) }))), /* @__PURE__ */ import_react26.default.createElement("div", { className: "absolute -bottom-4 left-1/2 w-16 -translate-x-1/2 rounded-xl bg-orange-400 px-2 py-1 text-center text-[0.7rem] font-black text-white shadow-lg" }, "MALL")),
+    /* @__PURE__ */ import_react26.default.createElement("div", { className: "absolute left-[12%] top-[63%] h-16 w-16 rounded-[1rem] bg-white/88 shadow-[0_18px_34px_rgba(76,118,176,0.12)]" }, /* @__PURE__ */ import_react26.default.createElement("div", { className: "absolute -top-3 left-1/2 h-0 w-0 -translate-x-1/2 border-x-[14px] border-b-[16px] border-x-transparent border-b-sky-300/95" })),
+    /* @__PURE__ */ import_react26.default.createElement("div", { className: "absolute left-[24%] top-[68%] h-14 w-14 rounded-[0.9rem] bg-white/88 shadow-[0_18px_34px_rgba(76,118,176,0.12)]" }, /* @__PURE__ */ import_react26.default.createElement("div", { className: "absolute -top-2.5 left-1/2 h-0 w-0 -translate-x-1/2 border-x-[12px] border-b-[14px] border-x-transparent border-b-orange-300/95" })),
+    /* @__PURE__ */ import_react26.default.createElement("div", { className: "absolute right-[14%] top-[61%] h-[3.75rem] w-[3.75rem] rounded-[1rem] bg-white/88 shadow-[0_18px_34px_rgba(76,118,176,0.12)]" }, /* @__PURE__ */ import_react26.default.createElement("div", { className: "absolute -top-3 left-1/2 h-0 w-0 -translate-x-1/2 border-x-[13px] border-b-[15px] border-x-transparent border-b-sky-300/95" })),
+    [0, 1, 2, 3, 4, 5, 6, 7].map((idx) => /* @__PURE__ */ import_react26.default.createElement(
+      "div",
+      {
+        key: `tree-${idx}`,
+        className: cn(
+          "absolute h-10 w-8",
+          idx === 0 && "left-[22%] top-[26%]",
+          idx === 1 && "left-[74%] top-[30%]",
+          idx === 2 && "left-[12%] top-[51%]",
+          idx === 3 && "left-[30%] top-[57%]",
+          idx === 4 && "left-[72%] top-[58%]",
+          idx === 5 && "left-[60%] top-[20%]",
+          idx === 6 && "left-[45%] top-[74%]",
+          idx === 7 && "left-[82%] top-[51%]"
+        )
+      },
+      /* @__PURE__ */ import_react26.default.createElement("span", { className: "absolute bottom-0 left-1/2 h-4 w-1 -translate-x-1/2 rounded-full bg-amber-900/45" }),
+      /* @__PURE__ */ import_react26.default.createElement("span", { className: "absolute left-1/2 top-0 h-7 w-7 -translate-x-1/2 rounded-full bg-emerald-400/80 shadow-[0_6px_10px_rgba(75,154,95,0.25)]" })
+    )),
+    /* @__PURE__ */ import_react26.default.createElement("div", { className: "absolute left-[80%] top-[22%] h-14 w-14" }, /* @__PURE__ */ import_react26.default.createElement(motion.div, { animate: { rotate: 360 }, transition: { repeat: Infinity, duration: 8, ease: "linear" }, className: "absolute left-1/2 top-1/2 h-10 w-10 -translate-x-1/2 -translate-y-1/2" }, /* @__PURE__ */ import_react26.default.createElement("span", { className: "absolute left-1/2 top-0 h-10 w-[2px] -translate-x-1/2 rounded-full bg-white/95" }), /* @__PURE__ */ import_react26.default.createElement("span", { className: "absolute left-0 top-1/2 h-[2px] w-10 -translate-y-1/2 rounded-full bg-white/95" }), /* @__PURE__ */ import_react26.default.createElement("span", { className: "absolute left-[15%] top-[15%] h-[2px] w-8 rotate-45 rounded-full bg-white/95" }), /* @__PURE__ */ import_react26.default.createElement("span", { className: "absolute left-[15%] top-[15%] h-[2px] w-8 -rotate-45 rounded-full bg-white/95" })), /* @__PURE__ */ import_react26.default.createElement("span", { className: "absolute left-1/2 top-1/2 h-14 w-1 -translate-x-1/2 rounded-full bg-slate-500/70" })),
+    level >= 3 && /* @__PURE__ */ import_react26.default.createElement("div", { className: "absolute right-[9%] top-[69%] h-[4.5rem] w-16" }, /* @__PURE__ */ import_react26.default.createElement("span", { className: "absolute bottom-0 left-7 h-[4.5rem] w-1 rounded-full bg-amber-700/80" }), /* @__PURE__ */ import_react26.default.createElement("span", { className: "absolute left-7 top-2 h-1 w-8 rounded-full bg-amber-700/80" }), /* @__PURE__ */ import_react26.default.createElement("span", { className: "absolute right-0 top-3 h-7 w-[2px] rounded-full bg-amber-700/80" })),
+    /* @__PURE__ */ import_react26.default.createElement("div", { className: "absolute left-[-2%] bottom-[8%] h-16 w-10 rounded-full bg-white/70 blur-sm" }),
+    /* @__PURE__ */ import_react26.default.createElement("div", { className: "absolute left-[5%] bottom-[6%] h-8 w-20 rounded-full bg-cyan-100/90" }),
+    /* @__PURE__ */ import_react26.default.createElement("div", { className: "absolute left-[10%] bottom-[4%] h-8 w-8 rounded-full bg-white/88 shadow" }, /* @__PURE__ */ import_react26.default.createElement("span", { className: "absolute left-1/2 top-1/2 h-0 w-0 -translate-x-1/2 -translate-y-1/2 border-x-[8px] border-b-[10px] border-x-transparent border-b-orange-200/95" }))
+  ), /* @__PURE__ */ import_react26.default.createElement("div", { className: "absolute left-7 bottom-[29%] z-30 rounded-[1.5rem] border border-white/70 bg-white/84 px-4 py-3 text-slate-800 shadow-[0_18px_36px_rgba(111,154,206,0.16)] backdrop-blur" }, /* @__PURE__ */ import_react26.default.createElement("p", { className: "text-sm font-bold" }, "\u4ECA\u65E5\u6D88\u8D39"), /* @__PURE__ */ import_react26.default.createElement("p", { className: "mt-1 text-xs text-slate-500" }, "\u{1F642} \u5408\u7406\u8303\u56F4\u5185")), /* @__PURE__ */ import_react26.default.createElement("div", { className: "absolute right-6 bottom-[25%] z-30 rounded-[1.5rem] border border-white/70 bg-white/84 px-4 py-3 text-right text-slate-800 shadow-[0_18px_36px_rgba(111,154,206,0.16)] backdrop-blur" }, /* @__PURE__ */ import_react26.default.createElement("p", { className: "text-sm font-bold" }, "\u5EFA\u8BBE\u8FDB\u5EA6"), /* @__PURE__ */ import_react26.default.createElement("p", { className: "mt-1 text-2xl font-black text-slate-900" }, budgetProgress.toFixed(0), "%"))), /* @__PURE__ */ import_react26.default.createElement("div", { className: "absolute inset-x-3 bottom-28 z-40" }, /* @__PURE__ */ import_react26.default.createElement("div", { className: "rounded-[2.25rem] border border-white/70 bg-white/70 p-4 shadow-[0_28px_80px_rgba(111,154,206,0.24)] backdrop-blur-xl" }, /* @__PURE__ */ import_react26.default.createElement("div", { className: "grid grid-cols-2 gap-3" }, /* @__PURE__ */ import_react26.default.createElement(SceneStat, { label: "\u4ECA\u65E5\u652F\u51FA", value: money(stats.today), icon: Wallet, sub: "\u5408\u7406\u8303\u56F4\u5185", accent: scene.cards[0], bars: scene.bars[0] }), /* @__PURE__ */ import_react26.default.createElement(SceneStat, { label: "\u672C\u6708\u7D2F\u8BA1", value: money(stats.total), icon: Landmark, sub: `\u5408\u7406\u7EBF ${money(stats.line)}`, accent: scene.cards[1], bars: scene.bars[1] }), /* @__PURE__ */ import_react26.default.createElement(SceneStat, { label: "\u5269\u4F59\u9884\u7B97", value: money(stats.remain), icon: CircleCheck, sub: `\u603B\u9884\u7B97 ${money(totalBudget)}`, accent: scene.cards[2], bars: scene.bars[2] }), /* @__PURE__ */ import_react26.default.createElement(SceneStat, { label: "\u57CE\u5E02\u7B49\u7EA7", value: meta.name, icon: Crown, sub: meta.title, accent: scene.cards[3], bars: scene.bars[3] })), /* @__PURE__ */ import_react26.default.createElement("div", { className: "mt-4 grid grid-cols-2 gap-3" }, /* @__PURE__ */ import_react26.default.createElement(Button, { onClick: () => setPage("add"), className: "h-14 rounded-[1.55rem] bg-slate-950 text-base shadow-[0_18px_36px_rgba(15,23,42,0.2)]" }, /* @__PURE__ */ import_react26.default.createElement(CirclePlus, { className: "h-5 w-5" }), "\u8BB0\u4E00\u7B14"), /* @__PURE__ */ import_react26.default.createElement(Button, { onClick: () => setPage("account"), variant: "secondary", className: "h-14 rounded-[1.55rem] border border-slate-200 bg-white/92 text-base text-slate-900 shadow-[0_18px_36px_rgba(111,154,206,0.12)]" }, /* @__PURE__ */ import_react26.default.createElement(User, { className: "h-5 w-5" }), "\u8D26\u53F7\u7BA1\u7406")), /* @__PURE__ */ import_react26.default.createElement("div", { className: "mt-4 h-2 overflow-hidden rounded-full bg-slate-200/80" }, /* @__PURE__ */ import_react26.default.createElement(
+    motion.div,
+    {
+      initial: { width: 0 },
+      animate: { width: `${budgetProgress}%` },
+      className: cn("h-full rounded-full", scene.progressTone)
+    }
+  )))));
 }
 function HomePage({ stats, setPage, healthLevel, warning: warning2, totalBudget }) {
-  const meta = healthMeta[healthLevel];
-  return /* @__PURE__ */ import_react26.default.createElement("div", { className: "pb-28" }, /* @__PURE__ */ import_react26.default.createElement(PageHeader, { title: "\u6A21\u62DF\u57CE\u5E02\u8BB0\u8D26\u672C", subtitle: "\u8BA9\u6BCF\u4E00\u7B14\u6D88\u8D39\u90FD\u5F71\u54CD\u4F60\u7684\u5C0F\u9547\u547D\u8FD0" }), /* @__PURE__ */ import_react26.default.createElement(TownScene, { level: healthLevel, warning: warning2 }), /* @__PURE__ */ import_react26.default.createElement("div", { className: "mx-5 mt-5 grid grid-cols-2 gap-3" }, /* @__PURE__ */ import_react26.default.createElement(StatCard, { icon: Wallet, label: "\u4ECA\u65E5\u652F\u51FA", value: money(stats.today), sub: `\u65E5\u5747\u9884\u7B97 ${money(stats.daily)}` }), /* @__PURE__ */ import_react26.default.createElement(StatCard, { icon: Landmark, label: "\u672C\u6708\u7D2F\u8BA1", value: money(stats.total), sub: `\u5408\u7406\u7EBF ${money(stats.line)}` }), /* @__PURE__ */ import_react26.default.createElement(StatCard, { icon: CircleCheck, label: "\u5269\u4F59\u9884\u7B97", value: money(stats.remain), sub: `\u6708\u603B\u9884\u7B97 ${money(totalBudget)}` }), /* @__PURE__ */ import_react26.default.createElement(StatCard, { icon: CloudSun, label: "\u5065\u5EB7\u7B49\u7EA7", value: meta.name, sub: meta.desc })), /* @__PURE__ */ import_react26.default.createElement(Card, { className: "mx-5 mt-5" }, /* @__PURE__ */ import_react26.default.createElement(CardContent, { className: "p-5" }, /* @__PURE__ */ import_react26.default.createElement("div", { className: "flex items-start gap-3" }, /* @__PURE__ */ import_react26.default.createElement("div", { className: "rounded-2xl bg-amber-100 p-2" }, /* @__PURE__ */ import_react26.default.createElement(TriangleAlert, { className: "h-5 w-5 text-amber-700" })), /* @__PURE__ */ import_react26.default.createElement("div", null, /* @__PURE__ */ import_react26.default.createElement("p", { className: "font-bold text-slate-900" }, "\u72B6\u6001\u8BF4\u660E"), /* @__PURE__ */ import_react26.default.createElement("p", { className: "mt-1 text-sm leading-6 text-slate-500" }, meta.desc, " \u7CFB\u7EDF\u4F1A\u6309\u7167\u201C\u7834\u4EA7 \u2192 \u8427\u6761 \u2192 \u5E73\u7A33 \u2192 \u7E41\u8363\u201D\u7684\u4F18\u5148\u7EA7\u91CD\u65B0\u8BA1\u7B97\u5C0F\u9547\u72B6\u6001\u3002"))))), /* @__PURE__ */ import_react26.default.createElement("div", { className: "mx-5 mt-5 grid grid-cols-2 gap-3" }, /* @__PURE__ */ import_react26.default.createElement(Button, { onClick: () => setPage("add"), className: "h-14 rounded-2xl text-base shadow-sm" }, /* @__PURE__ */ import_react26.default.createElement(CirclePlus, { className: "h-5 w-5" }), "\u8BB0\u4E00\u7B14"), /* @__PURE__ */ import_react26.default.createElement(Button, { onClick: () => setPage("budget"), variant: "secondary", className: "h-14 rounded-2xl text-base shadow-sm" }, /* @__PURE__ */ import_react26.default.createElement(Settings, { className: "h-5 w-5" }), "\u9884\u7B97\u8BBE\u7F6E")));
+  return /* @__PURE__ */ import_react26.default.createElement("div", { className: "relative pb-28" }, /* @__PURE__ */ import_react26.default.createElement(TownScene, { level: healthLevel, warning: warning2, stats, totalBudget, setPage }));
 }
 function AddBillPage({ onBack, onSave }) {
   const [type, setType] = (0, import_react26.useState)("expense");
@@ -33117,9 +33344,78 @@ function BillDetailPage({ bill, onBack, onDelete }) {
   const Icon2 = cat.icon;
   return /* @__PURE__ */ import_react26.default.createElement("div", { className: "pb-28" }, /* @__PURE__ */ import_react26.default.createElement(PageHeader, { title: "\u8D26\u5355\u8BE6\u60C5", subtitle: "\u652F\u6301\u67E5\u770B\u3001\u7F16\u8F91\u548C\u5220\u9664\u5F53\u524D\u8D26\u5355", onBack }), /* @__PURE__ */ import_react26.default.createElement(Card, { className: "mx-5" }, /* @__PURE__ */ import_react26.default.createElement(CardContent, { className: "p-6" }, /* @__PURE__ */ import_react26.default.createElement("div", { className: "flex items-center gap-4" }, /* @__PURE__ */ import_react26.default.createElement("div", { className: "rounded-3xl bg-slate-100 p-4" }, /* @__PURE__ */ import_react26.default.createElement(Icon2, { className: "h-8 w-8" })), /* @__PURE__ */ import_react26.default.createElement("div", null, /* @__PURE__ */ import_react26.default.createElement("p", { className: "text-sm text-slate-500" }, cat.name), /* @__PURE__ */ import_react26.default.createElement("p", { className: "text-4xl font-black text-slate-900" }, bill.type === "income" ? "+" : "-", money(bill.amount)))), /* @__PURE__ */ import_react26.default.createElement("div", { className: "mt-6 space-y-3 rounded-3xl bg-slate-50 p-4 text-sm" }, /* @__PURE__ */ import_react26.default.createElement("div", { className: "flex justify-between" }, /* @__PURE__ */ import_react26.default.createElement("span", { className: "text-slate-500" }, "\u8D26\u5355\u65E5\u671F"), /* @__PURE__ */ import_react26.default.createElement("span", { className: "font-semibold" }, bill.date)), /* @__PURE__ */ import_react26.default.createElement("div", { className: "flex justify-between" }, /* @__PURE__ */ import_react26.default.createElement("span", { className: "text-slate-500" }, "\u6536\u652F\u7C7B\u578B"), /* @__PURE__ */ import_react26.default.createElement("span", { className: "font-semibold" }, bill.type === "income" ? "\u6536\u5165" : "\u652F\u51FA")), /* @__PURE__ */ import_react26.default.createElement("div", { className: "flex justify-between" }, /* @__PURE__ */ import_react26.default.createElement("span", { className: "text-slate-500" }, "\u5907\u6CE8"), /* @__PURE__ */ import_react26.default.createElement("span", { className: "font-semibold" }, bill.remark || "\u65E0")), /* @__PURE__ */ import_react26.default.createElement("div", { className: "flex justify-between" }, /* @__PURE__ */ import_react26.default.createElement("span", { className: "text-slate-500" }, "\u521B\u5EFA\u65F6\u95F4"), /* @__PURE__ */ import_react26.default.createElement("span", { className: "font-semibold" }, DEMO_DATE, " 21:30"))), /* @__PURE__ */ import_react26.default.createElement("div", { className: "mt-6 grid grid-cols-2 gap-3" }, /* @__PURE__ */ import_react26.default.createElement(Button, { className: "h-12 rounded-2xl", onClick: onBack }, /* @__PURE__ */ import_react26.default.createElement(Pencil, { className: "h-4 w-4" }), "\u8FD4\u56DE\u5217\u8868"), /* @__PURE__ */ import_react26.default.createElement(Button, { variant: "destructive", className: "h-12 rounded-2xl", onClick: () => onDelete(bill.id) }, /* @__PURE__ */ import_react26.default.createElement(Trash2, { className: "h-4 w-4" }), "\u5220\u9664")))));
 }
-function BudgetPage({ totalBudget, setTotalBudget }) {
+function AccountPage({ totalBudget, setTotalBudget, account, setAccount }) {
   const [draft, setDraft] = (0, import_react26.useState)(String(totalBudget));
-  return /* @__PURE__ */ import_react26.default.createElement("div", { className: "pb-28" }, /* @__PURE__ */ import_react26.default.createElement(PageHeader, { title: "\u9884\u7B97\u8BBE\u7F6E", subtitle: "\u8BBE\u7F6E\u6708\u603B\u9884\u7B97\u4E0E\u53EF\u9009\u5206\u7C7B\u9884\u7B97" }), /* @__PURE__ */ import_react26.default.createElement(Card, { className: "mx-5" }, /* @__PURE__ */ import_react26.default.createElement(CardContent, { className: "space-y-5 p-5" }, /* @__PURE__ */ import_react26.default.createElement("div", null, /* @__PURE__ */ import_react26.default.createElement("label", { className: "text-sm font-semibold text-slate-700" }, "\u5F53\u524D\u6708\u4EFD"), /* @__PURE__ */ import_react26.default.createElement("div", { className: "mt-2 rounded-2xl bg-slate-50 px-4 py-3 font-bold text-slate-800" }, DEMO_MONTH)), /* @__PURE__ */ import_react26.default.createElement("div", null, /* @__PURE__ */ import_react26.default.createElement("label", { className: "text-sm font-semibold text-slate-700" }, "\u6BCF\u6708\u603B\u9884\u7B97\uFF08\u5FC5\u586B\uFF09"), /* @__PURE__ */ import_react26.default.createElement("div", { className: "mt-2 rounded-3xl bg-slate-50 px-5 py-4 text-3xl font-black text-slate-900" }, /* @__PURE__ */ import_react26.default.createElement("span", { className: "text-xl" }, "\xA5"), /* @__PURE__ */ import_react26.default.createElement(
+  const [mode, setMode] = (0, import_react26.useState)(account.isLoggedIn ? "profile" : "login");
+  const [loginName, setLoginName] = (0, import_react26.useState)(account.username || "simcity_player");
+  const [loginPassword, setLoginPassword] = (0, import_react26.useState)("123456");
+  const [registerName, setRegisterName] = (0, import_react26.useState)(account.username || "budget_user");
+  const [registerEmail, setRegisterEmail] = (0, import_react26.useState)(account.email || "budget@demo.local");
+  const [registerPassword, setRegisterPassword] = (0, import_react26.useState)("123456");
+  const [savedHint, setSavedHint] = (0, import_react26.useState)("");
+  (0, import_react26.useEffect)(() => {
+    setDraft(String(totalBudget));
+  }, [totalBudget]);
+  (0, import_react26.useEffect)(() => {
+    if (account.isLoggedIn) {
+      setMode("profile");
+    }
+  }, [account.isLoggedIn]);
+  function showHint(text) {
+    setSavedHint(text);
+    window.setTimeout(() => setSavedHint(""), 1800);
+  }
+  function handleLogin() {
+    const username = loginName.trim() || "simcity_player";
+    setAccount({
+      isLoggedIn: true,
+      username,
+      email: account.email || `${username}@demo.local`
+    });
+    showHint("\u5DF2\u767B\u5F55\u5230\u539F\u578B\u8D26\u53F7");
+  }
+  function handleRegister() {
+    const username = registerName.trim() || "budget_user";
+    const email = registerEmail.trim() || `${username}@demo.local`;
+    setAccount({
+      isLoggedIn: true,
+      username,
+      email
+    });
+    showHint("\u6CE8\u518C\u6210\u529F\u5E76\u5DF2\u767B\u5F55");
+  }
+  function handleLogout() {
+    setAccount(defaultAccount);
+    setMode("login");
+    showHint("\u5DF2\u9000\u51FA\u5F53\u524D\u8D26\u53F7");
+  }
+  function handleSaveBudget() {
+    setTotalBudget(Number(draft || 0));
+    showHint("\u9884\u7B97\u8BBE\u7F6E\u5DF2\u66F4\u65B0");
+  }
+  return /* @__PURE__ */ import_react26.default.createElement("div", { className: "pb-28" }, /* @__PURE__ */ import_react26.default.createElement(PageHeader, { title: "\u8D26\u53F7\u7BA1\u7406", subtitle: "\u767B\u5F55\u6CE8\u518C\u3001\u8D26\u53F7\u4FE1\u606F\u4E0E\u9884\u7B97\u914D\u7F6E\u7EDF\u4E00\u7BA1\u7406" }), /* @__PURE__ */ import_react26.default.createElement(Card, { className: "mx-5" }, /* @__PURE__ */ import_react26.default.createElement(CardContent, { className: "p-5" }, /* @__PURE__ */ import_react26.default.createElement("div", { className: "mb-4 flex items-center justify-between" }, /* @__PURE__ */ import_react26.default.createElement("div", null, /* @__PURE__ */ import_react26.default.createElement("p", { className: "text-xs font-semibold uppercase tracking-[0.24em] text-slate-400" }, "Account Center"), /* @__PURE__ */ import_react26.default.createElement("h2", { className: "mt-2 text-xl font-black text-slate-900" }, account.isLoggedIn ? "\u5F53\u524D\u8D26\u53F7" : "\u767B\u5F55 / \u6CE8\u518C")), account.isLoggedIn && /* @__PURE__ */ import_react26.default.createElement("span", { className: "rounded-full bg-emerald-100 px-3 py-1 text-xs font-semibold text-emerald-700" }, "\u5DF2\u767B\u5F55")), account.isLoggedIn ? /* @__PURE__ */ import_react26.default.createElement("div", { className: "space-y-4" }, /* @__PURE__ */ import_react26.default.createElement("div", { className: "rounded-[1.75rem] bg-slate-50 p-4" }, /* @__PURE__ */ import_react26.default.createElement("div", { className: "flex items-center gap-4" }, /* @__PURE__ */ import_react26.default.createElement("div", { className: "flex h-14 w-14 items-center justify-center rounded-3xl bg-slate-900 text-white" }, /* @__PURE__ */ import_react26.default.createElement(User, { className: "h-6 w-6" })), /* @__PURE__ */ import_react26.default.createElement("div", null, /* @__PURE__ */ import_react26.default.createElement("p", { className: "text-lg font-black text-slate-900" }, account.username), /* @__PURE__ */ import_react26.default.createElement("p", { className: "text-sm text-slate-500" }, account.email))), /* @__PURE__ */ import_react26.default.createElement("div", { className: "mt-4 grid grid-cols-2 gap-3 text-sm" }, /* @__PURE__ */ import_react26.default.createElement("div", { className: "rounded-2xl bg-white p-3" }, /* @__PURE__ */ import_react26.default.createElement("p", { className: "text-slate-400" }, "\u8D26\u53F7\u72B6\u6001"), /* @__PURE__ */ import_react26.default.createElement("p", { className: "mt-1 font-bold text-slate-900" }, "\u672C\u5730\u539F\u578B\u8D26\u53F7")), /* @__PURE__ */ import_react26.default.createElement("div", { className: "rounded-2xl bg-white p-3" }, /* @__PURE__ */ import_react26.default.createElement("p", { className: "text-slate-400" }, "\u6570\u636E\u7B56\u7565"), /* @__PURE__ */ import_react26.default.createElement("p", { className: "mt-1 font-bold text-slate-900" }, "\u8BBE\u5907\u7AEF\u672C\u5730\u4FDD\u5B58")))), /* @__PURE__ */ import_react26.default.createElement("div", { className: "rounded-[1.5rem] border border-dashed border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-500" }, "\u5F53\u524D\u4EC5\u4E3A\u8D26\u53F7\u7BA1\u7406\u539F\u578B\uFF0C\u540E\u7EED\u53EF\u4EE5\u63A5\u5165\u771F\u5B9E\u6CE8\u518C\u3001\u767B\u5F55\u3001\u627E\u56DE\u5BC6\u7801\u548C\u4E91\u540C\u6B65\u80FD\u529B\u3002"), /* @__PURE__ */ import_react26.default.createElement(Button, { variant: "secondary", className: "h-12 w-full rounded-2xl", onClick: handleLogout }, /* @__PURE__ */ import_react26.default.createElement(LogOut, { className: "h-4 w-4" }), "\u9000\u51FA\u767B\u5F55")) : /* @__PURE__ */ import_react26.default.createElement("div", null, /* @__PURE__ */ import_react26.default.createElement("div", { className: "grid grid-cols-2 gap-3 rounded-2xl bg-slate-100 p-1.5" }, /* @__PURE__ */ import_react26.default.createElement(
+    "button",
+    {
+      type: "button",
+      onClick: () => setMode("login"),
+      className: cn(
+        "rounded-2xl px-4 py-2 text-sm font-semibold transition",
+        mode === "login" ? "bg-white text-slate-900 shadow-sm" : "text-slate-500"
+      )
+    },
+    "\u767B\u5F55"
+  ), /* @__PURE__ */ import_react26.default.createElement(
+    "button",
+    {
+      type: "button",
+      onClick: () => setMode("register"),
+      className: cn(
+        "rounded-2xl px-4 py-2 text-sm font-semibold transition",
+        mode === "register" ? "bg-white text-slate-900 shadow-sm" : "text-slate-500"
+      )
+    },
+    "\u6CE8\u518C"
+  )), mode === "login" ? /* @__PURE__ */ import_react26.default.createElement("div", { className: "mt-5 space-y-4" }, /* @__PURE__ */ import_react26.default.createElement("div", null, /* @__PURE__ */ import_react26.default.createElement("label", { className: "text-sm font-semibold text-slate-700" }, "\u7528\u6237\u540D"), /* @__PURE__ */ import_react26.default.createElement("div", { className: "mt-2 flex items-center gap-3 rounded-2xl bg-slate-50 px-4 py-3" }, /* @__PURE__ */ import_react26.default.createElement(User, { className: "h-4 w-4 text-slate-400" }), /* @__PURE__ */ import_react26.default.createElement("input", { value: loginName, onChange: (e) => setLoginName(e.target.value), className: "w-full bg-transparent outline-none" }))), /* @__PURE__ */ import_react26.default.createElement("div", null, /* @__PURE__ */ import_react26.default.createElement("label", { className: "text-sm font-semibold text-slate-700" }, "\u5BC6\u7801"), /* @__PURE__ */ import_react26.default.createElement("div", { className: "mt-2 flex items-center gap-3 rounded-2xl bg-slate-50 px-4 py-3" }, /* @__PURE__ */ import_react26.default.createElement(LockKeyhole, { className: "h-4 w-4 text-slate-400" }), /* @__PURE__ */ import_react26.default.createElement("input", { type: "password", value: loginPassword, onChange: (e) => setLoginPassword(e.target.value), className: "w-full bg-transparent outline-none" }))), /* @__PURE__ */ import_react26.default.createElement(Button, { className: "h-12 w-full rounded-2xl", onClick: handleLogin }, /* @__PURE__ */ import_react26.default.createElement(LogIn, { className: "h-4 w-4" }), "\u767B\u5F55\u8D26\u53F7")) : /* @__PURE__ */ import_react26.default.createElement("div", { className: "mt-5 space-y-4" }, /* @__PURE__ */ import_react26.default.createElement("div", null, /* @__PURE__ */ import_react26.default.createElement("label", { className: "text-sm font-semibold text-slate-700" }, "\u7528\u6237\u540D"), /* @__PURE__ */ import_react26.default.createElement("div", { className: "mt-2 flex items-center gap-3 rounded-2xl bg-slate-50 px-4 py-3" }, /* @__PURE__ */ import_react26.default.createElement(User, { className: "h-4 w-4 text-slate-400" }), /* @__PURE__ */ import_react26.default.createElement("input", { value: registerName, onChange: (e) => setRegisterName(e.target.value), className: "w-full bg-transparent outline-none" }))), /* @__PURE__ */ import_react26.default.createElement("div", null, /* @__PURE__ */ import_react26.default.createElement("label", { className: "text-sm font-semibold text-slate-700" }, "\u90AE\u7BB1"), /* @__PURE__ */ import_react26.default.createElement("div", { className: "mt-2 flex items-center gap-3 rounded-2xl bg-slate-50 px-4 py-3" }, /* @__PURE__ */ import_react26.default.createElement(Mail, { className: "h-4 w-4 text-slate-400" }), /* @__PURE__ */ import_react26.default.createElement("input", { value: registerEmail, onChange: (e) => setRegisterEmail(e.target.value), className: "w-full bg-transparent outline-none" }))), /* @__PURE__ */ import_react26.default.createElement("div", null, /* @__PURE__ */ import_react26.default.createElement("label", { className: "text-sm font-semibold text-slate-700" }, "\u5BC6\u7801"), /* @__PURE__ */ import_react26.default.createElement("div", { className: "mt-2 flex items-center gap-3 rounded-2xl bg-slate-50 px-4 py-3" }, /* @__PURE__ */ import_react26.default.createElement(LockKeyhole, { className: "h-4 w-4 text-slate-400" }), /* @__PURE__ */ import_react26.default.createElement("input", { type: "password", value: registerPassword, onChange: (e) => setRegisterPassword(e.target.value), className: "w-full bg-transparent outline-none" }))), /* @__PURE__ */ import_react26.default.createElement(Button, { className: "h-12 w-full rounded-2xl", onClick: handleRegister }, /* @__PURE__ */ import_react26.default.createElement(UserPlus, { className: "h-4 w-4" }), "\u6CE8\u518C\u5E76\u767B\u5F55"))), savedHint && /* @__PURE__ */ import_react26.default.createElement("div", { className: "mt-4 rounded-2xl bg-emerald-50 px-4 py-3 text-sm font-semibold text-emerald-700" }, savedHint))), /* @__PURE__ */ import_react26.default.createElement(Card, { className: "mx-5 mt-5" }, /* @__PURE__ */ import_react26.default.createElement(CardContent, { className: "space-y-5 p-5" }, /* @__PURE__ */ import_react26.default.createElement("div", { className: "flex items-start justify-between gap-4" }, /* @__PURE__ */ import_react26.default.createElement("div", null, /* @__PURE__ */ import_react26.default.createElement("p", { className: "text-xs font-semibold uppercase tracking-[0.24em] text-slate-400" }, "Budget Config"), /* @__PURE__ */ import_react26.default.createElement("h2", { className: "mt-2 text-xl font-black text-slate-900" }, "\u9884\u7B97\u8BBE\u7F6E"), /* @__PURE__ */ import_react26.default.createElement("p", { className: "mt-1 text-sm text-slate-500" }, "\u9884\u7B97\u914D\u7F6E\u5DF2\u5E76\u5165\u8D26\u53F7\u7BA1\u7406\u9875\uFF0C\u65B9\u4FBF\u540E\u7EED\u4E0E\u8D26\u53F7\u6570\u636E\u7EDF\u4E00\u7BA1\u7406\u3002")), /* @__PURE__ */ import_react26.default.createElement("div", { className: "rounded-2xl bg-sky-100 p-3" }, /* @__PURE__ */ import_react26.default.createElement(Settings, { className: "h-5 w-5 text-sky-700" }))), /* @__PURE__ */ import_react26.default.createElement("div", null, /* @__PURE__ */ import_react26.default.createElement("label", { className: "text-sm font-semibold text-slate-700" }, "\u5F53\u524D\u6708\u4EFD"), /* @__PURE__ */ import_react26.default.createElement("div", { className: "mt-2 rounded-2xl bg-slate-50 px-4 py-3 font-bold text-slate-800" }, DEMO_MONTH)), /* @__PURE__ */ import_react26.default.createElement("div", null, /* @__PURE__ */ import_react26.default.createElement("label", { className: "text-sm font-semibold text-slate-700" }, "\u6BCF\u6708\u603B\u9884\u7B97\uFF08\u5FC5\u586B\uFF09"), /* @__PURE__ */ import_react26.default.createElement("div", { className: "mt-2 rounded-3xl bg-slate-50 px-5 py-4 text-3xl font-black text-slate-900" }, /* @__PURE__ */ import_react26.default.createElement("span", { className: "text-xl" }, "\xA5"), /* @__PURE__ */ import_react26.default.createElement(
     "input",
     {
       type: "number",
@@ -33129,10 +33425,10 @@ function BudgetPage({ totalBudget, setTotalBudget }) {
       onChange: (e) => setDraft(e.target.value),
       className: "ml-2 w-48 bg-transparent outline-none"
     }
-  ))), /* @__PURE__ */ import_react26.default.createElement("div", null, /* @__PURE__ */ import_react26.default.createElement("div", { className: "mb-3 flex items-center justify-between" }, /* @__PURE__ */ import_react26.default.createElement("label", { className: "text-sm font-semibold text-slate-700" }, "\u6D88\u8D39\u7C7B\u522B\u9884\u7B97\uFF08\u9009\u586B\uFF09"), /* @__PURE__ */ import_react26.default.createElement("span", { className: "text-xs text-slate-400" }, "\u539F\u578B\u793A\u4F8B\u4E3A\u9759\u6001\u7C7B\u522B\u9884\u7B97")), /* @__PURE__ */ import_react26.default.createElement("div", { className: "space-y-3" }, categories.map((cat) => {
+  ))), /* @__PURE__ */ import_react26.default.createElement("div", null, /* @__PURE__ */ import_react26.default.createElement("div", { className: "mb-3 flex items-center justify-between" }, /* @__PURE__ */ import_react26.default.createElement("label", { className: "text-sm font-semibold text-slate-700" }, "\u6D88\u8D39\u7C7B\u522B\u9884\u7B97\uFF08\u9009\u586B\uFF09"), /* @__PURE__ */ import_react26.default.createElement("span", { className: "text-xs text-slate-400" }, "\u539F\u578B\u793A\u4F8B\u4ECD\u4E3A\u9759\u6001\u5206\u7C7B\u9884\u7B97")), /* @__PURE__ */ import_react26.default.createElement("div", { className: "space-y-3" }, categories.map((cat) => {
     const Icon2 = cat.icon;
     return /* @__PURE__ */ import_react26.default.createElement("div", { key: cat.id, className: "flex items-center justify-between rounded-2xl bg-slate-50 p-3" }, /* @__PURE__ */ import_react26.default.createElement("div", { className: "flex items-center gap-3" }, /* @__PURE__ */ import_react26.default.createElement(Icon2, { className: "h-5 w-5 text-slate-600" }), /* @__PURE__ */ import_react26.default.createElement("span", { className: "font-semibold text-slate-700" }, cat.name)), /* @__PURE__ */ import_react26.default.createElement("div", { className: "w-28 rounded-xl bg-white px-3 py-2 text-right text-sm font-bold text-slate-800" }, "\xA5", cat.budget));
-  }))), /* @__PURE__ */ import_react26.default.createElement(Button, { className: "h-14 w-full rounded-2xl text-base", onClick: () => setTotalBudget(Number(draft || 0)) }, "\u4FDD\u5B58\u9884\u7B97\u914D\u7F6E"))));
+  }))), /* @__PURE__ */ import_react26.default.createElement(Button, { className: "h-14 w-full rounded-2xl text-base", onClick: handleSaveBudget }, "\u4FDD\u5B58\u9884\u7B97\u914D\u7F6E"))));
 }
 function CategoryBoardPage({ bills }) {
   const expenseBills = bills.filter((bill) => bill.type === "expense");
@@ -33181,12 +33477,12 @@ function StatisticsPage({ stats, bills }) {
 function BottomNav({ page, setPage }) {
   const items = [
     { id: "home", label: "\u9996\u9875", icon: House },
-    { id: "add", label: "\u8BB0\u8D26", icon: CirclePlus },
-    { id: "list", label: "\u660E\u7EC6", icon: ListChecks },
+    { id: "list", label: "\u8D26\u5355", icon: ListChecks },
     { id: "board", label: "\u770B\u677F", icon: ChartPie },
-    { id: "stats", label: "\u7EDF\u8BA1", icon: ChartColumn }
+    { id: "stats", label: "\u7EDF\u8BA1", icon: ChartColumn },
+    { id: "account", label: "\u6211\u7684", icon: User }
   ];
-  return /* @__PURE__ */ import_react26.default.createElement("div", { className: "fixed bottom-4 left-1/2 z-50 w-[min(94%,460px)] -translate-x-1/2 rounded-[2rem] border border-white/70 bg-white/[0.88] p-2 shadow-[0_24px_70px_rgba(15,23,42,0.2)] backdrop-blur" }, /* @__PURE__ */ import_react26.default.createElement("div", { className: "grid grid-cols-5 gap-1" }, items.map((item) => {
+  return /* @__PURE__ */ import_react26.default.createElement("div", { className: "fixed bottom-4 left-1/2 z-50 w-[min(94%,460px)] -translate-x-1/2 rounded-[2.2rem] border border-white/75 bg-white/[0.92] p-3 shadow-[0_24px_70px_rgba(111,154,206,0.22)] backdrop-blur-xl" }, /* @__PURE__ */ import_react26.default.createElement("div", { className: "grid grid-cols-5 gap-2" }, items.map((item) => {
     const Icon2 = item.icon;
     const active = page === item.id;
     return /* @__PURE__ */ import_react26.default.createElement(
@@ -33196,8 +33492,8 @@ function BottomNav({ page, setPage }) {
         type: "button",
         onClick: () => setPage(item.id),
         className: cn(
-          "rounded-2xl px-2 py-2 text-xs font-semibold transition",
-          active ? "bg-slate-900 text-white" : "text-slate-500"
+          "rounded-[1.45rem] px-2 py-2.5 text-xs font-semibold transition",
+          active ? "bg-slate-900 text-white shadow-[0_12px_28px_rgba(15,23,42,0.22)]" : "text-slate-500 hover:bg-slate-50"
         )
       },
       /* @__PURE__ */ import_react26.default.createElement(Icon2, { className: "mx-auto mb-1 h-5 w-5" }),
@@ -33210,6 +33506,7 @@ function App() {
   const [page, setPage] = (0, import_react26.useState)("home");
   const [bills, setBills] = (0, import_react26.useState)(stored?.bills || initialBills);
   const [totalBudget, setTotalBudgetState] = (0, import_react26.useState)(stored?.totalBudget || 2e3);
+  const [account, setAccount] = (0, import_react26.useState)(stored?.account || defaultAccount);
   const [editingBill, setEditingBill] = (0, import_react26.useState)(null);
   const [warning2, setWarning] = (0, import_react26.useState)(false);
   const stats = (0, import_react26.useMemo)(() => calculateHealth(totalBudget, bills), [totalBudget, bills]);
@@ -33218,10 +33515,11 @@ function App() {
       STORAGE_KEY,
       JSON.stringify({
         bills,
-        totalBudget
+        totalBudget,
+        account
       })
     );
-  }, [bills, totalBudget]);
+  }, [bills, totalBudget, account]);
   function saveBill(input) {
     if (!input.amount) return;
     const cat = categoryOf(input.categoryId);
@@ -33241,7 +33539,6 @@ function App() {
   }
   function updateBudget(nextValue) {
     setTotalBudgetState(nextValue);
-    setPage("home");
   }
   return /* @__PURE__ */ import_react26.default.createElement("div", { className: "min-h-screen bg-transparent px-3 py-6 text-slate-900 sm:px-6" }, /* @__PURE__ */ import_react26.default.createElement("div", { className: "mx-auto min-h-screen max-w-[460px] rounded-[2.5rem] border border-white/60 bg-white/40 shadow-[0_30px_90px_rgba(15,23,42,0.14)] backdrop-blur-xl" }, /* @__PURE__ */ import_react26.default.createElement(AnimatePresence, { mode: "wait" }, /* @__PURE__ */ import_react26.default.createElement(
     motion.div,
@@ -33256,9 +33553,9 @@ function App() {
     page === "add" && /* @__PURE__ */ import_react26.default.createElement(AddBillPage, { onBack: () => setPage("home"), onSave: saveBill }),
     page === "list" && /* @__PURE__ */ import_react26.default.createElement(BillListPage, { bills, setPage, setEditingBill }),
     page === "detail" && /* @__PURE__ */ import_react26.default.createElement(BillDetailPage, { bill: editingBill, onBack: () => setPage("list"), onDelete: deleteBill }),
-    page === "budget" && /* @__PURE__ */ import_react26.default.createElement(BudgetPage, { totalBudget, setTotalBudget: updateBudget }),
     page === "board" && /* @__PURE__ */ import_react26.default.createElement(CategoryBoardPage, { bills }),
-    page === "stats" && /* @__PURE__ */ import_react26.default.createElement(StatisticsPage, { stats, bills })
+    page === "stats" && /* @__PURE__ */ import_react26.default.createElement(StatisticsPage, { stats, bills }),
+    page === "account" && /* @__PURE__ */ import_react26.default.createElement(AccountPage, { totalBudget, setTotalBudget: updateBudget, account, setAccount })
   )), /* @__PURE__ */ import_react26.default.createElement(BottomNav, { page, setPage })));
 }
 var container = document.getElementById("root");
@@ -33332,6 +33629,7 @@ lucide-react/dist/esm/defaultAttributes.js:
 lucide-react/dist/esm/Icon.js:
 lucide-react/dist/esm/createLucideIcon.js:
 lucide-react/dist/esm/icons/arrow-left.js:
+lucide-react/dist/esm/icons/bell.js:
 lucide-react/dist/esm/icons/book-open.js:
 lucide-react/dist/esm/icons/bus.js:
 lucide-react/dist/esm/icons/calendar-days.js:
@@ -33341,12 +33639,17 @@ lucide-react/dist/esm/icons/circle-check.js:
 lucide-react/dist/esm/icons/circle-plus.js:
 lucide-react/dist/esm/icons/cloud-rain.js:
 lucide-react/dist/esm/icons/cloud-sun.js:
+lucide-react/dist/esm/icons/crown.js:
 lucide-react/dist/esm/icons/ellipsis.js:
 lucide-react/dist/esm/icons/gamepad-2.js:
 lucide-react/dist/esm/icons/heart-pulse.js:
 lucide-react/dist/esm/icons/house.js:
 lucide-react/dist/esm/icons/landmark.js:
 lucide-react/dist/esm/icons/list-checks.js:
+lucide-react/dist/esm/icons/lock-keyhole.js:
+lucide-react/dist/esm/icons/log-in.js:
+lucide-react/dist/esm/icons/log-out.js:
+lucide-react/dist/esm/icons/mail.js:
 lucide-react/dist/esm/icons/pencil.js:
 lucide-react/dist/esm/icons/save.js:
 lucide-react/dist/esm/icons/settings.js:
@@ -33354,7 +33657,8 @@ lucide-react/dist/esm/icons/shirt.js:
 lucide-react/dist/esm/icons/shopping-bag.js:
 lucide-react/dist/esm/icons/sun.js:
 lucide-react/dist/esm/icons/trash-2.js:
-lucide-react/dist/esm/icons/triangle-alert.js:
+lucide-react/dist/esm/icons/user-plus.js:
+lucide-react/dist/esm/icons/user.js:
 lucide-react/dist/esm/icons/utensils.js:
 lucide-react/dist/esm/icons/wallet.js:
 lucide-react/dist/esm/icons/zap.js:

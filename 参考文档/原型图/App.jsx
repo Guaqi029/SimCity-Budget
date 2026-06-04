@@ -2,20 +2,25 @@ import React, { useEffect, useMemo, useState } from "react";
 import { createRoot } from "react-dom/client";
 import { AnimatePresence, motion } from "framer-motion";
 import {
-  AlertTriangle,
   ArrowLeft,
   BarChart3,
+  Bell,
   BookOpen,
   Bus,
   CalendarDays,
   CheckCircle2,
   CloudRain,
   CloudSun,
+  Crown,
   Gamepad2,
   HeartPulse,
   Home,
   Landmark,
   ListChecks,
+  LockKeyhole,
+  LogIn,
+  LogOut,
+  Mail,
   MoreHorizontal,
   Pencil,
   PieChart,
@@ -26,6 +31,8 @@ import {
   Shirt,
   Sun,
   Trash2,
+  User,
+  UserPlus,
   Utensils,
   Wallet,
   Zap,
@@ -56,6 +63,12 @@ const initialBills = [
   { id: 6, amount: 62, type: "expense", categoryId: "daily", date: "2026-05-18", remark: "生活用品" },
   { id: 7, amount: 46, type: "expense", categoryId: "food", date: "2026-05-17", remark: "午餐" },
 ];
+
+const defaultAccount = {
+  isLoggedIn: false,
+  username: "",
+  email: "",
+};
 
 const healthMeta = {
   1: {
@@ -146,7 +159,19 @@ function loadStoredState() {
     if (!Array.isArray(parsed?.bills) || typeof parsed?.totalBudget !== "number") {
       return null;
     }
-    return parsed;
+    return {
+      ...parsed,
+      account:
+        parsed?.account &&
+        typeof parsed.account === "object" &&
+        typeof parsed.account.isLoggedIn === "boolean"
+          ? {
+              isLoggedIn: parsed.account.isLoggedIn,
+              username: String(parsed.account.username || ""),
+              email: String(parsed.account.email || ""),
+            }
+          : defaultAccount,
+    };
   } catch {
     return null;
   }
@@ -235,21 +260,142 @@ function StatCard({ icon: Icon, label, value, sub }) {
   );
 }
 
-function TownScene({ level, warning }) {
+function SceneStat({ label, value, icon: Icon, sub, accent = "bg-sky-100", bars = "bg-sky-300/85" }) {
+  return (
+    <div className="relative overflow-hidden rounded-[1.55rem] border border-white/65 bg-white/86 p-4 text-slate-900 shadow-[0_18px_45px_rgba(93,135,189,0.14)] backdrop-blur">
+      <div className="flex items-start justify-between gap-3">
+        <div className="min-w-0">
+          <p className="text-sm font-semibold text-slate-500">{label}</p>
+          <p className="mt-2 truncate text-[1.15rem] font-black tracking-tight text-slate-900">{value}</p>
+          {sub && <p className="mt-1 text-xs text-slate-400">{sub}</p>}
+        </div>
+        <div className={cn("rounded-2xl p-2.5", accent)}>
+          <Icon className="h-[1.125rem] w-[1.125rem] text-slate-700" />
+        </div>
+      </div>
+      <div className="mt-4 flex h-8 items-end gap-1.5 opacity-75">
+        {[10, 18, 12, 26, 14, 22, 16, 11].map((height, idx) => (
+          <span key={`${label}-${idx}`} className={cn("w-2 rounded-full", bars)} style={{ height }} />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function TownScene({ level, warning, stats, totalBudget, setPage }) {
   const meta = healthMeta[level];
-  const Icon = meta.icon;
-  const buildings = {
-    1: ["h-24", "h-32", "h-20", "h-28", "h-36"],
-    2: ["h-[4.5rem]", "h-24", "h-16", "h-[5.5rem]", "h-20"],
-    3: ["h-14", "h-20", "h-12", "h-16", "h-10"],
-    4: ["h-8", "h-12", "h-6", "h-10", "h-7"],
+  const WeatherIcon = meta.icon;
+  const scene = {
+    1: {
+      towerTone: "from-sky-200 to-sky-50",
+      roofTone: "bg-amber-300/90",
+      windowTone: "bg-sky-100/95",
+      landTone: "from-lime-200 via-emerald-200 to-lime-100",
+      cliffTone: "from-stone-300 to-stone-200",
+      roadTone: "bg-slate-600/78",
+      stripeTone: "bg-white/85",
+      waterTone: "from-cyan-300 via-sky-200 to-blue-100",
+      cloudTone: "bg-white/88",
+      weatherLabel: "晴空万里",
+      temp: "26°C",
+      progressTone: "bg-emerald-400",
+      cards: ["bg-sky-100", "bg-amber-100", "bg-emerald-100", "bg-violet-100"],
+      bars: ["bg-sky-300/85", "bg-orange-300/85", "bg-emerald-300/85", "bg-amber-300/85"],
+      birds: true,
+      drizzle: false,
+      lightning: false,
+    },
+    2: {
+      towerTone: "from-sky-100 to-white",
+      roofTone: "bg-slate-300/90",
+      windowTone: "bg-sky-50/85",
+      landTone: "from-lime-100 via-emerald-100 to-lime-50",
+      cliffTone: "from-stone-300 to-stone-100",
+      roadTone: "bg-slate-500/72",
+      stripeTone: "bg-white/75",
+      waterTone: "from-sky-300 via-cyan-100 to-blue-50",
+      cloudTone: "bg-white/92",
+      weatherLabel: "微风多云",
+      temp: "24°C",
+      progressTone: "bg-sky-400",
+      cards: ["bg-sky-100", "bg-orange-100", "bg-emerald-100", "bg-violet-100"],
+      bars: ["bg-sky-300/85", "bg-orange-300/85", "bg-emerald-300/85", "bg-violet-300/85"],
+      birds: false,
+      drizzle: false,
+      lightning: false,
+    },
+    3: {
+      towerTone: "from-slate-200 to-slate-50",
+      roofTone: "bg-stone-400/90",
+      windowTone: "bg-slate-200/65",
+      landTone: "from-lime-100 via-stone-100 to-amber-50",
+      cliffTone: "from-stone-400 to-stone-200",
+      roadTone: "bg-slate-600/76",
+      stripeTone: "bg-white/70",
+      waterTone: "from-slate-300 via-sky-100 to-white",
+      cloudTone: "bg-slate-100/92",
+      weatherLabel: "阴天有风",
+      temp: "21°C",
+      progressTone: "bg-amber-400",
+      cards: ["bg-slate-100", "bg-amber-100", "bg-lime-100", "bg-stone-100"],
+      bars: ["bg-slate-300/85", "bg-amber-300/85", "bg-lime-300/85", "bg-stone-300/85"],
+      birds: false,
+      drizzle: true,
+      lightning: false,
+    },
+    4: {
+      towerTone: "from-slate-500 to-stone-500",
+      roofTone: "bg-stone-700/95",
+      windowTone: "bg-rose-200/25",
+      landTone: "from-stone-300 via-stone-200 to-zinc-100",
+      cliffTone: "from-stone-500 to-stone-300",
+      roadTone: "bg-slate-700/80",
+      stripeTone: "bg-white/55",
+      waterTone: "from-slate-500 via-sky-200 to-slate-100",
+      cloudTone: "bg-slate-200/85",
+      weatherLabel: "雷阵暴雨",
+      temp: "18°C",
+      progressTone: "bg-rose-400",
+      cards: ["bg-slate-100", "bg-stone-100", "bg-rose-100", "bg-amber-100"],
+      bars: ["bg-slate-300/85", "bg-stone-300/85", "bg-rose-300/85", "bg-amber-300/85"],
+      birds: false,
+      drizzle: true,
+      lightning: true,
+    },
   }[level];
+  const budgetProgress = totalBudget > 0 ? Math.min(100, Math.max(0, (stats.total / totalBudget) * 100)) : 0;
 
   return (
-    <div className={cn("relative mx-5 overflow-hidden rounded-[2rem] bg-gradient-to-br p-5 shadow-[0_22px_60px_rgba(15,23,42,0.18)]", meta.sky)}>
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(255,255,255,0.55),transparent_40%)]" />
-      <div className="absolute right-5 top-5 rounded-full bg-white/75 p-3 shadow-sm backdrop-blur">
-        <Icon className="h-7 w-7 text-slate-700" />
+    <div className={cn("relative min-h-[calc(100vh-3rem)] overflow-hidden bg-gradient-to-b", meta.sky)}>
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(255,255,255,0.65),transparent_22%),radial-gradient(circle_at_top_right,rgba(255,255,255,0.28),transparent_28%),linear-gradient(180deg,rgba(255,255,255,0.22),transparent_28%)]" />
+      <div className="absolute inset-x-0 top-0 h-56 bg-[radial-gradient(circle_at_10%_0%,rgba(255,255,255,0.95),transparent_18%),radial-gradient(circle_at_90%_5%,rgba(255,255,255,0.4),transparent_15%)]" />
+
+      <div className="absolute left-5 right-5 top-6 z-30 flex items-start justify-between gap-4">
+        <div className="max-w-[62%] text-slate-900">
+          <p className="text-[0.7rem] font-semibold uppercase tracking-[0.34em] text-slate-500">SimCity Budget</p>
+          <h1 className="mt-3 text-[2.15rem] font-black leading-tight tracking-tight text-slate-900">模拟城市记账本</h1>
+          <p className="mt-2 text-sm leading-6 text-slate-500">让每一笔消费都影响你的小镇命运</p>
+        </div>
+        <div className="flex items-center gap-3">
+          <div className="rounded-[1.75rem] border border-white/70 bg-white/80 px-4 py-3 shadow-[0_18px_38px_rgba(111,154,206,0.16)] backdrop-blur">
+            <div className="flex items-center gap-3">
+              <div className="rounded-2xl bg-amber-100 p-2.5">
+                <WeatherIcon className="h-5 w-5 text-amber-500" />
+              </div>
+              <div>
+                <p className="text-sm font-bold text-slate-700">{scene.weatherLabel}</p>
+                <p className="text-sm font-semibold text-slate-500">{scene.temp}</p>
+              </div>
+            </div>
+          </div>
+          <button
+            type="button"
+            className="relative rounded-[1.4rem] border border-white/70 bg-white/80 p-4 shadow-[0_18px_38px_rgba(111,154,206,0.16)] backdrop-blur"
+          >
+            <Bell className="h-5 w-5 text-slate-700" />
+            <span className="absolute right-3 top-3 h-2.5 w-2.5 rounded-full bg-rose-500" />
+          </button>
+        </div>
       </div>
 
       <AnimatePresence>
@@ -259,9 +405,9 @@ function TownScene({ level, warning }) {
             animate={{ opacity: [0, 1, 0.45, 1, 0] }}
             exit={{ opacity: 0 }}
             transition={{ duration: 1.5 }}
-            className="absolute inset-0 z-20 flex items-center justify-center bg-slate-900/45 text-white"
+            className="absolute inset-0 z-50 flex items-center justify-center bg-slate-950/30 text-white"
           >
-            <div className="rounded-3xl bg-white/20 px-5 py-3 backdrop-blur">
+            <div className="rounded-3xl border border-white/15 bg-white/16 px-5 py-3 backdrop-blur">
               <div className="flex items-center gap-2 text-sm font-semibold">
                 <Zap className="h-5 w-5" />
                 分类预算单笔预警
@@ -279,87 +425,248 @@ function TownScene({ level, warning }) {
         />
       )}
 
-      <div className="relative mb-8 mt-4 max-w-[72%]">
-        <p className="text-sm font-medium text-slate-600">当前小镇状态</p>
-        <h2 className="mt-1 text-3xl font-black text-slate-900">{meta.name}</h2>
-        <p className="mt-2 text-sm leading-6 text-slate-600">{meta.title}</p>
-      </div>
+      <div className="absolute inset-0">
+        <motion.div
+          animate={{ y: [0, -6, 0] }}
+          transition={{ repeat: Infinity, duration: 9, ease: "easeInOut" }}
+          className={cn("absolute left-[10%] top-[10%] h-20 w-20 rounded-full blur-[1px]", level === 4 ? "bg-amber-100/20" : "bg-amber-100/90")}
+        />
 
-      <div className="relative h-44 rounded-3xl bg-white/35 p-4 backdrop-blur-sm">
-        <div className="absolute inset-x-0 bottom-0 h-12 rounded-b-3xl bg-emerald-200/65" />
-        {level === 1 && (
+        {[0, 1, 2].map((idx) => (
+          <motion.div
+            key={`cloud-${idx}`}
+            animate={{ x: idx % 2 === 0 ? [0, 18, 0] : [0, -14, 0] }}
+            transition={{ repeat: Infinity, duration: 7 + idx * 1.5, ease: "easeInOut" }}
+            className={cn(
+              "absolute rounded-full blur-sm",
+              scene.cloudTone,
+              idx === 0 && "left-[8%] top-[23%] h-9 w-24",
+              idx === 1 && "right-[10%] top-[17%] h-12 w-28",
+              idx === 2 && "right-[30%] top-[28%] h-8 w-20",
+            )}
+          />
+        ))}
+
+        {scene.birds && (
           <motion.div
             animate={{ x: [0, 220] }}
             transition={{ repeat: Infinity, duration: 8, ease: "linear" }}
-            className="absolute left-6 top-8 text-2xl"
+            className="absolute left-10 top-[20%] text-2xl"
           >
             🕊️
           </motion.div>
         )}
-        {level === 3 && (
-          <motion.div
-            animate={{ y: [0, 60], rotate: [0, 40] }}
-            transition={{ repeat: Infinity, duration: 3 }}
-            className="absolute left-16 top-12 text-xl"
-          >
-            🍂
-          </motion.div>
-        )}
-        {level === 4 && (
+
+        <motion.div
+          animate={{ x: [0, 16, 0], y: [0, -8, 0], rotate: [0, 2, 0] }}
+          transition={{ repeat: Infinity, duration: 7, ease: "easeInOut" }}
+          className="absolute left-[8%] top-[19%] hidden rounded-full border border-white/60 bg-white/82 px-4 py-2 text-sm font-bold text-slate-600 shadow-[0_18px_35px_rgba(111,154,206,0.18)] backdrop-blur md:block"
+        >
+          记账改变生活
+        </motion.div>
+
+        <motion.div
+          animate={{ y: [0, -10, 0] }}
+          transition={{ repeat: Infinity, duration: 5.5, ease: "easeInOut" }}
+          className="absolute right-[6%] top-[24%] text-5xl"
+        >
+          🎈
+        </motion.div>
+
+        {scene.drizzle &&
+          [0, 1, 2, 3, 4].map((idx) => (
+            <motion.span
+              key={`rain-${idx}`}
+              animate={{ y: [-10, 150], opacity: [0, 0.6, 0] }}
+              transition={{ repeat: Infinity, duration: 1.2 + idx * 0.15, delay: idx * 0.16, ease: "linear" }}
+              className="absolute top-[28%] h-10 w-[2px] rounded-full bg-white/40"
+              style={{ left: `${22 + idx * 13}%` }}
+            />
+          ))}
+
+        {scene.lightning && (
           <>
             <motion.div
               animate={{ opacity: [0, 1, 0] }}
               transition={{ repeat: Infinity, duration: 1 }}
-              className="absolute right-20 top-5 text-3xl"
+              className="absolute right-20 top-[24%] text-3xl"
             >
               ⚡
             </motion.div>
             <motion.div
               animate={{ y: [0, 80] }}
               transition={{ repeat: Infinity, duration: 1.2 }}
-              className="absolute left-28 top-4 text-2xl"
+              className="absolute left-28 top-[25%] text-2xl"
             >
               🌧️
             </motion.div>
           </>
         )}
-        <div className="absolute bottom-8 left-6 right-6 flex items-end justify-center gap-3">
-          {buildings.map((height, idx) => (
-            <motion.div
-              key={`${level}-${idx}`}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: idx * 0.06 }}
+
+        <div className={cn("absolute inset-x-0 bottom-[20%] top-[34%] bg-gradient-to-b", scene.waterTone)}>
+          <div className="absolute left-[-10%] bottom-[-3%] h-44 w-40 rounded-full bg-white/32 blur-xl" />
+          <div className="absolute right-[-8%] top-[28%] h-36 w-36 rounded-full bg-white/18 blur-xl" />
+        </div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 24, scale: 0.98 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          transition={{ duration: 0.45 }}
+          className="absolute left-1/2 top-[17%] z-20 h-[52%] w-[92%] -translate-x-1/2"
+        >
+          <div className={cn("absolute inset-x-0 bottom-0 h-[22%] rounded-[38%] bg-gradient-to-b shadow-[0_28px_60px_rgba(15,23,42,0.15)]", scene.cliffTone)} />
+          <div className={cn("absolute inset-x-[2%] bottom-[10%] top-[6%] rounded-[38%] bg-gradient-to-b shadow-[0_24px_50px_rgba(111,154,206,0.2)]", scene.landTone)} />
+
+          <div className="absolute inset-x-[8%] bottom-[16%] top-[16%]">
+            <div className={cn("absolute left-[4%] top-[44%] h-7 w-[90%] rounded-full rotate-[-22deg] shadow-sm", scene.roadTone)} />
+            <div className={cn("absolute left-[12%] top-[42%] h-2 w-[74%] rounded-full rotate-[-22deg]", scene.stripeTone)} />
+            <div className={cn("absolute left-[16%] top-[24%] h-[60%] w-7 rounded-full rotate-[18deg] shadow-sm", scene.roadTone)} />
+            <div className={cn("absolute left-[19%] top-[26%] h-[52%] w-2 rounded-full rotate-[18deg]", scene.stripeTone)} />
+            <div className={cn("absolute left-[40%] top-[38%] h-24 w-24 rounded-full shadow-[0_18px_30px_rgba(15,23,42,0.12)]", scene.roadTone)} />
+            <div className="absolute left-[44%] top-[42%] h-16 w-16 rounded-full bg-white/80">
+              <div className="absolute left-1/2 top-1/2 h-9 w-9 -translate-x-1/2 -translate-y-1/2 rounded-full bg-cyan-300/80" />
+              <div className="absolute left-1/2 top-[28%] h-7 w-1.5 -translate-x-1/2 rounded-full bg-cyan-50/90" />
+              <div className="absolute left-[38%] top-[42%] h-1.5 w-7 rounded-full bg-cyan-50/90" />
+            </div>
+          </div>
+
+          <div className="absolute left-[40%] top-[20%] h-40 w-24">
+            <div className={cn("absolute inset-0 rounded-t-[1.4rem] bg-gradient-to-b shadow-[0_20px_38px_rgba(76,118,176,0.18)]", scene.towerTone)} />
+            <div className={cn("absolute inset-x-2 top-3 h-3 rounded-full", scene.roofTone)} />
+            <div className="absolute left-1/2 top-[-9%] h-12 w-12 -translate-x-1/2 rounded-full bg-amber-200/85 shadow-[0_0_18px_rgba(255,196,85,0.55)]">
+              <span className="absolute inset-0 flex items-center justify-center text-xl">💰</span>
+            </div>
+            <div className="absolute inset-x-4 top-8 grid grid-cols-2 gap-1.5">
+              {Array.from({ length: 10 }).map((_, idx) => (
+                <span key={`tower-window-${idx}`} className={cn("h-3 rounded-sm", scene.windowTone)} />
+              ))}
+            </div>
+            <div className="absolute inset-x-[-12%] bottom-0 h-8 rounded-[1rem] bg-white/85 shadow-md" />
+          </div>
+
+          <div className="absolute left-[30%] top-[34%] h-24 w-16 rounded-t-[1rem] bg-white/88 shadow-[0_18px_34px_rgba(76,118,176,0.15)]">
+            <div className={cn("absolute inset-x-2 top-2 h-2 rounded-full", scene.roofTone)} />
+            <div className="absolute inset-x-3 top-7 grid grid-cols-2 gap-1">
+              {Array.from({ length: 6 }).map((_, idx) => (
+                <span key={`left-window-${idx}`} className={cn("h-2.5 rounded-sm", scene.windowTone)} />
+              ))}
+            </div>
+          </div>
+
+          <div className="absolute left-[56%] top-[33%] h-28 w-20 rounded-t-[1rem] bg-white/88 shadow-[0_18px_34px_rgba(76,118,176,0.15)]">
+            <div className={cn("absolute inset-x-2 top-2 h-2 rounded-full", scene.roofTone)} />
+            <div className="absolute inset-x-3 top-7 grid grid-cols-2 gap-1">
+              {Array.from({ length: 8 }).map((_, idx) => (
+                <span key={`right-window-${idx}`} className={cn("h-2.5 rounded-sm", scene.windowTone)} />
+              ))}
+            </div>
+          </div>
+
+          <div className="absolute left-[63%] top-[44%] h-[4.5rem] w-14 rounded-t-[0.9rem] bg-white/88 shadow-[0_18px_34px_rgba(76,118,176,0.15)]">
+            <div className={cn("absolute inset-x-2 top-2 h-2 rounded-full", scene.roofTone)} />
+            <div className="absolute inset-x-3 top-7 grid grid-cols-2 gap-1">
+              {Array.from({ length: 4 }).map((_, idx) => (
+                <span key={`mall-window-${idx}`} className={cn("h-2 rounded-sm", scene.windowTone)} />
+              ))}
+            </div>
+            <div className="absolute -bottom-4 left-1/2 w-16 -translate-x-1/2 rounded-xl bg-orange-400 px-2 py-1 text-center text-[0.7rem] font-black text-white shadow-lg">
+              MALL
+            </div>
+          </div>
+
+          <div className="absolute left-[12%] top-[63%] h-16 w-16 rounded-[1rem] bg-white/88 shadow-[0_18px_34px_rgba(76,118,176,0.12)]">
+            <div className="absolute -top-3 left-1/2 h-0 w-0 -translate-x-1/2 border-x-[14px] border-b-[16px] border-x-transparent border-b-sky-300/95" />
+          </div>
+          <div className="absolute left-[24%] top-[68%] h-14 w-14 rounded-[0.9rem] bg-white/88 shadow-[0_18px_34px_rgba(76,118,176,0.12)]">
+            <div className="absolute -top-2.5 left-1/2 h-0 w-0 -translate-x-1/2 border-x-[12px] border-b-[14px] border-x-transparent border-b-orange-300/95" />
+          </div>
+          <div className="absolute right-[14%] top-[61%] h-[3.75rem] w-[3.75rem] rounded-[1rem] bg-white/88 shadow-[0_18px_34px_rgba(76,118,176,0.12)]">
+            <div className="absolute -top-3 left-1/2 h-0 w-0 -translate-x-1/2 border-x-[13px] border-b-[15px] border-x-transparent border-b-sky-300/95" />
+          </div>
+
+          {[0, 1, 2, 3, 4, 5, 6, 7].map((idx) => (
+            <div
+              key={`tree-${idx}`}
               className={cn(
-                "w-10 rounded-t-xl shadow-sm",
-                height,
-                level === 1
-                  ? "bg-white/92"
-                  : level === 2
-                    ? "bg-slate-100/90"
-                    : level === 3
-                      ? "bg-stone-300/90"
-                      : "bg-stone-500/80",
+                "absolute h-10 w-8",
+                idx === 0 && "left-[22%] top-[26%]",
+                idx === 1 && "left-[74%] top-[30%]",
+                idx === 2 && "left-[12%] top-[51%]",
+                idx === 3 && "left-[30%] top-[57%]",
+                idx === 4 && "left-[72%] top-[58%]",
+                idx === 5 && "left-[60%] top-[20%]",
+                idx === 6 && "left-[45%] top-[74%]",
+                idx === 7 && "left-[82%] top-[51%]",
               )}
             >
-              <div className="mx-auto mt-3 grid w-6 grid-cols-2 gap-1">
-                {[0, 1, 2, 3].map((i) => (
-                  <span key={i} className="h-2 rounded-sm bg-slate-400/50" />
-                ))}
-              </div>
-            </motion.div>
+              <span className="absolute bottom-0 left-1/2 h-4 w-1 -translate-x-1/2 rounded-full bg-amber-900/45" />
+              <span className="absolute left-1/2 top-0 h-7 w-7 -translate-x-1/2 rounded-full bg-emerald-400/80 shadow-[0_6px_10px_rgba(75,154,95,0.25)]" />
+            </div>
           ))}
+
+          <div className="absolute left-[80%] top-[22%] h-14 w-14">
+            <motion.div animate={{ rotate: 360 }} transition={{ repeat: Infinity, duration: 8, ease: "linear" }} className="absolute left-1/2 top-1/2 h-10 w-10 -translate-x-1/2 -translate-y-1/2">
+              <span className="absolute left-1/2 top-0 h-10 w-[2px] -translate-x-1/2 rounded-full bg-white/95" />
+              <span className="absolute left-0 top-1/2 h-[2px] w-10 -translate-y-1/2 rounded-full bg-white/95" />
+              <span className="absolute left-[15%] top-[15%] h-[2px] w-8 rotate-45 rounded-full bg-white/95" />
+              <span className="absolute left-[15%] top-[15%] h-[2px] w-8 -rotate-45 rounded-full bg-white/95" />
+            </motion.div>
+            <span className="absolute left-1/2 top-1/2 h-14 w-1 -translate-x-1/2 rounded-full bg-slate-500/70" />
+          </div>
+
+          {level >= 3 && (
+            <div className="absolute right-[9%] top-[69%] h-[4.5rem] w-16">
+              <span className="absolute bottom-0 left-7 h-[4.5rem] w-1 rounded-full bg-amber-700/80" />
+              <span className="absolute left-7 top-2 h-1 w-8 rounded-full bg-amber-700/80" />
+              <span className="absolute right-0 top-3 h-7 w-[2px] rounded-full bg-amber-700/80" />
+            </div>
+          )}
+
+          <div className="absolute left-[-2%] bottom-[8%] h-16 w-10 rounded-full bg-white/70 blur-sm" />
+          <div className="absolute left-[5%] bottom-[6%] h-8 w-20 rounded-full bg-cyan-100/90" />
+          <div className="absolute left-[10%] bottom-[4%] h-8 w-8 rounded-full bg-white/88 shadow">
+            <span className="absolute left-1/2 top-1/2 h-0 w-0 -translate-x-1/2 -translate-y-1/2 border-x-[8px] border-b-[10px] border-x-transparent border-b-orange-200/95" />
+          </div>
+        </motion.div>
+
+        <div className="absolute left-7 bottom-[29%] z-30 rounded-[1.5rem] border border-white/70 bg-white/84 px-4 py-3 text-slate-800 shadow-[0_18px_36px_rgba(111,154,206,0.16)] backdrop-blur">
+          <p className="text-sm font-bold">今日消费</p>
+          <p className="mt-1 text-xs text-slate-500">🙂 合理范围内</p>
+        </div>
+
+        <div className="absolute right-6 bottom-[25%] z-30 rounded-[1.5rem] border border-white/70 bg-white/84 px-4 py-3 text-right text-slate-800 shadow-[0_18px_36px_rgba(111,154,206,0.16)] backdrop-blur">
+          <p className="text-sm font-bold">建设进度</p>
+          <p className="mt-1 text-2xl font-black text-slate-900">{budgetProgress.toFixed(0)}%</p>
         </div>
       </div>
 
-      <div className="mt-4 grid grid-cols-2 gap-3 text-xs text-slate-600">
-        <div className="rounded-2xl bg-white/55 p-3">
-          <p className="font-semibold text-slate-800">建筑图层</p>
-          <p className="mt-1">{meta.town}</p>
-        </div>
-        <div className="rounded-2xl bg-white/55 p-3">
-          <p className="font-semibold text-slate-800">天气动效</p>
-          <p className="mt-1">{meta.weather}</p>
+      <div className="absolute inset-x-3 bottom-28 z-40">
+        <div className="rounded-[2.25rem] border border-white/70 bg-white/70 p-4 shadow-[0_28px_80px_rgba(111,154,206,0.24)] backdrop-blur-xl">
+          <div className="grid grid-cols-2 gap-3">
+            <SceneStat label="今日支出" value={money(stats.today)} icon={Wallet} sub="合理范围内" accent={scene.cards[0]} bars={scene.bars[0]} />
+            <SceneStat label="本月累计" value={money(stats.total)} icon={Landmark} sub={`合理线 ${money(stats.line)}`} accent={scene.cards[1]} bars={scene.bars[1]} />
+            <SceneStat label="剩余预算" value={money(stats.remain)} icon={CheckCircle2} sub={`总预算 ${money(totalBudget)}`} accent={scene.cards[2]} bars={scene.bars[2]} />
+            <SceneStat label="城市等级" value={meta.name} icon={Crown} sub={meta.title} accent={scene.cards[3]} bars={scene.bars[3]} />
+          </div>
+
+          <div className="mt-4 grid grid-cols-2 gap-3">
+            <Button onClick={() => setPage("add")} className="h-14 rounded-[1.55rem] bg-slate-950 text-base shadow-[0_18px_36px_rgba(15,23,42,0.2)]">
+              <PlusCircle className="h-5 w-5" />
+              记一笔
+            </Button>
+            <Button onClick={() => setPage("account")} variant="secondary" className="h-14 rounded-[1.55rem] border border-slate-200 bg-white/92 text-base text-slate-900 shadow-[0_18px_36px_rgba(111,154,206,0.12)]">
+              <User className="h-5 w-5" />
+              账号管理
+            </Button>
+          </div>
+
+          <div className="mt-4 h-2 overflow-hidden rounded-full bg-slate-200/80">
+            <motion.div
+              initial={{ width: 0 }}
+              animate={{ width: `${budgetProgress}%` }}
+              className={cn("h-full rounded-full", scene.progressTone)}
+            />
+          </div>
         </div>
       </div>
     </div>
@@ -367,45 +674,9 @@ function TownScene({ level, warning }) {
 }
 
 function HomePage({ stats, setPage, healthLevel, warning, totalBudget }) {
-  const meta = healthMeta[healthLevel];
   return (
-    <div className="pb-28">
-      <PageHeader title="模拟城市记账本" subtitle="让每一笔消费都影响你的小镇命运" />
-      <TownScene level={healthLevel} warning={warning} />
-
-      <div className="mx-5 mt-5 grid grid-cols-2 gap-3">
-        <StatCard icon={Wallet} label="今日支出" value={money(stats.today)} sub={`日均预算 ${money(stats.daily)}`} />
-        <StatCard icon={Landmark} label="本月累计" value={money(stats.total)} sub={`合理线 ${money(stats.line)}`} />
-        <StatCard icon={CheckCircle2} label="剩余预算" value={money(stats.remain)} sub={`月总预算 ${money(totalBudget)}`} />
-        <StatCard icon={CloudSun} label="健康等级" value={meta.name} sub={meta.desc} />
-      </div>
-
-      <Card className="mx-5 mt-5">
-        <CardContent className="p-5">
-          <div className="flex items-start gap-3">
-            <div className="rounded-2xl bg-amber-100 p-2">
-              <AlertTriangle className="h-5 w-5 text-amber-700" />
-            </div>
-            <div>
-              <p className="font-bold text-slate-900">状态说明</p>
-              <p className="mt-1 text-sm leading-6 text-slate-500">
-                {meta.desc} 系统会按照“破产 → 萧条 → 平稳 → 繁荣”的优先级重新计算小镇状态。
-              </p>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-
-      <div className="mx-5 mt-5 grid grid-cols-2 gap-3">
-        <Button onClick={() => setPage("add")} className="h-14 rounded-2xl text-base shadow-sm">
-          <PlusCircle className="h-5 w-5" />
-          记一笔
-        </Button>
-        <Button onClick={() => setPage("budget")} variant="secondary" className="h-14 rounded-2xl text-base shadow-sm">
-          <Settings className="h-5 w-5" />
-          预算设置
-        </Button>
-      </div>
+    <div className="relative pb-28">
+      <TownScene level={healthLevel} warning={warning} stats={stats} totalBudget={totalBudget} setPage={setPage} />
     </div>
   );
 }
@@ -649,14 +920,209 @@ function BillDetailPage({ bill, onBack, onDelete }) {
   );
 }
 
-function BudgetPage({ totalBudget, setTotalBudget }) {
+function AccountPage({ totalBudget, setTotalBudget, account, setAccount }) {
   const [draft, setDraft] = useState(String(totalBudget));
+  const [mode, setMode] = useState(account.isLoggedIn ? "profile" : "login");
+  const [loginName, setLoginName] = useState(account.username || "simcity_player");
+  const [loginPassword, setLoginPassword] = useState("123456");
+  const [registerName, setRegisterName] = useState(account.username || "budget_user");
+  const [registerEmail, setRegisterEmail] = useState(account.email || "budget@demo.local");
+  const [registerPassword, setRegisterPassword] = useState("123456");
+  const [savedHint, setSavedHint] = useState("");
+
+  useEffect(() => {
+    setDraft(String(totalBudget));
+  }, [totalBudget]);
+
+  useEffect(() => {
+    if (account.isLoggedIn) {
+      setMode("profile");
+    }
+  }, [account.isLoggedIn]);
+
+  function showHint(text) {
+    setSavedHint(text);
+    window.setTimeout(() => setSavedHint(""), 1800);
+  }
+
+  function handleLogin() {
+    const username = loginName.trim() || "simcity_player";
+    setAccount({
+      isLoggedIn: true,
+      username,
+      email: account.email || `${username}@demo.local`,
+    });
+    showHint("已登录到原型账号");
+  }
+
+  function handleRegister() {
+    const username = registerName.trim() || "budget_user";
+    const email = registerEmail.trim() || `${username}@demo.local`;
+    setAccount({
+      isLoggedIn: true,
+      username,
+      email,
+    });
+    showHint("注册成功并已登录");
+  }
+
+  function handleLogout() {
+    setAccount(defaultAccount);
+    setMode("login");
+    showHint("已退出当前账号");
+  }
+
+  function handleSaveBudget() {
+    setTotalBudget(Number(draft || 0));
+    showHint("预算设置已更新");
+  }
 
   return (
     <div className="pb-28">
-      <PageHeader title="预算设置" subtitle="设置月总预算与可选分类预算" />
+      <PageHeader title="账号管理" subtitle="登录注册、账号信息与预算配置统一管理" />
+
       <Card className="mx-5">
+        <CardContent className="p-5">
+          <div className="mb-4 flex items-center justify-between">
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-[0.24em] text-slate-400">Account Center</p>
+              <h2 className="mt-2 text-xl font-black text-slate-900">{account.isLoggedIn ? "当前账号" : "登录 / 注册"}</h2>
+            </div>
+            {account.isLoggedIn && (
+              <span className="rounded-full bg-emerald-100 px-3 py-1 text-xs font-semibold text-emerald-700">已登录</span>
+            )}
+          </div>
+
+          {account.isLoggedIn ? (
+            <div className="space-y-4">
+              <div className="rounded-[1.75rem] bg-slate-50 p-4">
+                <div className="flex items-center gap-4">
+                  <div className="flex h-14 w-14 items-center justify-center rounded-3xl bg-slate-900 text-white">
+                    <User className="h-6 w-6" />
+                  </div>
+                  <div>
+                    <p className="text-lg font-black text-slate-900">{account.username}</p>
+                    <p className="text-sm text-slate-500">{account.email}</p>
+                  </div>
+                </div>
+                <div className="mt-4 grid grid-cols-2 gap-3 text-sm">
+                  <div className="rounded-2xl bg-white p-3">
+                    <p className="text-slate-400">账号状态</p>
+                    <p className="mt-1 font-bold text-slate-900">本地原型账号</p>
+                  </div>
+                  <div className="rounded-2xl bg-white p-3">
+                    <p className="text-slate-400">数据策略</p>
+                    <p className="mt-1 font-bold text-slate-900">设备端本地保存</p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="rounded-[1.5rem] border border-dashed border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-500">
+                当前仅为账号管理原型，后续可以接入真实注册、登录、找回密码和云同步能力。
+              </div>
+
+              <Button variant="secondary" className="h-12 w-full rounded-2xl" onClick={handleLogout}>
+                <LogOut className="h-4 w-4" />
+                退出登录
+              </Button>
+            </div>
+          ) : (
+            <div>
+              <div className="grid grid-cols-2 gap-3 rounded-2xl bg-slate-100 p-1.5">
+                <button
+                  type="button"
+                  onClick={() => setMode("login")}
+                  className={cn(
+                    "rounded-2xl px-4 py-2 text-sm font-semibold transition",
+                    mode === "login" ? "bg-white text-slate-900 shadow-sm" : "text-slate-500",
+                  )}
+                >
+                  登录
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setMode("register")}
+                  className={cn(
+                    "rounded-2xl px-4 py-2 text-sm font-semibold transition",
+                    mode === "register" ? "bg-white text-slate-900 shadow-sm" : "text-slate-500",
+                  )}
+                >
+                  注册
+                </button>
+              </div>
+
+              {mode === "login" ? (
+                <div className="mt-5 space-y-4">
+                  <div>
+                    <label className="text-sm font-semibold text-slate-700">用户名</label>
+                    <div className="mt-2 flex items-center gap-3 rounded-2xl bg-slate-50 px-4 py-3">
+                      <User className="h-4 w-4 text-slate-400" />
+                      <input value={loginName} onChange={(e) => setLoginName(e.target.value)} className="w-full bg-transparent outline-none" />
+                    </div>
+                  </div>
+                  <div>
+                    <label className="text-sm font-semibold text-slate-700">密码</label>
+                    <div className="mt-2 flex items-center gap-3 rounded-2xl bg-slate-50 px-4 py-3">
+                      <LockKeyhole className="h-4 w-4 text-slate-400" />
+                      <input type="password" value={loginPassword} onChange={(e) => setLoginPassword(e.target.value)} className="w-full bg-transparent outline-none" />
+                    </div>
+                  </div>
+                  <Button className="h-12 w-full rounded-2xl" onClick={handleLogin}>
+                    <LogIn className="h-4 w-4" />
+                    登录账号
+                  </Button>
+                </div>
+              ) : (
+                <div className="mt-5 space-y-4">
+                  <div>
+                    <label className="text-sm font-semibold text-slate-700">用户名</label>
+                    <div className="mt-2 flex items-center gap-3 rounded-2xl bg-slate-50 px-4 py-3">
+                      <User className="h-4 w-4 text-slate-400" />
+                      <input value={registerName} onChange={(e) => setRegisterName(e.target.value)} className="w-full bg-transparent outline-none" />
+                    </div>
+                  </div>
+                  <div>
+                    <label className="text-sm font-semibold text-slate-700">邮箱</label>
+                    <div className="mt-2 flex items-center gap-3 rounded-2xl bg-slate-50 px-4 py-3">
+                      <Mail className="h-4 w-4 text-slate-400" />
+                      <input value={registerEmail} onChange={(e) => setRegisterEmail(e.target.value)} className="w-full bg-transparent outline-none" />
+                    </div>
+                  </div>
+                  <div>
+                    <label className="text-sm font-semibold text-slate-700">密码</label>
+                    <div className="mt-2 flex items-center gap-3 rounded-2xl bg-slate-50 px-4 py-3">
+                      <LockKeyhole className="h-4 w-4 text-slate-400" />
+                      <input type="password" value={registerPassword} onChange={(e) => setRegisterPassword(e.target.value)} className="w-full bg-transparent outline-none" />
+                    </div>
+                  </div>
+                  <Button className="h-12 w-full rounded-2xl" onClick={handleRegister}>
+                    <UserPlus className="h-4 w-4" />
+                    注册并登录
+                  </Button>
+                </div>
+              )}
+            </div>
+          )}
+
+          {savedHint && (
+            <div className="mt-4 rounded-2xl bg-emerald-50 px-4 py-3 text-sm font-semibold text-emerald-700">{savedHint}</div>
+          )}
+        </CardContent>
+      </Card>
+
+      <Card className="mx-5 mt-5">
         <CardContent className="space-y-5 p-5">
+          <div className="flex items-start justify-between gap-4">
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-[0.24em] text-slate-400">Budget Config</p>
+              <h2 className="mt-2 text-xl font-black text-slate-900">预算设置</h2>
+              <p className="mt-1 text-sm text-slate-500">预算配置已并入账号管理页，方便后续与账号数据统一管理。</p>
+            </div>
+            <div className="rounded-2xl bg-sky-100 p-3">
+              <Settings className="h-5 w-5 text-sky-700" />
+            </div>
+          </div>
+
           <div>
             <label className="text-sm font-semibold text-slate-700">当前月份</label>
             <div className="mt-2 rounded-2xl bg-slate-50 px-4 py-3 font-bold text-slate-800">{DEMO_MONTH}</div>
@@ -678,7 +1144,7 @@ function BudgetPage({ totalBudget, setTotalBudget }) {
           <div>
             <div className="mb-3 flex items-center justify-between">
               <label className="text-sm font-semibold text-slate-700">消费类别预算（选填）</label>
-              <span className="text-xs text-slate-400">原型示例为静态类别预算</span>
+              <span className="text-xs text-slate-400">原型示例仍为静态分类预算</span>
             </div>
             <div className="space-y-3">
               {categories.map((cat) => {
@@ -695,7 +1161,7 @@ function BudgetPage({ totalBudget, setTotalBudget }) {
               })}
             </div>
           </div>
-          <Button className="h-14 w-full rounded-2xl text-base" onClick={() => setTotalBudget(Number(draft || 0))}>
+          <Button className="h-14 w-full rounded-2xl text-base" onClick={handleSaveBudget}>
             保存预算配置
           </Button>
         </CardContent>
@@ -817,15 +1283,15 @@ function StatisticsPage({ stats, bills }) {
 function BottomNav({ page, setPage }) {
   const items = [
     { id: "home", label: "首页", icon: Home },
-    { id: "add", label: "记账", icon: PlusCircle },
-    { id: "list", label: "明细", icon: ListChecks },
+    { id: "list", label: "账单", icon: ListChecks },
     { id: "board", label: "看板", icon: PieChart },
     { id: "stats", label: "统计", icon: BarChart3 },
+    { id: "account", label: "我的", icon: User },
   ];
 
   return (
-    <div className="fixed bottom-4 left-1/2 z-50 w-[min(94%,460px)] -translate-x-1/2 rounded-[2rem] border border-white/70 bg-white/[0.88] p-2 shadow-[0_24px_70px_rgba(15,23,42,0.2)] backdrop-blur">
-      <div className="grid grid-cols-5 gap-1">
+    <div className="fixed bottom-4 left-1/2 z-50 w-[min(94%,460px)] -translate-x-1/2 rounded-[2.2rem] border border-white/75 bg-white/[0.92] p-3 shadow-[0_24px_70px_rgba(111,154,206,0.22)] backdrop-blur-xl">
+      <div className="grid grid-cols-5 gap-2">
         {items.map((item) => {
           const Icon = item.icon;
           const active = page === item.id;
@@ -836,8 +1302,8 @@ function BottomNav({ page, setPage }) {
               type="button"
               onClick={() => setPage(item.id)}
               className={cn(
-                "rounded-2xl px-2 py-2 text-xs font-semibold transition",
-                active ? "bg-slate-900 text-white" : "text-slate-500",
+                "rounded-[1.45rem] px-2 py-2.5 text-xs font-semibold transition",
+                active ? "bg-slate-900 text-white shadow-[0_12px_28px_rgba(15,23,42,0.22)]" : "text-slate-500 hover:bg-slate-50",
               )}
             >
               <Icon className="mx-auto mb-1 h-5 w-5" />
@@ -855,6 +1321,7 @@ function App() {
   const [page, setPage] = useState("home");
   const [bills, setBills] = useState(stored?.bills || initialBills);
   const [totalBudget, setTotalBudgetState] = useState(stored?.totalBudget || 2000);
+  const [account, setAccount] = useState(stored?.account || defaultAccount);
   const [editingBill, setEditingBill] = useState(null);
   const [warning, setWarning] = useState(false);
   const stats = useMemo(() => calculateHealth(totalBudget, bills), [totalBudget, bills]);
@@ -865,9 +1332,10 @@ function App() {
       JSON.stringify({
         bills,
         totalBudget,
+        account,
       }),
     );
-  }, [bills, totalBudget]);
+  }, [bills, totalBudget, account]);
 
   function saveBill(input) {
     if (!input.amount) return;
@@ -893,7 +1361,6 @@ function App() {
 
   function updateBudget(nextValue) {
     setTotalBudgetState(nextValue);
-    setPage("home");
   }
 
   return (
@@ -911,9 +1378,9 @@ function App() {
             {page === "add" && <AddBillPage onBack={() => setPage("home")} onSave={saveBill} />}
             {page === "list" && <BillListPage bills={bills} setPage={setPage} setEditingBill={setEditingBill} />}
             {page === "detail" && <BillDetailPage bill={editingBill} onBack={() => setPage("list")} onDelete={deleteBill} />}
-            {page === "budget" && <BudgetPage totalBudget={totalBudget} setTotalBudget={updateBudget} />}
             {page === "board" && <CategoryBoardPage bills={bills} />}
             {page === "stats" && <StatisticsPage stats={stats} bills={bills} />}
+            {page === "account" && <AccountPage totalBudget={totalBudget} setTotalBudget={updateBudget} account={account} setAccount={setAccount} />}
           </motion.div>
         </AnimatePresence>
         <BottomNav page={page} setPage={setPage} />
