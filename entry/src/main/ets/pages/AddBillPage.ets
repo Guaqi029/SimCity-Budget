@@ -1,18 +1,13 @@
 import { TopMessageToast } from '../components/TopMessageToast'
 import { AssetAccount } from '../model/AssetAccount'
 import { AssetAccountStore } from '../storage/AssetAccountStore'
+import { BillDatePicker, BillDatePickerValue } from '../components/bill/BillDatePicker'
 
 type AddBillMode = 'expense' | 'income' | 'transfer' | 'debt'
 
 interface BillCategoryOption {
   icon: string
   title: string
-}
-
-interface CalendarDayCell {
-  day: number
-  lunar: string
-  selected: boolean
 }
 
 const EXPENSE_CATEGORIES: BillCategoryOption[] = [
@@ -25,13 +20,12 @@ const EXPENSE_CATEGORIES: BillCategoryOption[] = [
   { icon: '罚', title: '罚款赔偿' },
   { icon: '理', title: '理财支出' },
   { icon: '善', title: '慈善捐助' },
-  { icon: '+', title: '新增' },
   { icon: '居', title: '居家生活' },
   { icon: '学', title: '文化教育' },
   { icon: '礼', title: '送礼人情' },
   { icon: '医', title: '健康医疗' },
   { icon: '旅', title: '旅游' },
-  { icon: '+', title: '编辑' }
+  { icon: '+', title: '新增' }
 ]
 
 const INCOME_CATEGORIES: BillCategoryOption[] = [
@@ -70,15 +64,18 @@ export struct AddBillPage {
   @State private selectedDay: number = new Date().getDate()
   @State private selectedHour: number = new Date().getHours()
   @State private selectedMinute: number = new Date().getMinutes()
+  @State private dateDisplayLabel: string = '今天'
+  @State private dateDisplayVersion: number = 0
   onBack: () => void = () => {}
   private toastTimer: number = -1
 
   aboutToAppear() {
     this.loadAssets()
+    this.refreshDateDisplayLabel()
   }
 
   build() {
-    Stack({ alignContent: Alignment.Top }) {
+    Stack({ alignContent: Alignment.Center }) {
       Column() {
         this.header()
         this.categoryGrid()
@@ -96,6 +93,7 @@ export struct AddBillPage {
         message: this.toastMessage
       })
       .margin({ top: 48 })
+      .align(Alignment.Top)
 
       if (this.showDateSheet || this.showAssetSheet) {
         Column()
@@ -109,7 +107,27 @@ export struct AddBillPage {
       }
 
       if (this.showDateSheet) {
-        this.dateSheet()
+        BillDatePicker({
+          year: this.selectedYear,
+          month: this.selectedMonth,
+          day: this.selectedDay,
+          hour: this.selectedHour,
+          minute: this.selectedMinute,
+          onCancel: () => {
+            this.showDateSheet = false
+          },
+          onConfirm: (value: BillDatePickerValue) => {
+            this.selectedYear = value.year
+            this.selectedMonth = value.month
+            this.selectedDay = value.day
+            this.selectedHour = value.hour
+            this.selectedMinute = value.minute
+            this.refreshDateDisplayLabel()
+            this.showDateSheet = false
+          }
+        })
+        .align(Alignment.Center)
+        .onClick(() => {})
       }
 
       if (this.showAssetSheet) {
@@ -134,7 +152,6 @@ export struct AddBillPage {
         this.modeTab('expense', '支出')
         this.modeTab('income', '收入')
         this.modeTab('transfer', '转账')
-        this.modeTab('debt', '债务')
       }
       .margin({ left: 24 })
       .layoutWeight(1)
@@ -226,9 +243,9 @@ export struct AddBillPage {
   private metaBar() {
     Column() {
       Row({ space: 18 }) {
-        this.metaItem('日', this.dateLabel(), () => {
-          this.showDateSheet = true
-        })
+        ForEach([this.dateDisplayVersion], () => {
+          this.dateMetaItem()
+        }, (version: number) => version.toString())
         this.metaItem('￥', this.selectedAssetName, () => {
           this.showAssetSheet = true
         })
@@ -244,6 +261,24 @@ export struct AddBillPage {
     }
     .width('100%')
     .height(48)
+  }
+
+  @Builder
+  private dateMetaItem() {
+    Row({ space: 5 }) {
+      Image($r('app.media.calendar'))
+        .width(17)
+        .height(17)
+        .objectFit(ImageFit.Contain)
+      // 直接读取 @State，避免通过 Builder 参数传入后文案不刷新。
+      Text(this.dateDisplayLabel)
+        .fontSize(16)
+        .fontColor('#111111')
+        .maxLines(1)
+    }
+    .onClick(() => {
+      this.showDateSheet = true
+    })
   }
 
   @Builder
@@ -612,141 +647,6 @@ export struct AddBillPage {
   }
 
   @Builder
-  private dateSheet() {
-    Column() {
-      Column({ space: 14 }) {
-        Row({ space: 6 }) {
-          Text((this.selectedMonth + 1).toString() + '月')
-            .fontSize(26)
-            .fontWeight(FontWeight.Bold)
-            .fontColor('#111111')
-          Text(this.selectedYear.toString())
-            .fontSize(10)
-            .fontColor('#777777')
-            .margin({ top: 8 })
-          Blank()
-        }
-        .width('100%')
-
-        GridRow({ columns: 7 }) {
-          ForEach(['日', '一', '二', '三', '四', '五', '六'], (week: string) => {
-            GridCol() {
-              Text(week)
-                .fontSize(13)
-                .fontColor('#111111')
-                .textAlign(TextAlign.Center)
-                .width('100%')
-            }
-          }, (week: string) => week)
-        }
-
-        GridRow({ columns: 7, gutter: 2 }) {
-          ForEach(this.calendarCells(), (cell: CalendarDayCell, index: number) => {
-            GridCol() {
-              this.calendarDay(cell)
-            }
-          }, (_cell: CalendarDayCell, index: number) => index.toString())
-        }
-
-        Row() {
-          Text('◔')
-            .fontSize(17)
-            .fontColor('#111111')
-          Text('设置时间')
-            .fontSize(15)
-            .fontColor('#111111')
-            .margin({ left: 10 })
-          Blank()
-          Text('›')
-            .fontSize(28)
-            .fontColor('#999999')
-        }
-        .width('100%')
-        .height(34)
-
-        Row() {
-          Blank()
-          this.timeText((this.selectedHour + 23) % 24, false)
-          this.timeText(this.selectedHour, true)
-          Text(':')
-            .fontSize(26)
-            .fontWeight(FontWeight.Bold)
-            .fontColor('#111111')
-            .margin({ left: 16, right: 16 })
-          this.timeText((this.selectedMinute + 59) % 60, false)
-          this.timeText(this.selectedMinute, true)
-          Blank()
-        }
-        .width('100%')
-        .height(68)
-
-        Row() {
-          Text('取消')
-            .fontSize(15)
-            .fontColor('#888888')
-            .layoutWeight(1)
-            .textAlign(TextAlign.Center)
-            .onClick(() => {
-              this.showDateSheet = false
-            })
-          Text('确定')
-            .fontSize(15)
-            .fontColor('#55B8A7')
-            .layoutWeight(1)
-            .textAlign(TextAlign.Center)
-            .onClick(() => {
-              this.showDateSheet = false
-            })
-        }
-        .width('100%')
-        .height(42)
-      }
-      .width('100%')
-      .padding({ left: 24, right: 24, top: 18, bottom: 14 })
-      .backgroundColor('#FFFFFF')
-      .borderRadius({ topLeft: 8, topRight: 8 })
-    }
-    .width('100%')
-    .height('100%')
-    .justifyContent(FlexAlign.End)
-  }
-
-  @Builder
-  private calendarDay(cell: CalendarDayCell) {
-    Column({ space: 2 }) {
-      Text(cell.day > 0 ? cell.day.toString() : '')
-        .fontSize(14)
-        .fontColor(cell.selected ? '#FFFFFF' : (cell.day > 0 ? '#111111' : '#AAAAAA'))
-        .fontWeight(cell.selected ? FontWeight.Bold : FontWeight.Regular)
-        .textAlign(TextAlign.Center)
-      Text(cell.lunar)
-        .fontSize(9)
-        .fontColor(cell.selected ? '#FFFFFF' : '#999999')
-        .textAlign(TextAlign.Center)
-    }
-    .width(44)
-    .height(44)
-    .justifyContent(FlexAlign.Center)
-    .alignItems(HorizontalAlign.Center)
-    .backgroundColor(cell.selected ? '#55B8A7' : '#FFFFFF')
-    .borderRadius(22)
-    .onClick(() => {
-      if (cell.day > 0) {
-        this.selectedDay = cell.day
-      }
-    })
-  }
-
-  @Builder
-  private timeText(value: number, active: boolean) {
-    Text(value < 10 ? '0' + value.toString() : value.toString())
-      .fontSize(active ? 22 : 15)
-      .fontColor(active ? '#111111' : '#C8C8C8')
-      .width(44)
-      .textAlign(TextAlign.Center)
-  }
-
-  @Builder
   private assetSheet() {
     Column() {
       Column() {
@@ -893,43 +793,18 @@ export struct AddBillPage {
     if (this.selectedYear === now.getFullYear() && this.selectedMonth === now.getMonth() && this.selectedDay === now.getDate()) {
       return '今天'
     }
+
+    const yesterday = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 1)
+    if (this.selectedYear === yesterday.getFullYear() && this.selectedMonth === yesterday.getMonth() && this.selectedDay === yesterday.getDate()) {
+      return '昨天'
+    }
+
     return (this.selectedMonth + 1).toString() + '月' + this.selectedDay.toString() + '日'
   }
 
-  private calendarCells(): CalendarDayCell[] {
-    const cells: CalendarDayCell[] = []
-    const firstDay = new Date(this.selectedYear, this.selectedMonth, 1).getDay()
-    const daysInMonth = new Date(this.selectedYear, this.selectedMonth + 1, 0).getDate()
-
-    for (let index = 0; index < firstDay; index++) {
-      cells.push({ day: 0, lunar: '', selected: false })
-    }
-
-    for (let day = 1; day <= daysInMonth; day++) {
-      cells.push({
-        day: day,
-        lunar: this.lunarText(day),
-        selected: day === this.selectedDay
-      })
-    }
-
-    while (cells.length < 42) {
-      cells.push({ day: 0, lunar: '', selected: false })
-    }
-    return cells
-  }
-
-  private lunarText(day: number): string {
-    if (day === 5) {
-      return '芒种'
-    }
-    if (day === 21) {
-      return '夏至'
-    }
-    const lunarDays: string[] = ['初一', '初二', '初三', '初四', '初五', '初六', '初七', '初八', '初九', '初十',
-      '十一', '十二', '十三', '十四', '十五', '十六', '十七', '十八', '十九', '二十',
-      '廿一', '廿二', '廿三', '廿四', '廿五', '廿六', '廿七', '廿八', '廿九', '三十']
-    return lunarDays[(day - 1) % lunarDays.length]
+  private refreshDateDisplayLabel() {
+    this.dateDisplayLabel = this.dateLabel()
+    this.dateDisplayVersion += 1
   }
 
   private assetDisplayName(asset: AssetAccount): string {
