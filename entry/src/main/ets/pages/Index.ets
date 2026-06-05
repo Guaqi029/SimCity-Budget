@@ -90,21 +90,39 @@ struct Index {
   build() {
     Stack({ alignContent: Alignment.Bottom }) {
       Column() {
-        // 主内容统一放在 Scroll 中，避免页面内容超过屏幕时被截断。
-        Scroll() {
+        if (this.overlayPage === '') {
+          if (this.currentTab === 0) {
+            // 首页内部有自己的 Scroll 和悬浮添加按钮，避免全局浮层遮挡 TabBar。
+            Column() {
+              this.renderCurrentPage()
+            }
+            .width('100%')
+            .layoutWeight(1)
+          } else {
+            // 其他普通 Tab 页面继续由 Index 提供统一滚动容器。
+            Scroll() {
+              Column() {
+                this.renderCurrentPage()
+              }
+              .width('100%')
+              .padding({
+                left: 16,
+                right: 16,
+                top: 20,
+                bottom: 24
+              })
+            }
+            .scrollBar(BarState.Off)
+            .layoutWeight(1)
+          }
+        } else {
+          // 覆盖页使用完整屏幕，新增账单页的底部键盘才能贴近屏幕底部。
           Column() {
             this.renderCurrentPage()
           }
           .width('100%')
-          .padding({
-            left: 16,
-            right: 16,
-            top: 20,
-            bottom: this.overlayPage === '' ? 24 : 20
-          })
+          .height('100%')
         }
-        .scrollBar(BarState.Off)
-        .layoutWeight(1)
 
         // 覆盖页打开时隐藏底部导航，让新增/详情流程更像完整页面。
         if (this.overlayPage === '') {

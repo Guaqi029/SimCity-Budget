@@ -1,5 +1,7 @@
 import { PageHeader } from '../components/PageHeader'
 import { InfoCard } from '../components/InfoCard'
+import { HomeBillTimeline } from '../components/bill/HomeBillTimeline'
+import { HOME_BILL_GROUPS } from '../components/bill/MockBillData'
 
 @Component
 export struct HomePage {
@@ -7,67 +9,100 @@ export struct HomePage {
   onOpenAccount: () => void = () => {}
 
   build() {
-    Column({ space: 16 }) {
-      PageHeader({
-        eyebrow: 'SIMCITY BUDGET',
-        title: '模拟城市记账本',
-        subtitle: '让每一笔消费都影响你的小镇命运'
-      })
-
-      Stack({ alignContent: Alignment.TopStart }) {
-        Column()
-          .width('100%')
-          .height(360)
-          .linearGradient({
-            angle: 180,
-            colors: [['#E8F6FF', 0.0], ['#D0EEFF', 0.45], ['#BDE2FF', 1.0]]
+    Stack({ alignContent: Alignment.BottomEnd }) {
+      Scroll() {
+        Column({ space: 16 }) {
+          PageHeader({
+            eyebrow: 'SIMCITY BUDGET',
+            title: '模拟城市记账本',
+            subtitle: '让每一笔消费都影响你的小镇命运'
           })
-          .borderRadius(36)
 
-        Column({ space: 14 }) {
-          Row({ space: 12 }) {
-            Text('记账改变生活')
-              .fontSize(14)
-              .fontWeight(FontWeight.Medium)
-              .fontColor('#61738F')
-              .padding({ left: 18, right: 18, top: 10, bottom: 10 })
-              .backgroundColor('#F6FBFF')
-              .borderRadius(24)
+          Stack({ alignContent: Alignment.TopStart }) {
+            Column()
+              .width('100%')
+              .height(360)
+              .linearGradient({
+                angle: 180,
+                colors: [['#E8F6FF', 0.0], ['#D0EEFF', 0.45], ['#BDE2FF', 1.0]]
+              })
+              .borderRadius(36)
 
-            Blank()
+            Column({ space: 14 }) {
+              Row({ space: 12 }) {
+                Text('记账改变生活')
+                  .fontSize(14)
+                  .fontWeight(FontWeight.Medium)
+                  .fontColor('#61738F')
+                  .padding({ left: 18, right: 18, top: 10, bottom: 10 })
+                  .backgroundColor('#F6FBFF')
+                  .borderRadius(24)
 
-            this.buildWeatherCard()
-            this.buildNoticeCard()
+                Blank()
+
+                this.buildWeatherCard()
+                this.buildNoticeCard()
+              }
+              .width('100%')
+
+              Blank()
+
+              this.buildIslandScene()
+            }
+            .width('100%')
+            .height(360)
+            .padding(20)
           }
           .width('100%')
 
-          Blank()
+          GridRow({ columns: 2, gutter: 12 }) {
+            GridCol() {
+              InfoCard({ title: '今日支出', value: '¥53.00', description: '合理范围内' })
+            }
+            GridCol() {
+              InfoCard({ title: '本月累计', value: '¥388.00', description: '合理线 ¥1806.45' })
+            }
+            GridCol() {
+              InfoCard({ title: '剩余预算', value: '¥1612.00', description: '总预算 ¥2000.00' })
+            }
+            GridCol() {
+              InfoCard({ title: '城市等级', value: '繁荣', description: '消费克制，小镇持续发展' })
+            }
+          }
 
-          this.buildIslandScene()
+          HomeBillTimeline({ groups: HOME_BILL_GROUPS })
         }
         .width('100%')
-        .height(360)
-        .padding(20)
+        .padding({ left: 16, right: 16, top: 20, bottom: 104 })
+        .alignItems(HorizontalAlign.Start)
       }
       .width('100%')
+      .height('100%')
+      .scrollBar(BarState.Off)
 
-      GridRow({ columns: 2, gutter: 12 }) {
-        GridCol() {
-          InfoCard({ title: '今日支出', value: '¥53.00', description: '合理范围内' })
-        }
-        GridCol() {
-          InfoCard({ title: '本月累计', value: '¥388.00', description: '合理线 ¥1806.45' })
-        }
-        GridCol() {
-          InfoCard({ title: '剩余预算', value: '¥1612.00', description: '总预算 ¥2000.00' })
-        }
-        GridCol() {
-          InfoCard({ title: '城市等级', value: '繁荣', description: '消费克制，小镇持续发展' })
-        }
-      }
+      this.addBillButton()
     }
     .width('100%')
-    .alignItems(HorizontalAlign.Start)
+    .height('100%')
+  }
+
+  @Builder
+  private addBillButton() {
+    Stack({ alignContent: Alignment.Center }) {
+      Image($r('app.media.add'))
+        .width(28)
+        .height(28)
+    }
+    // 首页自己的悬浮入口，按钮本体之外不占点击区域，避免影响底部 TabBar。
+    .width(58)
+    .height(58)
+    .borderRadius(29)
+    .backgroundColor('#55B8A7')
+    .shadow({ radius: 18, color: '#3355B8A744', offsetY: 8 })
+    .margin({ right: 22, bottom: 22 })
+    .onClick(() => {
+      this.onAddBill()
+    })
   }
 
   @Builder
