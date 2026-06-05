@@ -11,15 +11,15 @@ export struct AssetTypeSheet {
   onSelect: (option: AssetTypeOption) => void = () => {}
 
   build() {
-    Column({ space: 22 }) {
+    Column({ space: 10 }) {
       ForEach(this.sections, (section: AssetTypeSection) => {
-        Column({ space: 14 }) {
+        Column({ space: 6 }) {
           Text(section.title)
-            .fontSize(20)
+            .fontSize(16)
             .fontWeight(FontWeight.Bold)
             .fontColor('#111111')
 
-          GridRow({ columns: 5, gutter: 8 }) {
+          GridRow({ columns: 5, gutter: 4 }) {
             ForEach(section.options, (option: AssetTypeOption) => {
               GridCol() {
                 AssetTypeCell({
@@ -37,9 +37,11 @@ export struct AssetTypeSheet {
       }, (section: AssetTypeSection) => section.title)
     }
     .width('100%')
-    .padding({ left: 18, right: 18, top: 28, bottom: 28 })
+    .height('70%')
+    .padding({ left: 14, right: 14, top: 18, bottom: 12 })
     .backgroundColor('#FFFFFF')
     .borderRadius({ topLeft: 18, topRight: 18 })
+    .justifyContent(FlexAlign.SpaceBetween)
   }
 }
 
@@ -55,26 +57,26 @@ struct AssetTypeCell {
   onSelect: (option: AssetTypeOption) => void = () => {}
 
   build() {
-    Column({ space: 8 }) {
+    Column({ space: 4 }) {
       Text(this.option.icon)
-        .fontSize(16)
+        .fontSize(13)
         .fontWeight(FontWeight.Bold)
         .fontColor('#FFFFFF')
         .textAlign(TextAlign.Center)
-        .width(36)
-        .height(36)
-        .padding({ top: 9 })
+        .width(28)
+        .height(28)
+        .padding({ top: 7 })
         .backgroundColor(this.option.color)
-        .borderRadius(18)
+        .borderRadius(14)
 
       Text(this.option.title)
-        .fontSize(16)
+        .fontSize(13)
         .fontColor('#111111')
         .textAlign(TextAlign.Center)
         .maxLines(1)
     }
     .width('100%')
-    .height(74)
+    .height(52)
     .alignItems(HorizontalAlign.Center)
     .onClick(() => {
       this.onSelect(this.option)

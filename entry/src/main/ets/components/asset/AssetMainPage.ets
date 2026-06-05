@@ -8,7 +8,7 @@ export struct AssetMainPage {
   onAddAsset: () => void = () => {}
 
   build() {
-    Stack({alignContent:Alignment.Top}) {
+    Stack({alignContent:Alignment.BottomEnd}) {
       Scroll() {
         Column({ space: 16 }) {
           AssetOverviewCard({
@@ -38,7 +38,7 @@ export struct AssetMainPage {
           }
         }
         .width('100%')
-        .height('100%')
+        .height('110%')
         .padding({ bottom: 104 })
       }
       .width('100%')
@@ -55,14 +55,12 @@ export struct AssetMainPage {
         .fontSize(46)
         .fontColor('#FFFFFF')
         .textAlign(TextAlign.Center)
-        .width(60)
-        .height(60)
-        .padding({ top: 5 })
+        .width(50)
+        .height(50)
         .backgroundColor('#55B8A7')
-        .borderRadius(30)
+        .borderRadius(25)
         .shadow({ radius: 18, color: '#3355B8A744', offsetY: 8 })
         .align(Alignment.BottomEnd)
-        .margin({ right: 10, bottom: 24 })
         .scale({ x: this.showAddButton ? 1 : 0.2, y: this.showAddButton ? 1 : 0.2 })
         .opacity(this.showAddButton ? 1 : 0)
         .animation({ duration: 180, curve: Curve.EaseOut })

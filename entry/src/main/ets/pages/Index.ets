@@ -6,6 +6,9 @@ import { AnalyticsPage } from './AnalyticsPage'
 import { AccountPage } from './AccountPage'
 import { AddBillPage } from './AddBillPage'
 import { BillDetailPage } from './BillDetailPage'
+import { AssetTypeOption } from '../model/AssetAccount'
+import { AssetTypeSheet } from '../components/asset/AssetTypeSheet'
+import { ASSET_TYPE_SECTIONS, DEFAULT_ASSET_TYPE_OPTION } from '../components/asset/AssetTypeConfig'
 
 @Entry
 @Component
@@ -15,6 +18,14 @@ struct Index {
 
   // 临时覆盖当前 Tab 的独立页面；为空时展示普通 Tab 页面。
   @State overlayPage: string = ''
+
+  // 资产类型选择弹层提升到 Index 层，定位参考就是整屏 Stack，可以贴到屏幕底部。
+  @State showAssetTypeSheet: boolean = false
+  @State assetTypeSheetVisible: boolean = false
+
+  // 通过“选中项 + 版本号”把弹层选择结果传回 AssetPage。
+  @State selectedAssetTypeOption: AssetTypeOption = DEFAULT_ASSET_TYPE_OPTION
+  @State selectedAssetTypeVersion: number = 0
 
   // 底部导航配置：中间的“资产”是主功能入口之一。
   private readonly tabs: TabItem[] = [
@@ -62,7 +73,13 @@ struct Index {
         }
       })
     } else if (this.currentTab === 2) {
-      AssetPage()
+      AssetPage({
+        selectedAssetTypeOption: this.selectedAssetTypeOption,
+        selectedAssetTypeVersion: this.selectedAssetTypeVersion,
+        onOpenAssetTypeSheet: () => {
+          this.openAssetTypeSheet()
+        }
+      })
     } else if (this.currentTab === 3) {
       AnalyticsPage()
     } else {
@@ -71,41 +88,96 @@ struct Index {
   }
 
   build() {
-    Column() {
-      // 主内容统一放在 Scroll 中，避免页面内容超过屏幕时被截断。
-      Scroll() {
-        Column() {
-          this.renderCurrentPage()
-        }
-        .width('100%')
-        .padding({
-          left: 16,
-          right: 16,
-          top: 20,
-          bottom: this.overlayPage === '' ? 24 : 20
-        })
-      }
-      .scrollBar(BarState.Off)
-      .layoutWeight(1)
-
-      // 覆盖页打开时隐藏底部导航，让新增/详情流程更像完整页面。
-      if (this.overlayPage === '') {
-        Column() {
-          BottomTabBar({
-            currentIndex: this.currentTab,
-            items: this.tabs,
-            onChange: (index: number) => {
-              this.overlayPage = ''
-              this.currentTab = index
-            }
+    Stack({ alignContent: Alignment.Bottom }) {
+      Column() {
+        // 主内容统一放在 Scroll 中，避免页面内容超过屏幕时被截断。
+        Scroll() {
+          Column() {
+            this.renderCurrentPage()
+          }
+          .width('100%')
+          .padding({
+            left: 16,
+            right: 16,
+            top: 20,
+            bottom: this.overlayPage === '' ? 24 : 20
           })
         }
+        .scrollBar(BarState.Off)
+        .layoutWeight(1)
+
+        // 覆盖页打开时隐藏底部导航，让新增/详情流程更像完整页面。
+        if (this.overlayPage === '') {
+          Column() {
+            BottomTabBar({
+              currentIndex: this.currentTab,
+              items: this.tabs,
+              onChange: (index: number) => {
+                this.closeAssetTypeSheet()
+                this.overlayPage = ''
+                this.currentTab = index
+              }
+            })
+          }
+          .width('100%')
+        }
+      }
+      .width('100%')
+      .height('100%')
+
+      if (this.showAssetTypeSheet) {
+        // 全屏遮罩同样放在 Index 层，避免被某个页面内部布局裁剪。
+        Column()
+          .width('100%')
+          .height('100%')
+          .backgroundColor('#000000')
+          .opacity(0.58)
+          .onClick(() => {
+            this.closeAssetTypeSheet()
+          })
+
+        AssetTypeSheet({
+          sections: ASSET_TYPE_SECTIONS,
+          onSelect: (option: AssetTypeOption) => {
+            this.selectAssetType(option)
+          }
+        })
         .width('100%')
+        .align(Alignment.Bottom)
+        .translate({ y: this.assetTypeSheetVisible ? 0 : 620 })
+        .opacity(this.assetTypeSheetVisible ? 1 : 0)
+        .animation({ duration: 260, curve: Curve.EaseOut })
       }
     }
     .width('100%')
     .height('100%')
     .backgroundColor('#EEF6FF')
-    .expandSafeArea([SafeAreaType.SYSTEM], [SafeAreaEdge.TOP])
+    .expandSafeArea([SafeAreaType.SYSTEM], [SafeAreaEdge.TOP, SafeAreaEdge.BOTTOM])
+  }
+
+  private openAssetTypeSheet() {
+    this.showAssetTypeSheet = true
+    this.assetTypeSheetVisible = false
+    setTimeout(() => {
+      this.assetTypeSheetVisible = true
+    }, 20)
+  }
+
+  private closeAssetTypeSheet() {
+    if (!this.showAssetTypeSheet) {
+      return
+    }
+    this.assetTypeSheetVisible = false
+    setTimeout(() => {
+      if (!this.assetTypeSheetVisible) {
+        this.showAssetTypeSheet = false
+      }
+    }, 260)
+  }
+
+  private selectAssetType(option: AssetTypeOption) {
+    this.selectedAssetTypeOption = option
+    this.selectedAssetTypeVersion += 1
+    this.closeAssetTypeSheet()
   }
 }

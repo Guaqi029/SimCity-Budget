@@ -25,39 +25,40 @@ export struct AssetDetailFormPage {
   onSave: () => void = () => {}
 
   build() {
-    Column({ space: 14 }) {
+    Column({ space: 8 }) {
       Row() {
         Text('×')
-          .fontSize(34)
+          .fontSize(28)
           .fontColor('#000000')
-          .width(46)
-          .height(46)
+          .width(40)
+          .height(40)
           .textAlign(TextAlign.Center)
           .onClick(() => {
             this.onBack()
           })
 
         Text('新增' + this.option.title + '账户')
-          .fontSize(26)
+          .fontSize(22)
           .fontWeight(FontWeight.Bold)
           .fontColor('#111111')
           .layoutWeight(1)
 
         Text('✓')
-          .fontSize(34)
+          .fontSize(28)
           .fontWeight(FontWeight.Bold)
           .fontColor('#000000')
-          .width(46)
-          .height(46)
+          .width(40)
+          .height(40)
           .textAlign(TextAlign.Center)
           .onClick(() => {
             this.onSave()
           })
       }
       .width('100%')
-      .height(64)
+      .height(48)
       .backgroundColor('#FFFFFF')
 
+      // 基础信息是最高频输入区域，压缩行高后仍保留清晰的标签/输入层级。
       Column({ space: 0 }) {
         FormInputRow({ label: '名称', value: this.name, placeholder: '请输入账户名称', onChange: (value: string) => this.onNameChange(value) })
         FormInputRow({ label: '余额', value: this.balance, placeholder: '请输入账户余额', onChange: (value: string) => this.onBalanceChange(value) })
@@ -66,14 +67,15 @@ export struct AssetDetailFormPage {
         FormInputRow({ label: '卡号', value: this.cardNo, placeholder: '请输入卡号，可为空', onChange: (value: string) => this.onCardNoChange(value) })
 
         Text('卡号仅用作个人备忘，不涉及任何金融交易，可不填写')
-          .fontSize(14)
+          .fontSize(12)
           .fontColor('#8A8A8A')
-          .margin({ left: 96, top: 2, bottom: 12 })
+          .maxLines(1)
+          .margin({ left: 76, top: 0, bottom: 4 })
       }
       .width('100%')
-      .padding({ left: 18, right: 18, top: 12, bottom: 10 })
+      .padding({ left: 14, right: 14, top: 6, bottom: 6 })
       .backgroundColor('#FFFFFF')
-      .borderRadius(14)
+      .borderRadius(12)
 
       Column({ space: 0 }) {
         SettingValueRow({ title: '账户图标', value: this.option.icon, color: this.option.color })
@@ -82,27 +84,27 @@ export struct AssetDetailFormPage {
         ArrowValueRow({ title: '收益同步', value: '无', subtitle: '余额宝、零钱通等收益自动同步' })
       }
       .width('100%')
-      .padding({ left: 18, right: 18, top: 10, bottom: 10 })
+      .padding({ left: 14, right: 14, top: 4, bottom: 4 })
       .backgroundColor('#FFFFFF')
-      .borderRadius(14)
+      .borderRadius(12)
 
       Column({ space: 0 }) {
         Row() {
           Text('计入总资产')
-            .fontSize(20)
+            .fontSize(16)
             .fontColor('#111111')
           Blank()
           SwitchButton({ active: this.includeInTotal, onToggle: () => this.onIncludeChange() })
         }
         .width('100%')
-        .height(64)
+        .height(44)
 
         ArrowValueRow({ title: '选择生效账本', value: '全部账本', subtitle: '账户仅显示在指定账本' })
       }
       .width('100%')
-      .padding({ left: 18, right: 18, top: 10, bottom: 10 })
+      .padding({ left: 14, right: 14, top: 4, bottom: 4 })
       .backgroundColor('#FFFFFF')
-      .borderRadius(14)
+      .borderRadius(12)
     }
     .width('100%')
     .alignItems(HorizontalAlign.Start)
@@ -136,16 +138,16 @@ struct FormInputRow {
   onChange: (value: string) => void = () => {}
 
   build() {
-    Row({ space: 18 }) {
+    Row({ space: 12 }) {
       Text(this.label)
-        .fontSize(20)
+        .fontSize(16)
         .fontColor('#111111')
-        .width(72)
+        .width(60)
 
       TextInput({ text: this.value, placeholder: this.placeholder })
         .layoutWeight(1)
-        .height(58)
-        .fontSize(20)
+        .height(36)
+        .fontSize(16)
         .fontColor('#111111')
         .placeholderColor('#9B9B9B')
         .backgroundColor('#FFFFFF')
@@ -155,7 +157,7 @@ struct FormInputRow {
         })
     }
     .width('100%')
-    .height(74)
+    .height(44)
   }
 }
 
@@ -168,22 +170,22 @@ struct SettingValueRow {
   build() {
     Row() {
       Text(this.title)
-        .fontSize(20)
+        .fontSize(16)
         .fontColor('#111111')
       Blank()
       Text(this.value)
-        .fontSize(17)
+        .fontSize(14)
         .fontWeight(FontWeight.Bold)
         .fontColor('#FFFFFF')
         .textAlign(TextAlign.Center)
-        .width(46)
-        .height(46)
-        .padding({ top: 12 })
+        .width(32)
+        .height(32)
+        .padding({ top: 7 })
         .backgroundColor(this.color)
-        .borderRadius(23)
+        .borderRadius(16)
     }
     .width('100%')
-    .height(74)
+    .height(48)
   }
 }
 
@@ -195,29 +197,30 @@ struct ArrowValueRow {
 
   build() {
     Row() {
-      Column({ space: 5 }) {
+      Column({ space: 2 }) {
         Text(this.title)
-          .fontSize(20)
+          .fontSize(16)
           .fontColor('#111111')
         if (this.subtitle.length > 0) {
           Text(this.subtitle)
-            .fontSize(14)
+            .fontSize(12)
             .fontColor('#9B9B9B')
+            .maxLines(1)
         }
       }
       .alignItems(HorizontalAlign.Start)
       .layoutWeight(1)
 
       Text(this.value)
-        .fontSize(18)
+        .fontSize(15)
         .fontColor('#111111')
       Text('›')
-        .fontSize(30)
+        .fontSize(24)
         .fontColor('#9B9B9B')
-        .margin({ left: 10 })
+        .margin({ left: 6 })
     }
     .width('100%')
-    .height(74)
+    .height(48)
   }
 }
 
@@ -232,19 +235,19 @@ struct SwitchButton {
         Blank()
       }
       Column()
-        .width(34)
-        .height(34)
+        .width(24)
+        .height(24)
         .backgroundColor(this.active ? '#55B8A7' : '#C7CDD2')
-        .borderRadius(17)
+        .borderRadius(12)
       if (!this.active) {
         Blank()
       }
     }
-    .width(58)
-    .height(38)
+    .width(44)
+    .height(28)
     .padding(2)
     .backgroundColor(this.active ? '#DFF3EE' : '#EEF0F2')
-    .borderRadius(19)
+    .borderRadius(14)
     .onClick(() => {
       this.onToggle()
     })
