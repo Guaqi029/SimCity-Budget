@@ -1,9 +1,13 @@
 import { TopMessageToast } from '../components/TopMessageToast'
 import { AssetAccount } from '../model/AssetAccount'
 import { AssetAccountStore } from '../storage/AssetAccountStore'
+import { BillDraftPreferenceStore } from '../storage/BillDraftPreferenceStore'
 import { BillDatePicker, BillDatePickerValue } from '../components/bill/BillDatePicker'
+import { AssetAccountPicker } from '../components/bill/AssetAccountPicker'
 
-type AddBillMode = 'expense' | 'income' | 'transfer' | 'debt'
+type AddBillMode = 'expense' | 'income' | 'transfer'
+
+const NO_ASSET_ID: string = '__none__'
 
 interface BillCategoryOption {
   icon: string
@@ -11,38 +15,52 @@ interface BillCategoryOption {
 }
 
 const EXPENSE_CATEGORIES: BillCategoryOption[] = [
-  { icon: '其', title: '其他' },
-  { icon: '购', title: '购物消费' },
-  { icon: '餐', title: '食品餐饮' },
-  { icon: '行', title: '出行交通' },
-  { icon: '娱', title: '休闲娱乐' },
-  { icon: '周', title: '周转' },
-  { icon: '罚', title: '罚款赔偿' },
-  { icon: '理', title: '理财支出' },
-  { icon: '善', title: '慈善捐助' },
-  { icon: '居', title: '居家生活' },
-  { icon: '学', title: '文化教育' },
-  { icon: '礼', title: '送礼人情' },
-  { icon: '医', title: '健康医疗' },
-  { icon: '旅', title: '旅游' },
-  { icon: '+', title: '新增' }
+  { icon: '餐', title: '餐饮' },
+  { icon: '购', title: '购物' },
+  { icon: '行', title: '交通' },
+  { icon: '居', title: '居家' },
+  { icon: '娱', title: '娱乐' },
+  { icon: '医', title: '医疗' },
+  { icon: '学', title: '学习' },
+  { icon: '旅', title: '旅行' },
+  { icon: '人', title: '人情' },
+  { icon: '宠', title: '宠物' },
+  { icon: '通', title: '通讯' },
+  { icon: '服', title: '服饰' },
+  { icon: '运', title: '运动' },
+  { icon: '捐', title: '公益' },
+  { icon: '其', title: '其他' }
 ]
 
 const INCOME_CATEGORIES: BillCategoryOption[] = [
-  { icon: 'AA', title: 'AA' },
-  { icon: '生', title: '生活费' },
-  { icon: '其', title: '其他' },
-  { icon: '奖', title: '中奖' },
-  { icon: '理', title: '理财盈利' },
-  { icon: '礼', title: '礼金人情' },
-  { icon: '借', title: '借入' },
-  { icon: '金', title: '奖金' },
-  { icon: '兼', title: '兼职外快' },
   { icon: '资', title: '工资' },
-  { icon: '闲', title: '二手闲置' },
-  { icon: '补', title: '补贴' },
+  { icon: '兼', title: '兼职' },
+  { icon: '奖', title: '奖金' },
+  { icon: '理', title: '理财' },
+  { icon: '息', title: '利息' },
+  { icon: '租', title: '租金' },
+  { icon: '礼', title: '礼金' },
+  { icon: '退', title: '退款' },
   { icon: '报', title: '报销' },
-  { icon: '+', title: '编辑' }
+  { icon: '补', title: '补贴' },
+  { icon: '闲', title: '闲置' },
+  { icon: '借', title: '借入' },
+  { icon: '生', title: '生活费' },
+  { icon: '其', title: '其他' }
+]
+
+const TRANSFER_CATEGORIES: BillCategoryOption[] = [
+  { icon: '转', title: '账户转账' },
+  { icon: '卡', title: '还信用卡' },
+  { icon: '提', title: '提现' },
+  { icon: '充', title: '充值' },
+  { icon: '换', title: '换卡' },
+  { icon: '投', title: '投资转入' },
+  { icon: '赎', title: '投资转出' },
+  { icon: '借', title: '借款转入' },
+  { icon: '还', title: '还款转出' },
+  { icon: '调', title: '内部调拨' },
+  { icon: '其', title: '其他转账' }
 ]
 
 @Component
@@ -59,6 +77,7 @@ export struct AddBillPage {
   @State private assets: AssetAccount[] = []
   @State private selectedAssetId: string = ''
   @State private selectedAssetName: string = '无账户'
+  @State private selectedAssetVersion: number = 0
   @State private selectedYear: number = new Date().getFullYear()
   @State private selectedMonth: number = new Date().getMonth()
   @State private selectedDay: number = new Date().getDate()
@@ -102,7 +121,9 @@ export struct AddBillPage {
           .backgroundColor('#000000')
           .opacity(0.52)
           .onClick(() => {
-            this.closeSheets()
+            if (this.showDateSheet) {
+              this.showDateSheet = false
+            }
           })
       }
 
@@ -131,7 +152,14 @@ export struct AddBillPage {
       }
 
       if (this.showAssetSheet) {
-        this.assetSheet()
+        AssetAccountPicker({
+          assets: this.assets,
+          selectedAssetId: this.selectedAssetId,
+          onSelect: (asset: AssetAccount | undefined) => {
+            this.selectAsset(asset)
+          }
+        })
+        .onClick(() => {})
       }
     }
     .width('100%')
@@ -212,10 +240,12 @@ export struct AddBillPage {
         Text('◇')
           .fontSize(20)
           .fontColor('#111111')
-        Text('标签')
-          .fontSize(17)
-          .fontColor('#111111')
-          .margin({ left: 6 })
+        // 暂时不做
+        // Text('标签')
+        //   .fontSize(17)
+        //   .fontColor('#111111')
+        //   .margin({ left: 6 })
+        // todo：改为输入框，输入账单备注
         Text(this.remark.length > 0 ? this.remark : '添加备注')
           .fontSize(16)
           .fontColor('#9A9A9A')
@@ -246,9 +276,9 @@ export struct AddBillPage {
         ForEach([this.dateDisplayVersion], () => {
           this.dateMetaItem()
         }, (version: number) => version.toString())
-        this.metaItem('￥', this.selectedAssetName, () => {
-          this.showAssetSheet = true
-        })
+        ForEach([this.selectedAssetVersion], () => {
+          this.assetMetaItem()
+        }, (version: number) => version.toString())
       }
       .width('100%')
       .height(47)
@@ -278,6 +308,23 @@ export struct AddBillPage {
     }
     .onClick(() => {
       this.showDateSheet = true
+    })
+  }
+
+  @Builder
+  private assetMetaItem() {
+    Row({ space: 5 }) {
+      Text('￥')
+        .fontSize(15)
+        .fontColor('#111111')
+      // 直接读取 @State，并配合 selectedAssetVersion 强制重建，避免选择后显示旧账户。
+      Text(this.selectedAssetName)
+        .fontSize(16)
+        .fontColor('#111111')
+        .maxLines(1)
+    }
+    .onClick(() => {
+      this.showAssetSheet = true
     })
   }
 
@@ -646,146 +693,72 @@ export struct AddBillPage {
     }, 1600)
   }
 
-  @Builder
-  private assetSheet() {
-    Column() {
-      Column() {
-        Row() {
-          Column({ space: 4 }) {
-            Text('选择账户')
-              .fontSize(16)
-              .fontWeight(FontWeight.Bold)
-              .fontColor('#111111')
-            Text('长按拖动可进行排序')
-              .fontSize(12)
-              .fontColor('#9A9A9A')
-          }
-          .alignItems(HorizontalAlign.Start)
-          Blank()
-          Text('组合支付')
-            .fontSize(14)
-            .fontWeight(FontWeight.Bold)
-            .fontColor('#55B8A7')
-          Text('≡')
-            .fontSize(24)
-            .fontColor('#111111')
-            .margin({ left: 18 })
-          Text('+')
-            .fontSize(27)
-            .fontColor('#111111')
-            .margin({ left: 16 })
-        }
-        .width('100%')
-        .height(52)
-        .padding({ left: 16, right: 16 })
-
-        Scroll() {
-          Column() {
-            ForEach(this.assets, (asset: AssetAccount) => {
-              this.assetSelectRow(asset)
-            }, (asset: AssetAccount) => asset.id)
-
-            Row() {
-              Text('无')
-                .fontSize(13)
-                .fontColor('#111111')
-                .textAlign(TextAlign.Center)
-                .width(22)
-                .height(22)
-                .borderRadius(11)
-                .backgroundColor('#F2F2F2')
-              Text('无账户')
-                .fontSize(15)
-                .fontColor('#111111')
-                .margin({ left: 12 })
-              Blank()
-            }
-            .width('100%')
-            .height(50)
-            .padding({ left: 16, right: 16 })
-            .onClick(() => {
-              this.selectedAssetId = ''
-              this.selectedAssetName = '无账户'
-              this.showAssetSheet = false
-            })
-          }
-          .width('100%')
-        }
-        .height(430)
-        .scrollBar(BarState.Off)
-      }
-      .width('100%')
-      .backgroundColor('#FFFFFF')
-      .borderRadius({ topLeft: 8, topRight: 8 })
-      .padding({ top: 8, bottom: 10 })
-    }
-    .width('100%')
-    .height('100%')
-    .justifyContent(FlexAlign.End)
-  }
-
-  @Builder
-  private assetSelectRow(asset: AssetAccount) {
-    Row() {
-      Text(asset.icon.length > 0 ? asset.icon : '账')
-        .fontSize(12)
-        .fontColor('#FFFFFF')
-        .textAlign(TextAlign.Center)
-        .width(22)
-        .height(22)
-        .padding({ top: 4 })
-        .borderRadius(11)
-        .backgroundColor(asset.color)
-
-      Column({ space: 3 }) {
-        Text(this.assetDisplayName(asset))
-          .fontSize(15)
-          .fontColor('#111111')
-          .maxLines(1)
-        if (asset.remark !== undefined && asset.remark.length > 0) {
-          Text(asset.remark)
-            .fontSize(12)
-            .fontColor('#777777')
-            .maxLines(1)
-        }
-      }
-      .alignItems(HorizontalAlign.Start)
-      .margin({ left: 12 })
-
-      Blank()
-
-      Text(this.formatAmount(asset.balance))
-        .fontSize(14)
-        .fontColor(asset.balance > 0 ? '#55B8A7' : (asset.balance < 0 ? '#D95F6A' : '#222222'))
-    }
-    .width('100%')
-    .height(56)
-    .padding({ left: 16, right: 16 })
-    .backgroundColor(this.selectedAssetId === asset.id ? '#F2FBF8' : '#FFFFFF')
-    .onClick(() => {
-      this.selectedAssetId = asset.id
-      this.selectedAssetName = asset.shortName.length > 0 ? asset.shortName : asset.name
-      this.showAssetSheet = false
-    })
-  }
-
-  private closeSheets() {
-    this.showDateSheet = false
-    this.showAssetSheet = false
-  }
-
   private loadAssets() {
     AssetAccountStore.load(getContext(this))
       .then((assets: AssetAccount[]) => {
         this.assets = assets
-        if (assets.length > 0 && this.selectedAssetId.length === 0 && this.selectedAssetName === '无账户') {
-          this.selectedAssetId = assets[0].id
-          this.selectedAssetName = assets[0].shortName.length > 0 ? assets[0].shortName : assets[0].name
-        }
+        this.loadLastAsset()
       })
       .catch(() => {
         this.showToast('账户读取失败')
       })
+  }
+
+  private loadLastAsset() {
+    BillDraftPreferenceStore.loadLastAssetId(getContext(this))
+      .then((assetId: string) => {
+        if (assetId === NO_ASSET_ID) {
+          this.applySelectedAsset(undefined)
+          return
+        }
+        const asset = this.findAsset(assetId)
+        if (asset !== undefined) {
+          this.applySelectedAsset(asset)
+          return
+        }
+        if (this.assets.length > 0) {
+          this.applySelectedAsset(this.assets[0])
+          return
+        }
+        this.applySelectedAsset(undefined)
+      })
+      .catch(() => {
+        if (this.assets.length > 0) {
+          this.applySelectedAsset(this.assets[0])
+        }
+      })
+  }
+
+  private selectAsset(asset: AssetAccount | undefined) {
+    this.applySelectedAsset(asset)
+    BillDraftPreferenceStore.saveLastAssetId(getContext(this), asset === undefined ? NO_ASSET_ID : asset.id)
+      .catch(() => {
+        this.showToast('默认账户保存失败')
+      })
+    this.showAssetSheet = false
+  }
+
+  private applySelectedAsset(asset: AssetAccount | undefined) {
+    if (asset === undefined) {
+      this.selectedAssetId = ''
+      this.selectedAssetName = '无账户'
+    } else {
+      this.selectedAssetId = asset.id
+      this.selectedAssetName = asset.shortName.length > 0 ? asset.shortName : asset.name
+    }
+    this.selectedAssetVersion += 1
+  }
+
+  private findAsset(assetId: string): AssetAccount | undefined {
+    if (assetId.length === 0) {
+      return undefined
+    }
+    for (let index = 0; index < this.assets.length; index++) {
+      if (this.assets[index].id === assetId) {
+        return this.assets[index]
+      }
+    }
+    return undefined
   }
 
   private dateLabel(): string {
@@ -805,13 +778,6 @@ export struct AddBillPage {
   private refreshDateDisplayLabel() {
     this.dateDisplayLabel = this.dateLabel()
     this.dateDisplayVersion += 1
-  }
-
-  private assetDisplayName(asset: AssetAccount): string {
-    if (asset.shortName.length > 0) {
-      return asset.name + '(' + asset.shortName + ')'
-    }
-    return asset.name
   }
 }
 
