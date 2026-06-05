@@ -2,6 +2,8 @@ import { BillRecord } from '../model/BillRecord'
 import { AssetAccount } from '../model/AssetAccount'
 import { AssetAccountStore } from '../storage/AssetAccountStore'
 import { BillRecordStore } from '../storage/BillRecordStore'
+import { BillDatePicker, BillDatePickerValue } from '../components/bill/BillDatePicker'
+import { AssetAccountPicker } from '../components/bill/AssetAccountPicker'
 
 const EMPTY_BILL_RECORD: BillRecord = {
   id: '',
@@ -30,11 +32,17 @@ export struct BillDetailPage {
   @State private bill: BillRecord = EMPTY_BILL_RECORD
   @State private hasBill: boolean = false
   @State private showMenu: boolean = false
+  @State private showDeleteConfirm: boolean = false
+  @State private showDatePicker: boolean = false
+  @State private showAssetPicker: boolean = false
+  @State private assets: AssetAccount[] = []
   onBack: () => void = () => {}
   onDeleted: () => void = () => {}
+  onUpdated: () => void = () => {}
 
   aboutToAppear() {
     this.loadBill()
+    this.loadAssets()
   }
 
   build() {
@@ -79,6 +87,71 @@ export struct BillDetailPage {
           })
 
         this.optionMenu()
+      }
+
+      if (this.showDeleteConfirm) {
+        Column()
+          .width('100%')
+          .height('100%')
+          .backgroundColor('#000000')
+          .opacity(0.42)
+          .onClick(() => {
+            this.showDeleteConfirm = false
+          })
+
+        Stack({ alignContent: Alignment.Center }) {
+          this.deleteConfirmDialog()
+        }
+        .width('100%')
+        .height('100%')
+      }
+
+      if (this.showDatePicker && this.hasBill) {
+        Column()
+          .width('100%')
+          .height('100%')
+          .backgroundColor('#000000')
+          .opacity(0.42)
+          .onClick(() => {
+            this.showDatePicker = false
+          })
+
+        Stack({ alignContent: Alignment.Center }) {
+          BillDatePicker({
+            year: this.billDate().getFullYear(),
+            month: this.billDate().getMonth(),
+            day: this.billDate().getDate(),
+            hour: this.billDate().getHours(),
+            minute: this.billDate().getMinutes(),
+            onCancel: () => {
+              this.showDatePicker = false
+            },
+            onConfirm: (value: BillDatePickerValue) => {
+              this.updateBillDate(value)
+            }
+          })
+        }
+        .width('100%')
+        .height('100%')
+      }
+
+      if (this.showAssetPicker && this.hasBill) {
+        Column()
+          .width('100%')
+          .height('100%')
+          .backgroundColor('#000000')
+          .opacity(0.42)
+          .onClick(() => {
+            this.showAssetPicker = false
+          })
+
+        AssetAccountPicker({
+          assets: this.assets,
+          selectedAssetId: this.bill.assetId === undefined ? '' : this.bill.assetId,
+          onSelect: (asset: AssetAccount | undefined) => {
+            this.updateBillAsset(asset)
+          }
+        })
       }
     }
     .width('100%')
@@ -180,7 +253,7 @@ export struct BillDetailPage {
   @Builder
   private detailCard() {
     Column({ space: 0 }) {
-      this.infoRow('账单日期', this.billDateText())
+      this.dateRow()
       this.accountRow()
       this.infoRow('备注', this.remarkText(), '#999999')
       this.infoRow('标签', '点击添加', '#999999')
@@ -196,6 +269,26 @@ export struct BillDetailPage {
     .padding({ left: 18, right: 18, top: 20, bottom: 10 })
     .backgroundColor('#FFFFFF')
     .borderRadius(8)
+  }
+
+  @Builder
+  private dateRow() {
+    Row() {
+      Text('账单日期')
+        .fontSize(17)
+        .fontColor('#111111')
+      Blank()
+      Text(this.billDateText())
+        .fontSize(17)
+        .fontColor('#111111')
+        .maxLines(1)
+        .textAlign(TextAlign.End)
+    }
+    .width('100%')
+    .height(62)
+    .onClick(() => {
+      this.showDatePicker = true
+    })
   }
 
   @Builder
@@ -241,6 +334,11 @@ export struct BillDetailPage {
     }
     .width('100%')
     .height(62)
+    .onClick(() => {
+      if (this.bill.type !== 'transfer') {
+        this.showAssetPicker = true
+      }
+    })
   }
 
   @Builder
@@ -330,9 +428,58 @@ export struct BillDetailPage {
       .onClick(() => {
         this.showMenu = false
         if (label === '删除') {
-          this.deleteBill()
+          this.showDeleteConfirm = true
         }
       })
+  }
+
+  @Builder
+  private deleteConfirmDialog() {
+    Column({ space: 16 }) {
+      Text('删除账单')
+        .fontSize(19)
+        .fontWeight(FontWeight.Medium)
+        .fontColor('#111111')
+
+      Text('删除后会同步回滚对应资产余额，确认删除这笔账单吗？')
+        .fontSize(14)
+        .fontColor('#666666')
+        .lineHeight(21)
+        .textAlign(TextAlign.Center)
+
+      Row({ space: 12 }) {
+        Button('取消')
+          .type(ButtonType.Normal)
+          .layoutWeight(1)
+          .height(42)
+          .fontSize(15)
+          .fontColor('#333333')
+          .backgroundColor('#F0F0F0')
+          .borderRadius(8)
+          .onClick(() => {
+            this.showDeleteConfirm = false
+          })
+
+        Button('确认删除')
+          .type(ButtonType.Normal)
+          .layoutWeight(1)
+          .height(42)
+          .fontSize(15)
+          .fontColor('#FFFFFF')
+          .backgroundColor('#D85C62')
+          .borderRadius(8)
+          .onClick(() => {
+            this.showDeleteConfirm = false
+            this.deleteBill()
+          })
+      }
+      .width('100%')
+    }
+    .width(300)
+    .padding({ left: 20, right: 20, top: 22, bottom: 18 })
+    .backgroundColor('#FFFFFF')
+    .borderRadius(12)
+    .shadow({ radius: 18, color: '#22333333', offsetY: 8 })
   }
 
   private loadBill() {
@@ -357,6 +504,180 @@ export struct BillDetailPage {
         this.hasBill = false
         this.bill = EMPTY_BILL_RECORD
       })
+  }
+
+  private loadAssets() {
+    AssetAccountStore.load(getContext(this))
+      .then((assets: AssetAccount[]) => {
+        const activeAssets: AssetAccount[] = []
+        for (let index = 0; index < assets.length; index++) {
+          if (!assets[index].isDeleted) {
+            activeAssets.push(assets[index])
+          }
+        }
+        this.assets = activeAssets
+      })
+      .catch(() => {
+        this.assets = []
+      })
+  }
+
+  private updateBillDate(value: BillDatePickerValue) {
+    if (!this.hasBill) {
+      this.showDatePicker = false
+      return
+    }
+
+    const nextDate = new Date(value.year, value.month, value.day, value.hour, value.minute, 0)
+    const now = new Date().toISOString()
+    const nextBill = this.copyBillWithDate(this.bill, nextDate, now)
+    this.saveUpdatedBill(nextBill)
+      .then(() => {
+        this.bill = nextBill
+        this.showDatePicker = false
+        this.onUpdated()
+      })
+  }
+
+  private updateBillAsset(asset: AssetAccount | undefined) {
+    if (!this.hasBill || this.bill.type === 'transfer') {
+      this.showAssetPicker = false
+      return
+    }
+
+    const nextAssetId = asset === undefined ? '' : asset.id
+    if ((this.bill.assetId === undefined ? '' : this.bill.assetId) === nextAssetId) {
+      this.showAssetPicker = false
+      return
+    }
+
+    const now = new Date().toISOString()
+    const nextBill = this.copyBillWithAsset(this.bill, asset, now)
+    this.moveBillAssetEffect(this.bill, nextBill)
+      .then(() => {
+        return this.saveUpdatedBill(nextBill)
+      })
+      .then(() => {
+        this.bill = nextBill
+        this.showAssetPicker = false
+        this.loadAssets()
+        this.onUpdated()
+      })
+  }
+
+  private saveUpdatedBill(nextBill: BillRecord): Promise<void> {
+    return BillRecordStore.load(getContext(this))
+      .then((records: BillRecord[]) => {
+        const nextRecords: BillRecord[] = []
+        for (let index = 0; index < records.length; index++) {
+          if (records[index].id === nextBill.id) {
+            nextRecords.push(nextBill)
+          } else {
+            nextRecords.push(records[index])
+          }
+        }
+        return BillRecordStore.save(getContext(this), nextRecords)
+      })
+  }
+
+  private moveBillAssetEffect(oldBill: BillRecord, nextBill: BillRecord): Promise<void> {
+    return AssetAccountStore.load(getContext(this))
+      .then((assets: AssetAccount[]) => {
+        const nextAssets: AssetAccount[] = []
+        let changed = false
+        for (let index = 0; index < assets.length; index++) {
+          const asset = assets[index]
+          let nextBalance = asset.balance
+          nextBalance = this.rollbackNormalBillBalance(asset, oldBill, nextBalance)
+          nextBalance = this.applyNormalBillBalance(asset, nextBill, nextBalance)
+
+          if (nextBalance !== asset.balance) {
+            nextAssets.push(this.copyAssetWithBalance(asset, this.roundMoney(nextBalance)))
+            changed = true
+          } else {
+            nextAssets.push(asset)
+          }
+        }
+
+        if (!changed) {
+          return Promise.resolve(undefined)
+        }
+        return AssetAccountStore.save(getContext(this), nextAssets)
+      })
+  }
+
+  private rollbackNormalBillBalance(asset: AssetAccount, record: BillRecord, currentBalance: number): number {
+    const assetId = record.assetId === undefined ? '' : record.assetId
+    if (assetId.length === 0 || asset.id !== assetId) {
+      return currentBalance
+    }
+    if (record.type === 'expense') {
+      return currentBalance + record.amount
+    }
+    if (record.type === 'income') {
+      return currentBalance - record.amount
+    }
+    return currentBalance
+  }
+
+  private applyNormalBillBalance(asset: AssetAccount, record: BillRecord, currentBalance: number): number {
+    const assetId = record.assetId === undefined ? '' : record.assetId
+    if (assetId.length === 0 || asset.id !== assetId) {
+      return currentBalance
+    }
+    if (record.type === 'expense') {
+      return currentBalance - record.amount
+    }
+    if (record.type === 'income') {
+      return currentBalance + record.amount
+    }
+    return currentBalance
+  }
+
+  private copyBillWithDate(record: BillRecord, date: Date, updateTime: string): BillRecord {
+    return {
+      id: record.id,
+      amount: record.amount,
+      type: record.type,
+      assetId: record.assetId,
+      assetName: record.assetName,
+      fromAssetId: record.fromAssetId,
+      fromAssetName: record.fromAssetName,
+      toAssetId: record.toAssetId,
+      toAssetName: record.toAssetName,
+      transferFee: record.transferFee,
+      categoryId: record.categoryId,
+      categoryName: record.categoryName,
+      billDate: date.toISOString(),
+      month: this.monthKey(date),
+      remark: record.remark,
+      createTime: record.createTime,
+      updateTime: updateTime,
+      isDeleted: record.isDeleted
+    }
+  }
+
+  private copyBillWithAsset(record: BillRecord, asset: AssetAccount | undefined, updateTime: string): BillRecord {
+    return {
+      id: record.id,
+      amount: record.amount,
+      type: record.type,
+      assetId: asset === undefined ? '' : asset.id,
+      assetName: asset === undefined ? '' : asset.name,
+      fromAssetId: record.fromAssetId,
+      fromAssetName: record.fromAssetName,
+      toAssetId: record.toAssetId,
+      toAssetName: record.toAssetName,
+      transferFee: record.transferFee,
+      categoryId: record.categoryId,
+      categoryName: record.categoryName,
+      billDate: record.billDate,
+      month: record.month,
+      remark: record.remark,
+      createTime: record.createTime,
+      updateTime: updateTime,
+      isDeleted: record.isDeleted
+    }
   }
 
   private deleteBill() {
@@ -592,6 +913,13 @@ export struct BillDetailPage {
     return this.formatDate(new Date(this.bill.createTime))
   }
 
+  private billDate(): Date {
+    if (!this.hasBill || this.bill.billDate.length === 0) {
+      return new Date()
+    }
+    return new Date(this.bill.billDate)
+  }
+
   private formatDate(date: Date): string {
     return date.getFullYear().toString() + '年' + this.pad2(date.getMonth() + 1) + '月' +
     this.pad2(date.getDate()) + '日 ' + this.pad2(date.getHours()) + ':' + this.pad2(date.getMinutes())
@@ -599,5 +927,9 @@ export struct BillDetailPage {
 
   private pad2(value: number): string {
     return value < 10 ? '0' + value.toString() : value.toString()
+  }
+
+  private monthKey(date: Date): string {
+    return date.getFullYear().toString() + '-' + this.pad2(date.getMonth() + 1)
   }
 }

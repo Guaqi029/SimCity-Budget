@@ -59,6 +59,9 @@ struct Index {
           this.billRefreshVersion += 1
           this.selectedBillId = ''
         },
+        onUpdated: () => {
+          this.billRefreshVersion += 1
+        },
         onBack: () => {
           // 关闭账单详情页后回到账单列表。
           this.overlayPage = ''
