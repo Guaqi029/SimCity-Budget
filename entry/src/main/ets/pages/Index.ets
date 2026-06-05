@@ -26,6 +26,8 @@ struct Index {
   // 通过“选中项 + 版本号”把弹层选择结果传回 AssetPage。
   @State selectedAssetTypeOption: AssetTypeOption = DEFAULT_ASSET_TYPE_OPTION
   @State selectedAssetTypeVersion: number = 0
+  @State billRefreshVersion: number = 0
+  @State selectedBillId: string = ''
 
   // 底部导航配置：中间的“资产”是主功能入口之一。
   private readonly tabs: TabItem[] = [
@@ -41,6 +43,9 @@ struct Index {
     // overlayPage 优先级高于 currentTab，用于从任意 Tab 临时打开独立流程页。
     if (this.overlayPage === 'add') {
       AddBillPage({
+        onSaved: () => {
+          this.billRefreshVersion += 1
+        },
         onBack: () => {
           // 关闭新增账单页后回到首页。
           this.overlayPage = ''
@@ -49,26 +54,36 @@ struct Index {
       })
     } else if (this.overlayPage === 'detail') {
       BillDetailPage({
+        billId: this.selectedBillId,
+        onDeleted: () => {
+          this.billRefreshVersion += 1
+          this.selectedBillId = ''
+        },
         onBack: () => {
           // 关闭账单详情页后回到账单列表。
           this.overlayPage = ''
-          this.currentTab = 1
         }
       })
     } else if (this.currentTab === 0) {
       HomePage({
+        billRefreshVersion: this.billRefreshVersion,
         onAddBill: () => {
           // 新增账单是独立页面，不占用底部 Tab 的一个位置。
           this.overlayPage = 'add'
         },
         onOpenAccount: () => {
           this.currentTab = 4
+        },
+        onOpenBillDetail: (billId: string) => {
+          this.selectedBillId = billId
+          this.overlayPage = 'detail'
         }
       })
     } else if (this.currentTab === 1) {
       BillListPage({
         onOpenDetail: () => {
           // 详情页同样作为覆盖页打开，避免改变当前 Tab 语义。
+          this.selectedBillId = ''
           this.overlayPage = 'detail'
         }
       })

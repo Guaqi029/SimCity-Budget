@@ -2,6 +2,8 @@ import { TopMessageToast } from '../components/TopMessageToast'
 import { AssetAccount } from '../model/AssetAccount'
 import { AssetAccountStore } from '../storage/AssetAccountStore'
 import { BillDraftPreferenceStore } from '../storage/BillDraftPreferenceStore'
+import { BillRecord, BillType } from '../model/BillRecord'
+import { BillRecordStore } from '../storage/BillRecordStore'
 import { BillDatePicker, BillDatePickerValue } from '../components/bill/BillDatePicker'
 import { AssetAccountPicker } from '../components/bill/AssetAccountPicker'
 
@@ -86,6 +88,7 @@ export struct AddBillPage {
   @State private dateDisplayLabel: string = '今天'
   @State private dateDisplayVersion: number = 0
   onBack: () => void = () => {}
+  onSaved: () => void = () => {}
   private toastTimer: number = -1
 
   aboutToAppear() {
@@ -240,17 +243,19 @@ export struct AddBillPage {
         Text('◇')
           .fontSize(20)
           .fontColor('#111111')
-        // 暂时不做
-        // Text('标签')
-        //   .fontSize(17)
-        //   .fontColor('#111111')
-        //   .margin({ left: 6 })
-        // todo：改为输入框，输入账单备注
-        Text(this.remark.length > 0 ? this.remark : '添加备注')
+
+        TextInput({ placeholder: '添加备注', text: this.remark })
           .fontSize(16)
-          .fontColor('#9A9A9A')
-          .margin({ left: 26 })
+          .fontColor('#111111')
+          .placeholderColor('#9A9A9A')
+          .backgroundColor('#00000000')
+          .height(40)
+          .padding({ left: 0, right: 0 })
+          .margin({ left: 18 })
           .layoutWeight(1)
+          .onChange((value: string) => {
+            this.remark = value
+          })
 
         Text(this.amountText)
           .fontSize(30)
@@ -440,6 +445,9 @@ export struct AddBillPage {
     if (this.mode === 'income') {
       return INCOME_CATEGORIES
     }
+    if (this.mode === 'transfer') {
+      return TRANSFER_CATEGORIES
+    }
     return EXPENSE_CATEGORIES
   }
 
@@ -473,6 +481,7 @@ export struct AddBillPage {
       return
     }
     if (key === '完成') {
+      this.saveBill()
       return
     }
     if (key === '=') {
@@ -691,6 +700,121 @@ export struct AddBillPage {
     this.toastTimer = setTimeout(() => {
       this.toastVisible = false
     }, 1600)
+  }
+
+  private saveBill() {
+    const amount = Number(this.amountText)
+    if (amount !== amount || amount <= 0) {
+      this.showToast('请输入有效金额')
+      return
+    }
+
+    const now = new Date().toISOString()
+    const billDate = this.selectedDateIsoString()
+    const category = this.selectedCategory()
+    const record: BillRecord = {
+      id: 'bill_' + now,
+      amount: amount,
+      type: this.currentBillType(),
+      assetId: this.mode === 'transfer' ? '' : this.selectedAssetId,
+      assetName: this.mode === 'transfer' ? '' : this.selectedAssetName,
+      fromAssetId: this.mode === 'transfer' ? this.selectedAssetId : '',
+      fromAssetName: this.mode === 'transfer' ? this.selectedAssetName : '',
+      toAssetId: '',
+      toAssetName: '',
+      transferFee: 0,
+      categoryId: category.title,
+      categoryName: category.title,
+      billDate: billDate,
+      month: this.monthKey(this.selectedYear, this.selectedMonth),
+      remark: this.remark.trim(),
+      createTime: now,
+      updateTime: now,
+      isDeleted: false
+    }
+
+    BillRecordStore.add(getContext(this), record)
+      .then(() => {
+        return this.updateSelectedAssetBalance(amount)
+      })
+      .then(() => {
+        this.onSaved()
+        this.onBack()
+      })
+      .catch(() => {
+        this.showToast('账单保存失败')
+      })
+  }
+
+  private updateSelectedAssetBalance(amount: number): Promise<void> {
+    if (this.selectedAssetId.length === 0 || this.mode === 'transfer') {
+      return Promise.resolve()
+    }
+
+    const nextAssets: AssetAccount[] = []
+    let changed = false
+    for (let index = 0; index < this.assets.length; index++) {
+      const asset = this.assets[index]
+      if (asset.id === this.selectedAssetId) {
+        const nextBalance = this.mode === 'income' ? asset.balance + amount : asset.balance - amount
+        nextAssets.push({
+          id: asset.id,
+          type: asset.type,
+          group: asset.group,
+          name: asset.name,
+          balance: Math.round(nextBalance * 100) / 100,
+          shortName: asset.shortName,
+          icon: asset.icon,
+          color: asset.color,
+          cardNo: asset.cardNo,
+          remark: asset.remark,
+          includeInTotal: asset.includeInTotal,
+          bookScope: asset.bookScope,
+          createTime: asset.createTime,
+          updateTime: new Date().toISOString(),
+          isDeleted: asset.isDeleted
+        })
+        changed = true
+      } else {
+        nextAssets.push(asset)
+      }
+    }
+
+    if (!changed) {
+      return Promise.resolve()
+    }
+    return AssetAccountStore.save(getContext(this), nextAssets)
+      .then(() => {
+        this.assets = nextAssets
+      })
+  }
+
+  private selectedCategory(): BillCategoryOption {
+    const categories = this.currentCategories()
+    if (this.selectedCategoryIndex < 0 || this.selectedCategoryIndex >= categories.length) {
+      return categories[0]
+    }
+    return categories[this.selectedCategoryIndex]
+  }
+
+  private currentBillType(): BillType {
+    if (this.mode === 'income') {
+      return 'income'
+    }
+    if (this.mode === 'transfer') {
+      return 'transfer'
+    }
+    return 'expense'
+  }
+
+  private selectedDateIsoString(): string {
+    const date = new Date(this.selectedYear, this.selectedMonth, this.selectedDay, this.selectedHour, this.selectedMinute, 0)
+    return date.toISOString()
+  }
+
+  private monthKey(year: number, month: number): string {
+    const monthNumber = month + 1
+    return year.toString() + '-' + (monthNumber < 10 ? '0' + monthNumber.toString() : monthNumber.toString())
   }
 
   private loadAssets() {

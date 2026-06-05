@@ -1,12 +1,23 @@
 import { PageHeader } from '../components/PageHeader'
 import { InfoCard } from '../components/InfoCard'
-import { HomeBillTimeline } from '../components/bill/HomeBillTimeline'
-import { HOME_BILL_GROUPS } from '../components/bill/MockBillData'
+import { BillRecordTimeline } from '../components/bill/BillRecordTimeline'
+import { BillTimelineMapper } from '../components/bill/BillTimelineMapper'
+import { BillRecord } from '../model/BillRecord'
+import { BillRecordStore } from '../storage/BillRecordStore'
 
 @Component
 export struct HomePage {
+  @Watch('onBillRefreshChanged') @Prop billRefreshVersion: number = 0
+  @State private billRecords: BillRecord[] = []
+  @State private todayExpense: number = 0
+  @State private monthExpense: number = 0
   onAddBill: () => void = () => {}
   onOpenAccount: () => void = () => {}
+  onOpenBillDetail: (billId: string) => void = () => {}
+
+  aboutToAppear() {
+    this.loadBills()
+  }
 
   build() {
     Stack({ alignContent: Alignment.BottomEnd }) {
@@ -57,10 +68,10 @@ export struct HomePage {
 
           GridRow({ columns: 2, gutter: 12 }) {
             GridCol() {
-              InfoCard({ title: '今日支出', value: '¥53.00', description: '合理范围内' })
+              InfoCard({ title: '今日支出', value: '¥' + this.todayExpense.toFixed(2), description: '合理范围内' })
             }
             GridCol() {
-              InfoCard({ title: '本月累计', value: '¥388.00', description: '合理线 ¥1806.45' })
+              InfoCard({ title: '本月累计', value: '¥' + this.monthExpense.toFixed(2), description: '合理线 ¥1806.45' })
             }
             GridCol() {
               InfoCard({ title: '剩余预算', value: '¥1612.00', description: '总预算 ¥2000.00' })
@@ -70,7 +81,13 @@ export struct HomePage {
             }
           }
 
-          HomeBillTimeline({ groups: HOME_BILL_GROUPS })
+          BillRecordTimeline({
+            records: this.billRecords,
+            filter: { limit: 30 },
+            onOpenBill: (billId: string) => {
+              this.onOpenBillDetail(billId)
+            }
+          })
         }
         .width('100%')
         .padding({ left: 16, right: 16, top: 20, bottom: 104 })
@@ -103,6 +120,30 @@ export struct HomePage {
     .onClick(() => {
       this.onAddBill()
     })
+  }
+
+  private onBillRefreshChanged() {
+    this.loadBills()
+  }
+
+  private loadBills() {
+    BillRecordStore.load(getContext(this))
+      .then((records: BillRecord[]) => {
+        const now = new Date()
+        this.billRecords = records
+        this.todayExpense = BillTimelineMapper.calculateExpense(records, {
+          day: BillTimelineMapper.dateKey(now)
+        })
+        this.monthExpense = BillTimelineMapper.calculateExpense(records, {
+          startDate: BillTimelineMapper.monthStartKey(now),
+          endDate: BillTimelineMapper.monthEndKey(now)
+        })
+      })
+      .catch(() => {
+        this.billRecords = []
+        this.todayExpense = 0
+        this.monthExpense = 0
+      })
   }
 
   @Builder
