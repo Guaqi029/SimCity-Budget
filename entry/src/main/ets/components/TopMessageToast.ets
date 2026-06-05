@@ -12,7 +12,8 @@ export struct TopMessageToast {
           .maxLines(1)
           .textAlign(TextAlign.Center)
           .padding({ left: 14, right: 14, top: 8, bottom: 8 })
-          .backgroundColor('#FFFFFFCC')
+          // ArkUI 的 8 位 hex 使用 #AARRGGBB，CC 在前面才是半透明白色。
+          .backgroundColor('#CCFFFFFF')
           .borderRadius(14)
           .shadow({ radius: 10, color: '#22334422', offsetY: 3 })
       }

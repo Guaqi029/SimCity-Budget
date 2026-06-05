@@ -15,9 +15,11 @@ export struct AssetDetailFormPage {
   @Prop remark: string = ''
   @Prop cardNo: string = ''
   @Prop includeInTotal: boolean = true
+  @Prop pageTitle: string = ''
   onBack: () => void = () => {}
   onNameChange: (value: string) => void = () => {}
   onBalanceChange: (value: string) => void = () => {}
+  onBalanceInvalid: () => void = () => {}
   onShortNameChange: (value: string) => void = () => {}
   onRemarkChange: (value: string) => void = () => {}
   onCardNoChange: (value: string) => void = () => {}
@@ -37,7 +39,7 @@ export struct AssetDetailFormPage {
             this.onBack()
           })
 
-        Text('新增' + this.option.title + '账户')
+        Text(this.pageTitle.length > 0 ? this.pageTitle : '新增' + this.option.title + '账户')
           .fontSize(22)
           .fontWeight(FontWeight.Bold)
           .fontColor('#111111')
@@ -61,7 +63,11 @@ export struct AssetDetailFormPage {
       // 基础信息是最高频输入区域，压缩行高后仍保留清晰的标签/输入层级。
       Column({ space: 0 }) {
         FormInputRow({ label: '名称', value: this.name, placeholder: '请输入账户名称', onChange: (value: string) => this.onNameChange(value) })
-        FormInputRow({ label: '余额', value: this.balance, placeholder: '请输入账户余额', onChange: (value: string) => this.onBalanceChange(value) })
+        BalanceInputRow({
+          value: this.balance,
+          onChange: (value: string) => this.onBalanceChange(value),
+          onInvalid: () => this.onBalanceInvalid()
+        })
         FormInputRow({ label: '简称', value: this.shortName, placeholder: '如工资卡、农行，可用于账户快速识别', onChange: (value: string) => this.onShortNameChange(value) })
         FormInputRow({ label: '备注', value: this.remark, placeholder: '请输入备注', onChange: (value: string) => this.onRemarkChange(value) })
         FormInputRow({ label: '卡号', value: this.cardNo, placeholder: '请输入卡号，可为空', onChange: (value: string) => this.onCardNoChange(value) })
@@ -127,6 +133,40 @@ export struct AssetDetailFormPage {
       return '二手货物'
     }
     return '债务'
+  }
+}
+
+@Component
+struct BalanceInputRow {
+  @Prop value: string = ''
+  onChange: (value: string) => void = () => {}
+  onInvalid: () => void = () => {}
+
+  build() {
+    Row({ space: 12 }) {
+      Text('余额')
+        .fontSize(16)
+        .fontColor('#111111')
+        .width(60)
+
+      TextInput({ text: this.value, placeholder: '请输入账户余额' })
+        .layoutWeight(1)
+        .height(36)
+        .fontSize(16)
+        .fontColor('#111111')
+        .placeholderColor('#9B9B9B')
+        .backgroundColor('#FFFFFF')
+        .padding({ left: 0, right: 0 })
+        // 余额支持负数，且小数部分最多两位；第三位小数会被输入框直接拒绝。
+        .inputFilter('^-?\\d*(\\.\\d{0,2})?$', (_value: string) => {
+          this.onInvalid()
+        })
+        .onChange((value: string) => {
+          this.onChange(value)
+        })
+    }
+    .width('100%')
+    .height(44)
   }
 }
 

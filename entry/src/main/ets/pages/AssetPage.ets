@@ -1,8 +1,10 @@
 import { AssetAccount, AssetTypeOption } from '../model/AssetAccount'
 import { AssetMainPage } from '../components/asset/AssetMainPage'
 import { AssetDetailFormPage } from '../components/asset/AssetDetailFormPage'
+import { AssetAccountDetailPage } from '../components/asset/AssetAccountDetailPage'
 import { DEFAULT_ASSET_TYPE_OPTION } from '../components/asset/AssetTypeConfig'
 import { TopMessageToast } from '../components/TopMessageToast'
+import { AssetAccountStore } from '../storage/AssetAccountStore'
 
 @Component
 export struct AssetPage {
@@ -15,6 +17,22 @@ export struct AssetPage {
   @State private assetCardNo: string = ''
   @State private includeInTotal: boolean = true
   @State private assets: AssetAccount[] = []
+  @State private selectedAsset: AssetAccount = {
+    id: '',
+    type: 'custom',
+    group: 'fund',
+    name: '',
+    balance: 0,
+    shortName: '',
+    icon: '',
+    color: '#55B8A7',
+    includeInTotal: true,
+    bookScope: '全部账本',
+    createTime: '',
+    updateTime: '',
+    isDeleted: false
+  }
+  @State private editingAssetId: string = ''
   @State private toastVisible: boolean = false
   @State private toastMessage: string = ''
   @State private toastVersion: number = 0
@@ -29,8 +47,12 @@ export struct AssetPage {
   // 资产页只发起打开请求，弹层本体由 Index 托管，才能真正贴住屏幕底部。
   onOpenAssetTypeSheet: () => void = () => {}
 
+  aboutToAppear() {
+    this.loadAssets()
+  }
+
   build() {
-    if (this.currentStep === 'detail') {
+    if (this.currentStep === 'form') {
       Stack({ alignContent: Alignment.Top }) {
         AssetDetailFormPage({
           option: this.selectedOption,
@@ -40,14 +62,18 @@ export struct AssetPage {
           remark: this.assetRemark,
           cardNo: this.assetCardNo,
           includeInTotal: this.includeInTotal,
+          pageTitle: this.editingAssetId.length > 0 ? '编辑' + this.assetName + '账户' : '新增' + this.selectedOption.title + '账户',
           onBack: () => {
-            this.currentStep = 'list'
+            this.currentStep = this.editingAssetId.length > 0 ? 'detail' : 'list'
           },
           onNameChange: (value: string) => {
             this.assetName = value
           },
           onBalanceChange: (value: string) => {
             this.updateBalance(value)
+          },
+          onBalanceInvalid: () => {
+            this.showToast('余额最多只能输入两位小数')
           },
           onShortNameChange: (value: string) => {
             this.assetShortName = value
@@ -73,12 +99,38 @@ export struct AssetPage {
         .margin({ top: 8 })
       }
       .width('100%')
+    } else if (this.currentStep === 'detail') {
+      Stack({ alignContent: Alignment.Top }) {
+        AssetAccountDetailPage({
+          asset: this.selectedAsset,
+          onBack: () => {
+            this.currentStep = 'list'
+          },
+          onEdit: () => {
+            this.startEditAsset()
+          },
+          onDelete: () => {
+            this.deleteSelectedAsset()
+          }
+        })
+
+        TopMessageToast({
+          visible: this.toastVisible,
+          message: this.toastMessage
+        })
+        .margin({ top: 8 })
+      }
+      .width('100%')
     } else {
       AssetMainPage({
         assets: this.assets,
         onAddAsset: () => {
           this.resetDraft()
           this.onOpenAssetTypeSheet()
+        },
+        onOpenAsset: (asset: AssetAccount) => {
+          this.selectedAsset = asset
+          this.currentStep = 'detail'
         }
       })
     }
@@ -92,6 +144,7 @@ export struct AssetPage {
     this.assetRemark = ''
     this.assetCardNo = ''
     this.includeInTotal = true
+    this.editingAssetId = ''
     this.toastVisible = false
     this.toastMessage = ''
     this.toastVersion += 1
@@ -108,16 +161,19 @@ export struct AssetPage {
   private selectType(option: AssetTypeOption) {
     this.selectedOption = option
     this.assetName = option.title
-    this.assetShortName = option.title.length > 2 ? option.title.substring(0, 2) : option.title
-    this.currentStep = 'detail'
+    this.assetShortName = ''
+    this.editingAssetId = ''
+    this.currentStep = 'form'
   }
 
   private updateBalance(value: string) {
-    if (this.hasMoreThanTwoDecimalPlaces(value)) {
+    const sanitizedValue = this.sanitizeBalanceInput(value)
+    if (sanitizedValue !== value) {
+      this.assetBalance = sanitizedValue
       this.showToast('余额最多只能输入两位小数')
       return
     }
-    this.assetBalance = value
+    this.assetBalance = sanitizedValue
   }
 
   private saveAsset() {
@@ -131,12 +187,12 @@ export struct AssetPage {
     const name = this.assetName.trim()
     const shortName = this.assetShortName.trim()
 
-    if (name.length === 0 || shortName.length === 0 || balance !== balance) {
+    if (name.length === 0 || balance !== balance) {
       return
     }
 
     const nextAsset: AssetAccount = {
-      id: 'asset_' + now,
+      id: this.editingAssetId.length > 0 ? this.editingAssetId : 'asset_' + now,
       type: this.selectedOption.type,
       group: this.selectedOption.group,
       name: name,
@@ -148,13 +204,57 @@ export struct AssetPage {
       remark: this.assetRemark.trim(),
       includeInTotal: this.includeInTotal,
       bookScope: '全部账本',
-      createTime: now,
+      createTime: this.editingAssetId.length > 0 ? this.findCreateTime(this.editingAssetId) : now,
       updateTime: now,
       isDeleted: false
     }
 
-    this.assets = [nextAsset].concat(this.assets)
-    this.currentStep = 'list'
+    const nextAssets = this.editingAssetId.length > 0 ? this.replaceAsset(nextAsset) : [nextAsset].concat(this.assets)
+    AssetAccountStore.save(getContext(this), nextAssets)
+      .then(() => {
+        this.assets = nextAssets
+        this.selectedAsset = nextAsset
+        this.editingAssetId = ''
+        this.currentStep = 'detail'
+      })
+      .catch(() => {
+        this.showToast('资产账户保存失败')
+      })
+  }
+
+  private loadAssets() {
+    AssetAccountStore.load(getContext(this))
+      .then((assets: AssetAccount[]) => {
+        this.assets = assets
+      })
+      .catch(() => {
+        this.showToast('资产账户读取失败')
+      })
+  }
+
+  // 余额允许为负数，但小数部分最多保留两位；第三位小数会被直接截断。
+  private sanitizeBalanceInput(value: string): string {
+    let result = ''
+    let hasDot = false
+
+    for (let index = 0; index < value.length; index++) {
+      const char = value.charAt(index)
+
+      if (char >= '0' && char <= '9') {
+        result += char
+      } else if (char === '-' && result.length === 0) {
+        result += char
+      } else if (char === '.' && !hasDot) {
+        result += char
+        hasDot = true
+      }
+    }
+
+    const dotIndex = result.indexOf('.')
+    if (dotIndex >= 0 && result.length > dotIndex + 3) {
+      return result.substring(0, dotIndex + 3)
+    }
+    return result
   }
 
   private hasMoreThanTwoDecimalPlaces(value: string): boolean {
@@ -175,5 +275,90 @@ export struct AssetPage {
         this.toastVisible = false
       }
     }, 1800)
+  }
+
+  private startEditAsset() {
+    if (this.selectedAsset.id.length === 0) {
+      return
+    }
+
+    this.selectedOption = {
+      type: this.selectedAsset.type,
+      group: this.selectedAsset.group,
+      title: this.selectedAsset.name,
+      icon: this.selectedAsset.icon,
+      color: this.selectedAsset.color
+    }
+    this.assetName = this.selectedAsset.name
+    this.assetBalance = String(this.selectedAsset.balance)
+    this.assetShortName = this.selectedAsset.shortName
+    this.assetRemark = this.selectedAsset.remark === undefined ? '' : this.selectedAsset.remark
+    this.assetCardNo = this.selectedAsset.cardNo === undefined ? '' : this.selectedAsset.cardNo
+    this.includeInTotal = this.selectedAsset.includeInTotal
+    this.editingAssetId = this.selectedAsset.id
+    this.currentStep = 'form'
+  }
+
+  private deleteSelectedAsset() {
+    if (this.selectedAsset.id.length === 0) {
+      return
+    }
+
+    const targetId = this.selectedAsset.id
+    const nextAssets: AssetAccount[] = []
+    for (let index = 0; index < this.assets.length; index++) {
+      if (this.assets[index].id !== targetId) {
+        nextAssets.push(this.assets[index])
+      }
+    }
+
+    AssetAccountStore.save(getContext(this), nextAssets)
+      .then(() => {
+        this.assets = nextAssets
+        this.selectedAsset = this.emptyAsset()
+        this.currentStep = 'list'
+      })
+      .catch(() => {
+        this.showToast('资产账户删除失败')
+      })
+  }
+
+  private replaceAsset(asset: AssetAccount): AssetAccount[] {
+    const nextAssets: AssetAccount[] = []
+    for (let index = 0; index < this.assets.length; index++) {
+      if (this.assets[index].id === asset.id) {
+        nextAssets.push(asset)
+      } else {
+        nextAssets.push(this.assets[index])
+      }
+    }
+    return nextAssets
+  }
+
+  private findCreateTime(assetId: string): string {
+    for (let index = 0; index < this.assets.length; index++) {
+      if (this.assets[index].id === assetId) {
+        return this.assets[index].createTime
+      }
+    }
+    return new Date().toISOString()
+  }
+
+  private emptyAsset(): AssetAccount {
+    return {
+      id: '',
+      type: 'custom',
+      group: 'fund',
+      name: '',
+      balance: 0,
+      shortName: '',
+      icon: '',
+      color: '#55B8A7',
+      includeInTotal: true,
+      bookScope: '全部账本',
+      createTime: '',
+      updateTime: '',
+      isDeleted: false
+    }
   }
 }

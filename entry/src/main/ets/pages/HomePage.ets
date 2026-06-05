@@ -65,62 +65,6 @@ export struct HomePage {
           InfoCard({ title: '城市等级', value: '繁荣', description: '消费克制，小镇持续发展' })
         }
       }
-
-      Row({ space: 12 }) {
-        Button('记一笔')
-          .type(ButtonType.Capsule)
-          .layoutWeight(1)
-          .height(54)
-          .fontSize(18)
-          .fontWeight(FontWeight.Bold)
-          .fontColor('#FFFFFF')
-          .backgroundColor('#111B33')
-          .onClick(() => this.onAddBill())
-
-        Button('账号管理')
-          .type(ButtonType.Capsule)
-          .layoutWeight(1)
-          .height(54)
-          .fontSize(18)
-          .fontWeight(FontWeight.Bold)
-          .fontColor('#18233A')
-          .backgroundColor('#EAF1F8')
-          .onClick(() => this.onOpenAccount())
-      }
-      .width('100%')
-
-      Column({ space: 10 }) {
-        Row() {
-          Text('建造进度')
-            .fontSize(14)
-            .fontColor('#6B7A99')
-          Blank()
-          Text('78%')
-            .fontSize(14)
-            .fontWeight(FontWeight.Medium)
-            .fontColor('#24314A')
-        }
-        .width('100%')
-
-        Row() {
-          Column()
-            .width('78%')
-            .height(10)
-            .backgroundColor('#35C28A')
-            .borderRadius(8)
-
-          Blank()
-        }
-        .width('100%')
-        .height(10)
-        .backgroundColor('#DCE5EF')
-        .borderRadius(8)
-      }
-      .width('100%')
-      .padding(18)
-      .backgroundColor('#FFFFFF')
-      .borderRadius(28)
-      .alignItems(HorizontalAlign.Start)
     }
     .width('100%')
     .alignItems(HorizontalAlign.Start)

@@ -6,11 +6,12 @@ export struct AssetMainPage {
   @State private showAddButton: boolean = true
   @State private lastScrollY: number = 0
   onAddAsset: () => void = () => {}
+  onOpenAsset: (asset: AssetAccount) => void = () => {}
 
   build() {
-    Stack({alignContent:Alignment.BottomEnd}) {
+    Stack({ alignContent: Alignment.BottomEnd }) {
       Scroll() {
-        Column({ space: 16 }) {
+        Column({ space: 12 }) {
           AssetOverviewCard({
             netAsset: this.totalIncludedBalance(),
             totalAsset: this.totalPositiveBalance(),
@@ -24,25 +25,22 @@ export struct AssetMainPage {
               }
             })
           } else {
-            AssetGroupCard({
-              title: '资金账户',
-              total: this.groupBalance('fund'),
-              assets: this.filterGroup('fund')
-            })
-
-            AssetGroupCard({
-              title: '储蓄账户',
-              total: this.groupBalance('investment'),
-              assets: this.filterGroup('investment')
-            })
+            this.assetGroup('资金账户', 'fund')
+            this.assetGroup('信贷账户', 'credit')
+            this.assetGroup('充值账户', 'stored_value')
+            this.assetGroup('储蓄账户', 'investment')
+            this.assetGroup('二手货物', 'second_hand')
+            this.assetGroup('债务', 'debt')
           }
         }
         .width('100%')
-        .height('110%')
+        // 只给内容区设置最小高度：短内容也能多出约 10% 可滚动空间，长内容则按真实高度继续增长。
+        .constraintSize({ minHeight: '110%' })
         .padding({ bottom: 104 })
       }
       .width('100%')
       .height('100%')
+      .align(Alignment.TopStart)
       .scrollBar(BarState.Off)
       .onScroll((_xOffset: number, yOffset: number) => {
         this.updateAddButtonByScroll(yOffset)
@@ -60,7 +58,7 @@ export struct AssetMainPage {
         .backgroundColor('#55B8A7')
         .borderRadius(25)
         .shadow({ radius: 18, color: '#3355B8A744', offsetY: 8 })
-        .align(Alignment.BottomEnd)
+        .margin({ right: 16, bottom: 18 })
         .scale({ x: this.showAddButton ? 1 : 0.2, y: this.showAddButton ? 1 : 0.2 })
         .opacity(this.showAddButton ? 1 : 0)
         .animation({ duration: 180, curve: Curve.EaseOut })
@@ -70,6 +68,29 @@ export struct AssetMainPage {
     }
     .width('100%')
     .height('100%')
+  }
+
+  @Builder
+  private assetGroup(title: string, group: AssetGroup) {
+    if (this.hasGroup(group)) {
+      AssetGroupCard({
+        title: title,
+        total: this.groupBalance(group),
+        assets: this.filterGroup(group),
+        onOpenAsset: (asset: AssetAccount) => {
+          this.onOpenAsset(asset)
+        }
+      })
+    }
+  }
+
+  private hasGroup(group: AssetGroup): boolean {
+    for (let index = 0; index < this.assets.length; index++) {
+      if (this.assets[index].group === group) {
+        return true
+      }
+    }
+    return false
   }
 
   private updateAddButtonByScroll(yOffset: number) {
@@ -94,8 +115,9 @@ export struct AssetMainPage {
   private groupBalance(group: AssetGroup): number {
     let total = 0
     for (let index = 0; index < this.assets.length; index++) {
-      if (this.assets[index].group === group && this.assets[index].includeInTotal) {
-        total += this.assets[index].balance
+      const balance = Number(this.assets[index].balance)
+      if (this.assets[index].group === group && this.assets[index].includeInTotal && balance === balance) {
+        total += balance
       }
     }
     return total
@@ -104,8 +126,11 @@ export struct AssetMainPage {
   private totalIncludedBalance(): number {
     let total = 0
     for (let index = 0; index < this.assets.length; index++) {
-      if (this.assets[index].includeInTotal) {
-        total += this.assets[index].balance
+      const asset = this.assets[index]
+      const balance = Number(asset.balance)
+
+      if (asset.includeInTotal && balance === balance) {
+        total += balance
       }
     }
     return total
@@ -114,8 +139,11 @@ export struct AssetMainPage {
   private totalPositiveBalance(): number {
     let total = 0
     for (let index = 0; index < this.assets.length; index++) {
-      if (this.assets[index].includeInTotal && this.assets[index].balance > 0) {
-        total += this.assets[index].balance
+      const asset = this.assets[index]
+      const balance = Number(asset.balance)
+
+      if (asset.includeInTotal && balance > 0) {
+        total += balance
       }
     }
     return total
@@ -124,8 +152,11 @@ export struct AssetMainPage {
   private totalLiability(): number {
     let total = 0
     for (let index = 0; index < this.assets.length; index++) {
-      if (this.assets[index].includeInTotal && this.assets[index].balance < 0) {
-        total += Math.abs(this.assets[index].balance)
+      const asset = this.assets[index]
+      const balance = Number(asset.balance)
+
+      if (asset.includeInTotal && balance < 0) {
+        total += Math.abs(balance)
       }
     }
     return total
@@ -178,15 +209,6 @@ struct AssetOverviewCard {
         .backgroundColor('#DDF5F2')
         .borderRadius(14)
 
-      Text('⋮')
-        .fontSize(36)
-        .fontColor('#000000')
-        .width(34)
-        .height(60)
-        .textAlign(TextAlign.Center)
-        .margin({ top: 12, right: 12 })
-        .align(Alignment.TopEnd)
-
       Row() {
         Column({ space: 18 }) {
           Row({ space: 10 }) {
@@ -207,8 +229,8 @@ struct AssetOverviewCard {
         .alignItems(HorizontalAlign.Start)
 
         Column({ space: 22 }) {
-          this.metricLine('总资产', this.totalAsset)
-          this.metricLine('负资产', this.liability)
+          this.totalAssetLine()
+          this.liabilityLine()
         }
         .layoutWeight(1)
         .alignItems(HorizontalAlign.Start)
@@ -221,12 +243,25 @@ struct AssetOverviewCard {
   }
 
   @Builder
-  private metricLine(label: string, value: number) {
+  private totalAssetLine() {
     Row({ space: 16 }) {
-      Text(label)
+      Text('总资产')
         .fontSize(16)
         .fontColor('#6E7D83')
-      Text(this.formatMoney(value))
+      Text(this.formatMoney(this.totalAsset))
+        .fontSize(18)
+        .fontWeight(FontWeight.Bold)
+        .fontColor('#111111')
+    }
+  }
+
+  @Builder
+  private liabilityLine() {
+    Row({ space: 16 }) {
+      Text('负资产')
+        .fontSize(16)
+        .fontColor('#6E7D83')
+      Text(this.formatMoney(this.liability))
         .fontSize(18)
         .fontWeight(FontWeight.Bold)
         .fontColor('#111111')
@@ -282,39 +317,66 @@ struct AssetGroupCard {
   @Prop title: string = ''
   @Prop total: number = 0
   @Prop assets: AssetAccount[] = []
+  @State private expanded: boolean = true
+  onOpenAsset: (asset: AssetAccount) => void = () => {}
 
   build() {
-    Column({ space: 18 }) {
+    Column({ space: 8 }) {
       Row() {
         Text(this.title)
-          .fontSize(20)
+          .fontSize(17)
           .fontWeight(FontWeight.Bold)
           .fontColor('#111111')
         Blank()
         Text(this.formatMoney(this.total))
-          .fontSize(18)
+          .fontSize(16)
           .fontWeight(FontWeight.Bold)
           .fontColor('#111111')
-        Text('⌄')
-          .fontSize(22)
-          .fontColor('#555555')
-          .margin({ left: 10 })
+
+        Image(this.expanded ? $r('app.media.arrow_down') : $r('app.media.arrow_forward'))
+          .width(24)
+          .height(24)
+          .margin({ left: 8 })
+          .animation({ duration: 180, curve: Curve.EaseOut })
       }
       .width('100%')
+      .height(28)
+      .onClick(() => {
+        this.expanded = !this.expanded
+      })
 
-      ForEach(this.assets, (asset: AssetAccount) => {
-        AssetAccountRow({ asset: asset })
-      }, (asset: AssetAccount) => asset.id)
+      Column({ space: 4 }) {
+        ForEach(this.assets, (asset: AssetAccount) => {
+          AssetAccountRow({
+            asset: asset,
+            onOpenAsset: (nextAsset: AssetAccount) => {
+              this.onOpenAsset(nextAsset)
+            }
+          })
+        }, (asset: AssetAccount) => asset.id)
+      }
+      .width('100%')
+      .height(this.expanded ? this.groupContentHeight() : 0)
+      .opacity(this.expanded ? 1 : 0)
+      .clip(true)
+      .animation({ duration: 220, curve: Curve.EaseInOut })
     }
     .width('100%')
-    .padding(20)
+    .padding({ left: 16, right: 16, top: 14, bottom: 14 })
     .backgroundColor('#FFFFFF')
-    .borderRadius(14)
+    .borderRadius(12)
     .alignItems(HorizontalAlign.Start)
   }
 
   private formatMoney(value: number): string {
     return (value < 0 ? '-' : '') + Math.abs(value).toFixed(2)
+  }
+
+  private groupContentHeight(): number {
+    if (this.assets.length === 0) {
+      return 0
+    }
+    return this.assets.length * 56 + (this.assets.length - 1) * 4
   }
 }
 
@@ -335,34 +397,78 @@ struct AssetAccountRow {
     updateTime: '',
     isDeleted: false
   }
+  onOpenAsset: (asset: AssetAccount) => void = () => {}
 
   build() {
-    Row({ space: 14 }) {
+    Row({ space: 10 }) {
       Text(this.asset.icon)
-        .fontSize(16)
+        .fontSize(13)
         .fontWeight(FontWeight.Bold)
         .fontColor('#FFFFFF')
         .textAlign(TextAlign.Center)
-        .width(32)
-        .height(32)
-        .padding({ top: 8 })
+        .width(26)
+        .height(26)
+        .padding({ top: 6 })
         .backgroundColor(this.asset.color)
-        .borderRadius(16)
+        .borderRadius(13)
 
-      Text(this.asset.name)
-        .fontSize(20)
-        .fontColor('#111111')
-        .layoutWeight(1)
+      Column({ space: 2 }) {
+        Text(this.displayName())
+          .fontSize(16)
+          .fontColor('#111111')
+          .maxLines(1)
+
+        if (this.hasRemark()) {
+          Text(this.remarkText())
+            .fontSize(12)
+            .fontColor('#8A8A8A')
+            .maxLines(1)
+        }
+      }
+      .layoutWeight(1)
+      .alignItems(HorizontalAlign.Start)
 
       Text(this.formatMoney(this.asset.balance))
-        .fontSize(20)
-        .fontColor(this.asset.balance === 0 ? '#111111' : '#55B8A7')
+        .fontSize(16)
+        .fontColor(this.balanceColor())
+        .maxLines(1)
     }
     .width('100%')
-    .height(58)
+    .height(56)
+    .onClick(() => {
+      this.onOpenAsset(this.asset)
+    })
+  }
+
+  private displayName(): string {
+    if (this.asset.shortName.length === 0) {
+      return this.asset.name
+    }
+    return this.asset.name + '(' + this.asset.shortName + ')'
+  }
+
+  private hasRemark(): boolean {
+    return this.asset.remark !== undefined && this.asset.remark.length > 0
+  }
+
+  private remarkText(): string {
+    if (this.asset.remark === undefined) {
+      return ''
+    }
+    return this.asset.remark
   }
 
   private formatMoney(value: number): string {
     return (value < 0 ? '-' : '') + Math.abs(value).toFixed(2)
+  }
+
+  private balanceColor(): string {
+    if (this.asset.balance > 0) {
+      return '#55B8A7'
+    }
+    if (this.asset.balance < 0) {
+      return '#E07178'
+    }
+    return '#9A9A9A'
   }
 }
