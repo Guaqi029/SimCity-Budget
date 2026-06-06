@@ -84,9 +84,11 @@ struct Index {
       })
     } else if (this.currentTab === 1) {
       BillListPage({
-        onOpenDetail: () => {
+        // 把新增/删除账单后的刷新信号继续传给账单明细页。
+        billRefreshVersion: this.billRefreshVersion,
+        onOpenDetail: (billId: string) => {
           // 详情页同样作为覆盖页打开，避免改变当前 Tab 语义。
-          this.selectedBillId = ''
+          this.selectedBillId = billId
           this.overlayPage = 'detail'
         }
       })
