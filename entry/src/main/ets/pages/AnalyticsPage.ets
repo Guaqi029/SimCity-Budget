@@ -1,114 +1,6 @@
-import { InfoCard } from '../components/InfoCard'
 import { StatisticAssetSummaryChart } from '../components/analytics/StatisticAssetSummaryChart'
 import { StatisticSevenDayBarChart } from '../components/analytics/StatisticSevenDayBarChart'
 import { StatisticTopTabItem, StatisticTopTabs } from '../components/analytics/StatisticTopTabs'
-import { StatisticPanelCard } from '../components/analytics/StatisticPanelCard'
-
-@Builder
-function AnalyticsProgressCard(title: string, meta: string, percentText: string, widthPercent: number) {
-  Column({ space: 12 }) {
-    Row() {
-      Column({ space: 4 }) {
-        Text(title)
-          .fontSize(18)
-          .fontWeight(FontWeight.Bold)
-          .fontColor('#18233A')
-        Text(meta)
-          .fontSize(13)
-          .fontColor('#6B7A99')
-      }
-      .alignItems(HorizontalAlign.Start)
-
-      Blank()
-
-      Text('正常')
-        .fontSize(12)
-        .fontWeight(FontWeight.Medium)
-        .fontColor('#1B8F63')
-        .padding({ left: 10, right: 10, top: 6, bottom: 6 })
-        .backgroundColor('#E6FAF1')
-        .borderRadius(16)
-    }
-    .width('100%')
-
-    Row() {
-      Column()
-        .width(widthPercent + '%')
-        .height(10)
-        .backgroundColor('#111B33')
-        .borderRadius(8)
-    }
-    .width('100%')
-    .height(10)
-    .backgroundColor('#EEF3F9')
-    .borderRadius(8)
-
-    Text(percentText)
-      .fontSize(12)
-      .fontColor('#95A2BC')
-  }
-  .width('100%')
-  .padding(18)
-  .backgroundColor('#FFFFFF')
-  .borderRadius(24)
-  .alignItems(HorizontalAlign.Start)
-}
-
-@Builder
-function AnalyticsRankRow(rank: string, label: string, value: string, widthPercent: number) {
-  Column({ space: 8 }) {
-    Row() {
-      Text(rank + '. ' + label)
-        .fontSize(16)
-        .fontWeight(FontWeight.Medium)
-        .fontColor('#24314A')
-      Blank()
-      Text(value)
-        .fontSize(14)
-        .fontColor('#6B7A99')
-    }
-    .width('100%')
-
-    Row() {
-      Column()
-        .width(widthPercent + '%')
-        .height(10)
-        .backgroundColor('#90C4FF')
-        .borderRadius(8)
-    }
-    .width('100%')
-    .height(10)
-    .backgroundColor('#EEF3F9')
-    .borderRadius(8)
-  }
-  .width('100%')
-  .padding(18)
-  .backgroundColor('#FFFFFF')
-  .borderRadius(24)
-  .alignItems(HorizontalAlign.Start)
-}
-
-@Builder
-function AnalyticsBudgetBoardContent() {
-  Column({ space: 14 }) {
-    AnalyticsProgressCard('餐饮', '¥81 / ¥800', '10%', 10)
-    AnalyticsProgressCard('娱乐', '¥99 / ¥300', '33%', 33)
-    AnalyticsProgressCard('学习', '¥128 / ¥300', '43%', 43)
-  }
-  .width('100%')
-  .alignItems(HorizontalAlign.Start)
-}
-
-@Builder
-function AnalyticsRankBoardContent() {
-  Column({ space: 14 }) {
-    AnalyticsRankRow('1', '学习', '¥128.00', 100)
-    AnalyticsRankRow('2', '娱乐', '¥99.00', 78)
-    AnalyticsRankRow('3', '日用', '¥62.00', 48)
-  }
-  .width('100%')
-  .alignItems(HorizontalAlign.Start)
-}
 
 @Component
 export struct AnalyticsPage {
@@ -151,33 +43,9 @@ export struct AnalyticsPage {
         billRefreshVersion: this.billRefreshVersion
       })
 
-      GridRow({ columns: 2, gutter: 12 }) {
-        GridCol() {
-          InfoCard({ title: '本月总支出', value: '¥388.00', description: '只统计支出' })
-        }
-        GridCol() {
-          InfoCard({ title: '本月总收入', value: '¥1200.00', description: '不抵扣健康度' })
-        }
-        GridCol() {
-          InfoCard({ title: '日均预算', value: '¥64.52', description: '月预算 / 月天数' })
-        }
-        GridCol() {
-          InfoCard({ title: '剩余预算', value: '¥1612.00', description: '合理线 ¥1806.45' })
-        }
-      }
-
-      StatisticPanelCard({
-        title: '分类预算看板',
-        actionText: '',
-        content: AnalyticsBudgetBoardContent
-      })
-
-    
-      StatisticPanelCard({
-        title: '分类支出排行',
-        actionText: '查看全部',
-        content: AnalyticsRankBoardContent
-      })
+      // 这里删除了资产汇总组件下面原本所有的占位统计卡、预算看板和排行面板。
+      // 删除原因：你已经明确这些内容在当前阶段都是无用的，占着页面位置只会干扰统计页的真实主线开发。
+      // 新增功能：统计页当前只保留“近7日统计”和“资产汇总”两块核心组件，页面结构更聚焦，后续继续扩展也更清晰。
     }
     .width('100%')
     .alignItems(HorizontalAlign.Start)
