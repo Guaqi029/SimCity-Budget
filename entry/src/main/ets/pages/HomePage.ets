@@ -23,11 +23,6 @@ export struct HomePage {
     Stack({ alignContent: Alignment.BottomEnd }) {
       Scroll() {
         Column({ space: 16 }) {
-          PageHeader({
-            eyebrow: 'SIMCITY BUDGET',
-            title: '模拟城市记账本',
-            subtitle: '让每一笔消费都影响你的小镇命运'
-          })
 
           Stack({ alignContent: Alignment.TopStart }) {
             Column()

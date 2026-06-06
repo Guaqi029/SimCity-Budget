@@ -27,6 +27,7 @@ export struct AssetAccountDetailPage {
   onBack: () => void = () => {}
   onEdit: () => void = () => {}
   onDelete: () => void = () => {}
+  onOpenBill: (billId: string) => void = () => {}
 
   aboutToAppear() {
     this.loadAssetBills()
@@ -181,7 +182,12 @@ export struct AssetAccountDetailPage {
           .fontColor('#111111')
           .width('100%')
 
-        BillTimeline({ groups: this.billGroups })
+        BillTimeline({
+          groups: this.billGroups,
+          onOpenBill: (billId: string) => {
+            this.onOpenBill(billId)
+          }
+        })
       }
       .width('100%')
       .padding({ left: 16, right: 16, bottom: 18 })

@@ -1,5 +1,6 @@
 import { BillRecord } from '../../model/BillRecord'
 import { BillTimelineDayGroup, BillTimelineItem } from './BillTimeline'
+import { iconResourceById } from '../icon/IconLibraryConfig'
 
 export interface BillTimelineFilter {
   // 指定资产：收入/支出匹配 assetId，转账同时匹配 from/to 账户。
@@ -92,13 +93,15 @@ export class BillTimelineMapper {
   }
 
   private static toItem(record: BillRecord): BillTimelineItem {
+    const categoryName = record.category.name.length > 0 ? record.category.name : record.categoryName
     return {
       id: record.id,
       type: record.type,
       icon: BillTimelineMapper.billIcon(record),
-      title: record.remark !== undefined && record.remark.length > 0 ? record.remark : record.categoryName,
-      remark: record.remark === undefined || record.remark.length === 0 ? record.categoryName : record.categoryName,
-      category: record.type === 'transfer' ? '转账' : record.categoryName,
+      iconResource: iconResourceById(record.category.iconId),
+      title: record.remark !== undefined && record.remark.length > 0 ? record.remark : categoryName,
+      remark: categoryName,
+      category: record.type === 'transfer' ? '转账' : categoryName,
       assetName: BillTimelineMapper.billAssetName(record),
       amount: record.amount,
       date: BillTimelineMapper.dateKey(new Date(record.billDate))
@@ -122,7 +125,8 @@ export class BillTimelineMapper {
     if (record.type === 'transfer') {
       return '转'
     }
-    return record.categoryName.length > 0 ? record.categoryName.substring(0, 1) : '支'
+    const categoryName = record.category.name.length > 0 ? record.category.name : record.categoryName
+    return categoryName.length > 0 ? categoryName.substring(0, 1) : '支'
   }
 
   private static billAssetName(record: BillRecord): string {

@@ -1,4 +1,7 @@
-export type BillType = 'income' | 'expense' | 'transfer'
+import { BillCategory } from './BillCategory'
+import { BillType } from './BillType'
+
+export { BillType } from './BillType'
 
 export interface BillRecord {
   id: string
@@ -13,6 +16,8 @@ export interface BillRecord {
   toAssetId?: string
   toAssetName?: string
   transferFee?: number
+  category: BillCategory
+  // 兼容旧版本本地数据和旧调用点；新逻辑优先读取 category。
   categoryId: string
   categoryName: string
   billDate: string

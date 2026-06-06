@@ -1,6 +1,7 @@
 import common from '@ohos.app.ability.common'
 import preferences from '@ohos.data.preferences'
 import { BillRecord, BillType } from '../model/BillRecord'
+import { BillCategory } from '../model/BillCategory'
 
 const BILL_RECORD_STORE_NAME: string = 'bill_record_store'
 const BILL_RECORD_LIST_KEY: string = 'bill_record_list'
@@ -44,6 +45,7 @@ export class BillRecordStore {
 
   private static normalize(record: BillRecord): BillRecord {
     const amount = Number(record.amount)
+    const category = BillRecordStore.normalizeCategory(record)
     return {
       id: record.id,
       amount: amount === amount ? amount : 0,
@@ -55,14 +57,44 @@ export class BillRecordStore {
       toAssetId: record.toAssetId === undefined ? '' : record.toAssetId,
       toAssetName: record.toAssetName === undefined ? '' : record.toAssetName,
       transferFee: record.transferFee === undefined ? 0 : Number(record.transferFee),
-      categoryId: record.categoryId,
-      categoryName: record.categoryName,
+      category: category,
+      categoryId: category.id,
+      categoryName: category.name,
       billDate: record.billDate,
       month: record.month,
       remark: record.remark === undefined ? '' : record.remark,
       createTime: record.createTime,
       updateTime: record.updateTime,
       isDeleted: record.isDeleted === undefined ? false : record.isDeleted
+    }
+  }
+
+  private static normalizeCategory(record: BillRecord): BillCategory {
+    const now = new Date().toISOString()
+    if (record.category !== undefined && record.category.id !== undefined && record.category.id.length > 0) {
+      return {
+        id: record.category.id,
+        name: record.category.name,
+        type: record.category.type as BillType,
+        iconId: record.category.iconId === undefined || record.category.iconId.length === 0 ? 'icon_other' : record.category.iconId,
+        createTime: record.category.createTime === undefined ? now : record.category.createTime,
+        updateTime: record.category.updateTime === undefined ? now : record.category.updateTime,
+        isSystem: record.category.isSystem === undefined ? false : record.category.isSystem,
+        isDeleted: record.category.isDeleted === undefined ? false : record.category.isDeleted
+      }
+    }
+
+    const name = record.categoryName === undefined || record.categoryName.length === 0 ? '其他' : record.categoryName
+    const id = record.categoryId === undefined || record.categoryId.length === 0 ? 'legacy_' + name : record.categoryId
+    return {
+      id: id,
+      name: name,
+      type: record.type as BillType,
+      iconId: 'icon_other',
+      createTime: now,
+      updateTime: now,
+      isSystem: false,
+      isDeleted: false
     }
   }
 }

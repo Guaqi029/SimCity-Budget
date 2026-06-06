@@ -6,69 +6,20 @@ import { BillRecord, BillType } from '../model/BillRecord'
 import { BillRecordStore } from '../storage/BillRecordStore'
 import { BillDatePicker, BillDatePickerValue } from '../components/bill/BillDatePicker'
 import { AssetAccountPicker } from '../components/bill/AssetAccountPicker'
+import { BillCategory } from '../model/BillCategory'
+import { BillCategoryStore } from '../storage/BillCategoryStore'
+import { iconResourceById } from '../components/icon/IconLibraryConfig'
+import { BillCategoryManagerDialog } from '../components/bill/BillCategoryManagerDialog'
 
 type AddBillMode = 'expense' | 'income' | 'transfer'
 
 const NO_ASSET_ID: string = '__none__'
 
-interface BillCategoryOption {
-  icon: string
-  title: string
-}
-
-const EXPENSE_CATEGORIES: BillCategoryOption[] = [
-  { icon: '餐', title: '餐饮' },
-  { icon: '购', title: '购物' },
-  { icon: '行', title: '交通' },
-  { icon: '居', title: '居家' },
-  { icon: '娱', title: '娱乐' },
-  { icon: '医', title: '医疗' },
-  { icon: '学', title: '学习' },
-  { icon: '旅', title: '旅行' },
-  { icon: '人', title: '人情' },
-  { icon: '宠', title: '宠物' },
-  { icon: '通', title: '通讯' },
-  { icon: '服', title: '服饰' },
-  { icon: '运', title: '运动' },
-  { icon: '捐', title: '公益' },
-  { icon: '其', title: '其他' }
-]
-
-const INCOME_CATEGORIES: BillCategoryOption[] = [
-  { icon: '资', title: '工资' },
-  { icon: '兼', title: '兼职' },
-  { icon: '奖', title: '奖金' },
-  { icon: '理', title: '理财' },
-  { icon: '息', title: '利息' },
-  { icon: '租', title: '租金' },
-  { icon: '礼', title: '礼金' },
-  { icon: '退', title: '退款' },
-  { icon: '报', title: '报销' },
-  { icon: '补', title: '补贴' },
-  { icon: '闲', title: '闲置' },
-  { icon: '借', title: '借入' },
-  { icon: '生', title: '生活费' },
-  { icon: '其', title: '其他' }
-]
-
-const TRANSFER_CATEGORIES: BillCategoryOption[] = [
-  { icon: '转', title: '账户转账' },
-  { icon: '卡', title: '还信用卡' },
-  { icon: '提', title: '提现' },
-  { icon: '充', title: '充值' },
-  { icon: '换', title: '换卡' },
-  { icon: '投', title: '投资转入' },
-  { icon: '赎', title: '投资转出' },
-  { icon: '借', title: '借款转入' },
-  { icon: '还', title: '还款转出' },
-  { icon: '调', title: '内部调拨' },
-  { icon: '其', title: '其他转账' }
-]
-
 @Component
 export struct AddBillPage {
   @State private mode: AddBillMode = 'expense'
   @State private selectedCategoryIndex: number = 0
+  @State private categories: BillCategory[] = []
   @State private amountText: string = '0.00'
   @State private justCalculated: boolean = false
   @State private remark: string = ''
@@ -90,9 +41,20 @@ export struct AddBillPage {
   onBack: () => void = () => {}
   onSaved: () => void = () => {}
   private toastTimer: number = -1
+  private categoryManagerController: CustomDialogController = new CustomDialogController({
+    builder: BillCategoryManagerDialog({
+      onChanged: () => {
+        this.loadCategories()
+      }
+    }),
+    alignment: DialogAlignment.Center,
+    customStyle: true,
+    autoCancel: true
+  })
 
   aboutToAppear() {
     this.loadAssets()
+    this.loadCategories()
     this.refreshDateDisplayLabel()
   }
 
@@ -215,7 +177,7 @@ export struct AddBillPage {
   @Builder
   private categoryGrid() {
     GridRow({ columns: 5, gutter: 4 }) {
-      ForEach(this.currentCategories(), (category: BillCategoryOption, index: number) => {
+      ForEach(this.currentCategories(), (category: BillCategory, index: number) => {
         GridCol() {
           BillCategoryCell({
             category: category,
@@ -225,7 +187,15 @@ export struct AddBillPage {
             }
           })
         }
-      }, (category: BillCategoryOption, index: number) => category.title + index.toString())
+      }, (category: BillCategory, index: number) => category.id + index.toString())
+
+      GridCol() {
+        BillCategoryManageCell({
+          onSelect: () => {
+            this.categoryManagerController.open()
+          }
+        })
+      }
     }
     .width('100%')
     .padding({ left: 10, right: 10, top: 8 })
@@ -441,14 +411,8 @@ export struct AddBillPage {
       })
   }
 
-  private currentCategories(): BillCategoryOption[] {
-    if (this.mode === 'income') {
-      return INCOME_CATEGORIES
-    }
-    if (this.mode === 'transfer') {
-      return TRANSFER_CATEGORIES
-    }
-    return EXPENSE_CATEGORIES
+  private currentCategories(): BillCategory[] {
+    return BillCategoryStore.activeByType(this.categories, this.currentBillType())
   }
 
   private isOperatorKey(key: string): boolean {
@@ -723,8 +687,9 @@ export struct AddBillPage {
       toAssetId: '',
       toAssetName: '',
       transferFee: 0,
-      categoryId: category.title,
-      categoryName: category.title,
+      category: category,
+      categoryId: category.id,
+      categoryName: category.name,
       billDate: billDate,
       month: this.monthKey(this.selectedYear, this.selectedMonth),
       remark: this.remark.trim(),
@@ -789,12 +754,26 @@ export struct AddBillPage {
       })
   }
 
-  private selectedCategory(): BillCategoryOption {
+  private selectedCategory(): BillCategory {
     const categories = this.currentCategories()
     if (this.selectedCategoryIndex < 0 || this.selectedCategoryIndex >= categories.length) {
-      return categories[0]
+      return this.fallbackCategory()
     }
     return categories[this.selectedCategoryIndex]
+  }
+
+  private fallbackCategory(): BillCategory {
+    const now = new Date().toISOString()
+    return {
+      id: 'fallback_other_' + this.currentBillType(),
+      name: '其他',
+      type: this.currentBillType(),
+      iconId: 'icon_other',
+      createTime: now,
+      updateTime: now,
+      isSystem: true,
+      isDeleted: false
+    }
   }
 
   private currentBillType(): BillType {
@@ -825,6 +804,16 @@ export struct AddBillPage {
       })
       .catch(() => {
         this.showToast('账户读取失败')
+      })
+  }
+
+  private loadCategories() {
+    BillCategoryStore.load(getContext(this))
+      .then((categories: BillCategory[]) => {
+        this.categories = categories
+      })
+      .catch(() => {
+        this.categories = []
       })
   }
 
@@ -907,25 +896,65 @@ export struct AddBillPage {
 
 @Component
 struct BillCategoryCell {
-  @Prop category: BillCategoryOption = { icon: '', title: '' }
+  @Prop category: BillCategory = {
+    id: '',
+    name: '',
+    type: 'expense',
+    iconId: 'icon_other',
+    createTime: '',
+    updateTime: '',
+    isSystem: false,
+    isDeleted: false
+  }
   @Prop selected: boolean = false
   onSelect: () => void = () => {}
 
   build() {
     Column({ space: 5 }) {
-      Text(this.category.icon)
-        .fontSize(this.category.icon.length > 1 ? 13 : 15)
-        .fontColor(this.selected ? '#55B8A7' : '#3B4A48')
-        .textAlign(TextAlign.Center)
-        .width(44)
-        .height(44)
-        .padding({ top: this.category.icon.length > 1 ? 13 : 12 })
-        .backgroundColor(this.selected ? '#BFE9DE' : '#F5F5F5')
-        .borderRadius(22)
+      Stack({ alignContent: Alignment.Center }) {
+        Image(iconResourceById(this.category.iconId))
+          .width(22)
+          .height(22)
+          .objectFit(ImageFit.Contain)
+      }
+      .width(44)
+      .height(44)
+      .backgroundColor(this.selected ? '#BFE9DE' : '#F5F5F5')
+      .borderRadius(22)
 
-      Text(this.category.title)
+      Text(this.category.name)
         .fontSize(13)
         .fontColor(this.selected ? '#55B8A7' : '#111111')
+        .maxLines(1)
+    }
+    .width('100%')
+    .height(76)
+    .alignItems(HorizontalAlign.Center)
+    .onClick(() => {
+      this.onSelect()
+    })
+  }
+}
+
+@Component
+struct BillCategoryManageCell {
+  onSelect: () => void = () => {}
+
+  build() {
+    Column({ space: 5 }) {
+      Stack({ alignContent: Alignment.Center }) {
+        Text('+')
+          .fontSize(25)
+          .fontColor('#111111')
+      }
+      .width(44)
+      .height(44)
+      .backgroundColor('#F5F5F5')
+      .borderRadius(22)
+
+      Text('编辑')
+        .fontSize(13)
+        .fontColor('#111111')
         .maxLines(1)
     }
     .width('100%')
