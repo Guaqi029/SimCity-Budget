@@ -17,9 +17,12 @@ export struct PageHeader {
         .fontWeight(FontWeight.Bold)
         .fontColor('#18233A')
 
-      Text(this.subtitle)
-        .fontSize(14)
-        .fontColor('#6B7A99')
+      // 这里把原来“无论 subtitle 是否为空都固定渲染一行文本”的写法改成了条件渲染。
+      if (this.subtitle.length > 0) {
+        Text(this.subtitle)
+          .fontSize(14)
+          .fontColor('#6B7A99')
+      }
     }
     .alignItems(HorizontalAlign.Start)
     .width('100%')
