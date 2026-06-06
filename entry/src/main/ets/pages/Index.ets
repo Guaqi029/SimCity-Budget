@@ -98,6 +98,10 @@ struct Index {
         selectedAssetTypeVersion: this.selectedAssetTypeVersion,
         onOpenAssetTypeSheet: () => {
           this.openAssetTypeSheet()
+        },
+        onOpenBillDetail: (billId: string) => {
+          this.selectedBillId = billId
+          this.overlayPage = 'detail'
         }
       })
     } else if (this.currentTab === 3) {

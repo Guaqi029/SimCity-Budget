@@ -46,6 +46,7 @@ export struct AssetPage {
 
   // 资产页只发起打开请求，弹层本体由 Index 托管，才能真正贴住屏幕底部。
   onOpenAssetTypeSheet: () => void = () => {}
+  onOpenBillDetail: (billId: string) => void = () => {}
 
   aboutToAppear() {
     this.loadAssets()
@@ -111,6 +112,9 @@ export struct AssetPage {
           },
           onDelete: () => {
             this.deleteSelectedAsset()
+          },
+          onOpenBill: (billId: string) => {
+            this.onOpenBillDetail(billId)
           }
         })
 

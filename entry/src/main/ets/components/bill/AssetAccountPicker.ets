@@ -4,38 +4,35 @@ import { AssetAccount } from '../../model/AssetAccount'
 export struct AssetAccountPicker {
   @Prop assets: AssetAccount[] = []
   @Prop selectedAssetId: string = ''
+  @Prop allowNoAccount: boolean = true
   onSelect: (asset: AssetAccount | undefined) => void = () => {}
 
   build() {
     Column() {
-      Column() {
-        this.header()
+      this.header()
 
-        Scroll() {
-          Column() {
-            ForEach(this.assets, (asset: AssetAccount) => {
-              this.assetRow(asset)
-            }, (asset: AssetAccount) => asset.id)
+      Scroll() {
+        Column() {
+          ForEach(this.assets, (asset: AssetAccount) => {
+            this.assetRow(asset)
+          }, (asset: AssetAccount) => asset.id)
 
+          if (this.allowNoAccount) {
             this.noAccountRow()
           }
-          .width('100%')
-          .height(this.assetListContentHeight())
-          .alignItems(HorizontalAlign.Start)
-          .justifyContent(FlexAlign.Start)
         }
         .width('100%')
-        .height(430)
-        .scrollBar(BarState.Off)
+        .height(this.assetListContentHeight())
+        .alignItems(HorizontalAlign.Start)
+        .justifyContent(FlexAlign.Start)
       }
       .width('100%')
-      .backgroundColor('#FFFFFF')
-      .borderRadius({ topLeft: 8, topRight: 8 })
-      .padding({ top: 8, bottom: 10 })
+      .height(430)
+      .scrollBar(BarState.Off)
     }
     .width('100%')
-    .height('100%')
-    .justifyContent(FlexAlign.End)
+    .padding({ top: 4, bottom: 10 })
+    .backgroundColor('#FFFFFF')
   }
 
   @Builder
@@ -155,7 +152,7 @@ export struct AssetAccountPicker {
   }
 
   private assetListContentHeight(): number {
-    const rowHeight = this.assets.length * 56 + 50
+    const rowHeight = this.assets.length * 56 + (this.allowNoAccount ? 50 : 0)
     return rowHeight < 430 ? 430 : rowHeight
   }
 }

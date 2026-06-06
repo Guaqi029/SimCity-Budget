@@ -4,6 +4,7 @@ import { AssetAccountStore } from '../storage/AssetAccountStore'
 import { BillRecordStore } from '../storage/BillRecordStore'
 import { BillDatePicker, BillDatePickerValue } from '../components/bill/BillDatePicker'
 import { AssetAccountPicker } from '../components/bill/AssetAccountPicker'
+import { iconResourceById } from '../components/icon/IconLibraryConfig'
 
 const EMPTY_BILL_RECORD: BillRecord = {
   id: '',
@@ -16,6 +17,16 @@ const EMPTY_BILL_RECORD: BillRecord = {
   toAssetId: '',
   toAssetName: '',
   transferFee: 0,
+  category: {
+    id: '',
+    name: '其他',
+    type: 'expense',
+    iconId: 'icon_other',
+    createTime: '',
+    updateTime: '',
+    isSystem: false,
+    isDeleted: false
+  },
   categoryId: '',
   categoryName: '',
   billDate: '',
@@ -53,29 +64,12 @@ export struct BillDetailPage {
         if (!this.hasBill) {
           this.emptyState()
         } else {
-          Stack({ alignContent: Alignment.Bottom }) {
-            Scroll() {
-              Column({ space: 12 }) {
-                this.summaryCard()
-                this.detailCard()
-              }
-              .width('100%')
-              .padding({ left: 16, right: 16, top: 18, bottom: 96 })
-              .alignItems(HorizontalAlign.Start)
-            }
-            .width('100%')
-            .height('100%')
-            .scrollBar(BarState.Off)
-
-            this.bottomActions()
-          }
-          .layoutWeight(1)
-          .width('100%')
+          this.detailScrollContent()
+          this.bottomActions()
         }
       }
       .width('100%')
       .height('100%')
-      .backgroundColor('#F3F3F3')
 
       if (this.showMenu) {
         Column()
@@ -134,28 +128,31 @@ export struct BillDetailPage {
         .width('100%')
         .height('100%')
       }
-
-      if (this.showAssetPicker && this.hasBill) {
-        Column()
-          .width('100%')
-          .height('100%')
-          .backgroundColor('#000000')
-          .opacity(0.42)
-          .onClick(() => {
-            this.showAssetPicker = false
-          })
-
-        AssetAccountPicker({
-          assets: this.assets,
-          selectedAssetId: this.bill.assetId === undefined ? '' : this.bill.assetId,
-          onSelect: (asset: AssetAccount | undefined) => {
-            this.updateBillAsset(asset)
-          }
-        })
-      }
+      
     }
     .width('100%')
     .height('100%')
+    .backgroundColor('#FFFFFF')
+    .expandSafeArea([SafeAreaType.SYSTEM], [SafeAreaEdge.TOP, SafeAreaEdge.BOTTOM])
+    .bindSheet($$this.showAssetPicker, this.assetPickerSheet(), {
+      height: 520,
+      backgroundColor: '#FFFFFF',
+      preferType: SheetType.BOTTOM,
+      maskColor: '#66000000'
+    })
+  }
+
+  @Builder
+  private assetPickerSheet() {
+    if (this.hasBill) {
+      AssetAccountPicker({
+        assets: this.assets,
+        selectedAssetId: this.bill.assetId === undefined ? '' : this.bill.assetId,
+        onSelect: (asset: AssetAccount | undefined) => {
+          this.updateBillAsset(asset)
+        }
+      })
+    }
   }
 
   @Builder
@@ -171,7 +168,7 @@ export struct BillDetailPage {
           })
 
         Text('账单详情')
-          .fontSize(24)
+          .fontSize(18)
           .fontWeight(FontWeight.Medium)
           .fontColor('#111111')
           .margin({ left: 22 })
@@ -181,22 +178,18 @@ export struct BillDetailPage {
         Image($r('app.media.more_col'))
           .width(28)
           .height(28)
-          .objectFit(ImageFit.Contain)
+          .objectFit(ImageFit.Fill)
           .onClick(() => {
             this.showMenu = !this.showMenu
           })
       }
       .width('100%')
-      .height(73)
-      .padding({ left: 20, right: 20, top: 8 })
-
-      Column()
-        .width('100%')
-        .height(1)
-        .backgroundColor('#E7E7E7')
+      .height(50)
+      .padding({ left: 20, right: 20 })
     }
     .width('100%')
-    .height(74)
+    .justifyContent(FlexAlign.Start)
+    .height(50)
     .backgroundColor('#FFFFFF')
   }
 
@@ -216,18 +209,37 @@ export struct BillDetailPage {
     .layoutWeight(1)
     .justifyContent(FlexAlign.Center)
     .padding({ left: 32, right: 32 })
+    .backgroundColor('#F3F3F3')
+  }
+
+  @Builder
+  private detailScrollContent() {
+    Scroll() {
+      Column({ space: 12 }) {
+        this.summaryCard()
+        this.detailCard()
+      }
+      .width('100%')
+      .padding({ left: 16, right: 16, top: 12, bottom: 12 })
+      .alignItems(HorizontalAlign.Start)
+    }
+    .width('100%')
+    .layoutWeight(1)
+    .backgroundColor('#F3F3F3')
+    .scrollBar(BarState.Off)
   }
 
   @Builder
   private summaryCard() {
     Row({ space: 18 }) {
-      Text(this.billIcon())
+      Stack({ alignContent: Alignment.Center }) {
+        Image(iconResourceById(this.bill.category.iconId))
+          .width(24)
+          .height(24)
+          .objectFit(ImageFit.Contain)
+      }
         .width(36)
         .height(36)
-        .fontSize(19)
-        .fontColor('#3D5752')
-        .textAlign(TextAlign.Center)
-        .padding({ top: 7 })
         .border({ width: 1, color: '#DDE7E4' })
         .borderRadius(4)
 
@@ -255,6 +267,9 @@ export struct BillDetailPage {
     Column({ space: 0 }) {
       this.dateRow()
       this.accountRow()
+      if (this.bill.type === 'transfer') {
+        this.infoRow('手续费', this.transferFeeText(), this.transferFeeColor())
+      }
       this.infoRow('备注', this.remarkText(), '#999999')
       this.infoRow('标签', '点击添加', '#999999')
       this.infoRow('附件', '点击添加', '#999999')
@@ -380,8 +395,8 @@ export struct BillDetailPage {
       Button('退款')
         .type(ButtonType.Normal)
         .layoutWeight(1)
-        .height(54)
-        .fontSize(18)
+        .height(44)
+        .fontSize(16)
         .fontColor('#FFFFFF')
         .backgroundColor('#55B8A7')
         .borderRadius(8)
@@ -389,15 +404,16 @@ export struct BillDetailPage {
       Button('编辑')
         .type(ButtonType.Normal)
         .layoutWeight(1)
-        .height(54)
-        .fontSize(18)
+        .height(44)
+        .fontSize(16)
         .fontColor('#FFFFFF')
         .backgroundColor('#55B8A7')
         .borderRadius(8)
     }
     .width('100%')
-    .padding({ left: 16, right: 16, top: 12, bottom: 12 })
+    .padding({ left: 16, right: 16, top: 8, bottom: 8 })
     .backgroundColor('#FFFFFF')
+    .expandSafeArea([SafeAreaType.SYSTEM], [SafeAreaEdge.BOTTOM])
   }
 
   @Builder
@@ -646,6 +662,7 @@ export struct BillDetailPage {
       toAssetId: record.toAssetId,
       toAssetName: record.toAssetName,
       transferFee: record.transferFee,
+      category: record.category,
       categoryId: record.categoryId,
       categoryName: record.categoryName,
       billDate: date.toISOString(),
@@ -669,6 +686,7 @@ export struct BillDetailPage {
       toAssetId: record.toAssetId,
       toAssetName: record.toAssetName,
       transferFee: record.transferFee,
+      category: record.category,
       categoryId: record.categoryId,
       categoryName: record.categoryName,
       billDate: record.billDate,
@@ -717,6 +735,7 @@ export struct BillDetailPage {
           toAssetId: record.toAssetId,
           toAssetName: record.toAssetName,
           transferFee: record.transferFee,
+          category: record.category,
           categoryId: record.categoryId,
           categoryName: record.categoryName,
           billDate: record.billDate,
@@ -817,20 +836,7 @@ export struct BillDetailPage {
     if (this.bill.type === 'transfer') {
       return '转账'
     }
-    return this.bill.categoryName
-  }
-
-  private billIcon(): string {
-    if (!this.hasBill) {
-      return ''
-    }
-    if (this.bill.type === 'income') {
-      return '收'
-    }
-    if (this.bill.type === 'transfer') {
-      return '转'
-    }
-    return this.bill.categoryName.length > 0 ? this.bill.categoryName.substring(0, 1) : '支'
+    return this.bill.category.name.length > 0 ? this.bill.category.name : this.bill.categoryName
   }
 
   private amountText(): string {
@@ -890,6 +896,20 @@ export struct BillDetailPage {
       return this.bill.assetName
     }
     return '无账户'
+  }
+
+  private transferFeeText(): string {
+    if (!this.hasBill || this.bill.transferFee === undefined || this.bill.transferFee <= 0) {
+      return '0.00'
+    }
+    return '-' + this.bill.transferFee.toFixed(2)
+  }
+
+  private transferFeeColor(): string {
+    if (this.hasBill && this.bill.transferFee !== undefined && this.bill.transferFee > 0) {
+      return '#E07178'
+    }
+    return '#999999'
   }
 
   private remarkText(): string {

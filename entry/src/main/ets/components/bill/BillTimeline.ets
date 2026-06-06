@@ -2,6 +2,7 @@ export interface BillTimelineItem {
   id: string
   type: 'income' | 'expense' | 'transfer'
   icon: string
+  iconResource?: Resource
   title: string
   remark: string
   category: string
@@ -118,6 +119,7 @@ struct BillTimelineRow {
     id: '',
     type: 'expense',
     icon: '',
+    iconResource: undefined,
     title: '',
     remark: '',
     category: '',
@@ -129,15 +131,23 @@ struct BillTimelineRow {
 
   build() {
     Row({ space: 10 }) {
-      Text(this.bill.icon)
-        .fontSize(12)
-        .fontColor('#3C5652')
-        .textAlign(TextAlign.Center)
-        .width(24)
-        .height(24)
-        .padding({ top: 5 })
-        .border({ width: 1, color: '#DDE8E5' })
-        .borderRadius(4)
+      Stack({ alignContent: Alignment.Center }) {
+        if (this.bill.iconResource !== undefined) {
+          Image(this.bill.iconResource)
+            .width(18)
+            .height(18)
+            .objectFit(ImageFit.Contain)
+        } else {
+          Text(this.bill.icon)
+            .fontSize(12)
+            .fontColor('#3C5652')
+            .textAlign(TextAlign.Center)
+        }
+      }
+      .width(24)
+      .height(24)
+      .border({ width: 1, color: '#DDE8E5' })
+      .borderRadius(4)
 
       Column({ space: 3 }) {
         Text(this.bill.title)
