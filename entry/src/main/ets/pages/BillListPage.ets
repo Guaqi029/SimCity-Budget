@@ -6,23 +6,17 @@ import { BillRecordStore } from '../storage/BillRecordStore'
 
 @Component
 export struct BillListPage {
-  // 新增：沿用首页已经在使用的刷新版本号机制。
-  // 原因：新增账单 / 删除账单后，Index 层已经会递增 billRefreshVersion，
-  // 所以账单明细页直接复用这个信号，就能在最小改动下感知本地存储数据变化。
   @Watch('onBillRefreshChanged') @Prop billRefreshVersion: number = 0
-
-  // 新增：账单明细页自己维护当前选中的年月日，
-  // 因为顶部筛选 chip 已被替换为可交互日历，需要有页面级状态接收日历回调。
-  @State private selectedYear: number = 2026
-  @State private selectedMonth: number = 4
-  @State private selectedDay: number = 28
-  // 这里把原来的“本地演示 records 常量”替换成了页面状态 billRecords。
-  // 删除原因：你现在要求直接读取真实本地存储，继续保留演示数组会让页面和真实数据脱节。
-  // 新增功能：账单页会像首页一样，从 BillRecordStore.load() 读取真实账单列表。
+  @State private selectedYear: number = new Date().getFullYear()
+  @State private selectedMonth: number = new Date().getMonth()
+  @State private selectedDay: number = new Date().getDate()
   @State private billRecords: BillRecord[] = []
-  onOpenDetail: () => void = () => {}
+  onOpenDetail: (billId: string) => void = (_billId: string) => {}
 
   aboutToAppear() {
+    // 新增：页面重新进入或刷新时，先把顶部日历重新对齐到系统当天。
+    // 原因：账单页是 Tab 页面，用户重新切回来时希望看到“今天”被选中，而不是停留在上次手动点过的日期。
+    this.syncSelectedDateToToday()
     this.loadBills()
   }
 
@@ -64,8 +58,11 @@ export struct BillListPage {
         filter: {
           day: this.selectedDateKey()
         },
-        onOpenBill: (_billId: string) => {
-          this.onOpenDetail()
+        // 这里删除了原来“点击账单后直接调用无参 onOpenDetail”的写法。
+        // 删除原因：原写法会把时间线里已经拿到的 billId 丢弃，导致详情页不知道该打开哪一条账单。
+        // 新增功能：把 BillRecordTimeline 抛出的真实 billId 原样传给页面外层，保持点击链路高内聚、低耦合。
+        onOpenBill: (billId: string) => {
+          this.onOpenDetail(billId)
         }
       })
 
@@ -77,6 +74,15 @@ export struct BillListPage {
   // 新增：和首页保持一致，收到 Index 层的账单刷新信号后重新读取本地存储。
   private onBillRefreshChanged() {
     this.loadBills()
+  }
+
+  // 新增：把“同步系统当天日期”抽成独立函数。
+  // 这样初始化和后续页面刷新都复用同一处逻辑，避免把 year / month / day 三个赋值散落在多个位置。
+  private syncSelectedDateToToday() {
+    const today = new Date()
+    this.selectedYear = today.getFullYear()
+    this.selectedMonth = today.getMonth()
+    this.selectedDay = today.getDate()
   }
 
   // 新增：把读取真实账单存储的逻辑集中在一个函数里。
