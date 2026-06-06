@@ -10,6 +10,11 @@ interface SevenDayStatisticItem {
 
 @Component
 export struct StatisticSevenDayBarChart {
+  // 新增：接入账单刷新版本号。
+  // 原因：组件内部直接读取本地账单数据，如果不监听外部账单刷新信号，
+  // 新增/删除账单后近 7 日条形图可能仍停留在旧数据。
+  // 新增功能：外部账单更新后，条形图会自动重新聚合近 7 天统计结果。
+  @Watch('onBillRefreshChanged') @Prop billRefreshVersion: number = 0
   @State private items: SevenDayStatisticItem[] = []
   @State private totalExpense: number = 0
   @State private totalIncome: number = 0
@@ -186,6 +191,10 @@ export struct StatisticSevenDayBarChart {
         this.averageExpense = 0
         this.averageIncome = 0
       })
+  }
+
+  private onBillRefreshChanged() {
+    this.loadChartData()
   }
 
   // 原因：组件显示的是“按天汇总后的收入/支出”，不能直接拿原始账单列表渲染，所以需要先统一做一次日期桶聚合。
