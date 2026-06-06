@@ -129,29 +129,30 @@ export struct BillDetailPage {
         .height('100%')
       }
       
-      if (this.showAssetPicker && this.hasBill) {
-        Column()
-          .width('100%')
-          .height('100%')
-          .backgroundColor('#000000')
-          .opacity(0.42)
-          .onClick(() => {
-            this.showAssetPicker = false
-          })
-
-        AssetAccountPicker({
-          assets: this.assets,
-          selectedAssetId: this.bill.assetId === undefined ? '' : this.bill.assetId,
-          onSelect: (asset: AssetAccount | undefined) => {
-            this.updateBillAsset(asset)
-          }
-        })
-      }
     }
     .width('100%')
     .height('100%')
     .backgroundColor('#FFFFFF')
     .expandSafeArea([SafeAreaType.SYSTEM], [SafeAreaEdge.TOP, SafeAreaEdge.BOTTOM])
+    .bindSheet($$this.showAssetPicker, this.assetPickerSheet(), {
+      height: 520,
+      backgroundColor: '#FFFFFF',
+      preferType: SheetType.BOTTOM,
+      maskColor: '#66000000'
+    })
+  }
+
+  @Builder
+  private assetPickerSheet() {
+    if (this.hasBill) {
+      AssetAccountPicker({
+        assets: this.assets,
+        selectedAssetId: this.bill.assetId === undefined ? '' : this.bill.assetId,
+        onSelect: (asset: AssetAccount | undefined) => {
+          this.updateBillAsset(asset)
+        }
+      })
+    }
   }
 
   @Builder

@@ -8,34 +8,28 @@ export struct AssetAccountPicker {
 
   build() {
     Column() {
-      Column() {
-        this.header()
+      this.header()
 
-        Scroll() {
-          Column() {
-            ForEach(this.assets, (asset: AssetAccount) => {
-              this.assetRow(asset)
-            }, (asset: AssetAccount) => asset.id)
+      Scroll() {
+        Column() {
+          ForEach(this.assets, (asset: AssetAccount) => {
+            this.assetRow(asset)
+          }, (asset: AssetAccount) => asset.id)
 
-            this.noAccountRow()
-          }
-          .width('100%')
-          .height(this.assetListContentHeight())
-          .alignItems(HorizontalAlign.Start)
-          .justifyContent(FlexAlign.Start)
+          this.noAccountRow()
         }
         .width('100%')
-        .height(430)
-        .scrollBar(BarState.Off)
+        .height(this.assetListContentHeight())
+        .alignItems(HorizontalAlign.Start)
+        .justifyContent(FlexAlign.Start)
       }
       .width('100%')
-      .backgroundColor('#FFFFFF')
-      .borderRadius({ topLeft: 8, topRight: 8 })
-      .padding({ top: 8, bottom: 10 })
+      .height(430)
+      .scrollBar(BarState.Off)
     }
     .width('100%')
-    .height('100%')
-    .justifyContent(FlexAlign.End)
+    .padding({ top: 4, bottom: 10 })
+    .backgroundColor('#FFFFFF')
   }
 
   @Builder

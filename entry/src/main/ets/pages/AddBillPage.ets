@@ -79,7 +79,7 @@ export struct AddBillPage {
       .margin({ top: 48 })
       .align(Alignment.Top)
 
-      if (this.showDateSheet || this.showAssetSheet) {
+      if (this.showDateSheet) {
         Column()
           .width('100%')
           .height('100%')
@@ -116,19 +116,26 @@ export struct AddBillPage {
         .onClick(() => {})
       }
 
-      if (this.showAssetSheet) {
-        AssetAccountPicker({
-          assets: this.assets,
-          selectedAssetId: this.selectedAssetId,
-          onSelect: (asset: AssetAccount | undefined) => {
-            this.selectAsset(asset)
-          }
-        })
-        .onClick(() => {})
-      }
     }
     .width('100%')
     .height('100%')
+    .bindSheet($$this.showAssetSheet, this.assetPickerSheet(), {
+      height: 520,
+      backgroundColor: '#FFFFFF',
+      preferType: SheetType.BOTTOM,
+      maskColor: '#66000000'
+    })
+  }
+
+  @Builder
+  private assetPickerSheet() {
+    AssetAccountPicker({
+      assets: this.assets,
+      selectedAssetId: this.selectedAssetId,
+      onSelect: (asset: AssetAccount | undefined) => {
+        this.selectAsset(asset)
+      }
+    })
   }
 
   @Builder
