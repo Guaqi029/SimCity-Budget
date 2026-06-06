@@ -1,6 +1,8 @@
 import { PageHeader } from '../components/PageHeader'
 import { BillDatePicker, BillDatePickerValue } from '../components/bill/BillDatePicker'
 import { BillRecordTimeline } from '../components/bill/BillRecordTimeline'
+import { BillTimelineMapper } from '../components/bill/BillTimelineMapper'
+import { StatisticSummaryStrip } from '../components/analytics/StatisticSummaryStrip'
 import { BillRecord } from '../model/BillRecord'
 import { BillRecordStore } from '../storage/BillRecordStore'
 
@@ -25,7 +27,21 @@ export struct BillListPage {
       PageHeader({
         eyebrow: 'BILL LIST',
         title: '账单明细',
-        subtitle: '按时间流展示当月全部收支记录，并预留详情入口'
+        // 这里把原来的说明性 subtitle 文案替换成空字符串。
+        // 删除原因：你现在希望标题下方展示“收 / 支 / 余”这类统计信息，而不是继续显示说明文字。
+        // 新增功能：PageHeader 只保留标题职责，统计数据改由独立统计组件承接，后续也能复用到统计页。
+        subtitle: ''
+      })
+
+      // 新增：这里不直接把“收 / 支 / 余”写死成页面内文本，而是先复用独立的统计摘要条组件。
+      // 原因：后面统计页也需要类似的顶部统计展示，先抽成 analytics 目录下的通用组件，能保持高内聚、低耦合。
+      // 当前这一版先只完成样式替换，数值先用占位形式，后续再统一接真实统计逻辑。
+      StatisticSummaryStrip({
+        items: [
+          { label: '收', value: '0.78', valueColor: '#55B8A7' },
+          { label: '支', value: '213.51', valueColor: '#E07178' },
+          { label: '余', value: '-212.73', valueColor: '#18233A' }
+        ]
       })
 
       // 这里删除了原来的“月份 / 支出筛选 / 类别筛选”三个占位 chip。
@@ -66,6 +82,16 @@ export struct BillListPage {
         }
       })
 
+      // 这里把原来的“只有没账单时才补透明占位块”替换成“账单太少时也继续补齐空间”。
+      // 删除原因：即使当前日期有 1~2 条账单，列表卡片仍然可能过短，页面底部会显得空落，整体视觉还是不像从上往下铺开的内容流。
+      // 新增功能：根据当前日期账单条数动态补透明空间；无账单、账单很少时都会自动撑开页面，有较多账单时则不额外增加占位。
+      if (this.selectedDayFillerHeight() > 0) {
+        Column()
+          .width('100%')
+          .height(this.selectedDayFillerHeight())
+          .backgroundColor('#00000000')
+      }
+
     }
     .width('100%')
     .alignItems(HorizontalAlign.Start)
@@ -101,6 +127,24 @@ export struct BillListPage {
   // 这里单独抽成函数，后面如果账单页还要做“整月筛选 / 日期区间筛选”，可以继续复用。
   private selectedDateKey(): string {
     return this.selectedYear.toString() + '-' + this.pad2(this.selectedMonth + 1) + '-' + this.pad2(this.selectedDay)
+  }
+
+  // 这里把原来“是否有账单”的布尔判断替换成“当前日期账单数量”统计函数。
+  // 删除原因：现在不仅要区分有没有账单，还要根据账单数量决定补多少透明占位，所以单纯返回 true / false 已经不够用了。
+  // 新增功能：统一返回当前选中日期的账单条数，给空状态和少量账单场景共用。
+  private selectedDayBillCount(): number {
+    return BillTimelineMapper.filterRecords(this.billRecords, {
+      day: this.selectedDateKey()
+    }).length
+  }
+
+  // 新增：按当前日期账单数量动态计算底部需要补的透明高度。
+  // 原因：空列表和只有 1~2 条账单的场景都需要向下补空间，才能让页面整体内容保持靠上而不是显得中间一小块。
+  // 这里先用一个轻量的经验值公式处理，后面如果你们微调界面，只需要改这个函数，不必去动时间线组件。
+  private selectedDayFillerHeight(): number {
+    const billCount = this.selectedDayBillCount()
+    const fillerHeight = 300 - billCount * 84
+    return fillerHeight > 0 ? fillerHeight : 0
   }
 
   // 本地补一个两位数格式化，避免为了这一处联动额外改动其他工具类。
