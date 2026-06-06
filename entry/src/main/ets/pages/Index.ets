@@ -2,7 +2,7 @@ import { BottomTabBar, TabItem } from '../components/BottomTabBar'
 import { HomePage } from './HomePage'
 import { BillListPage } from './BillListPage'
 import { AssetPage } from './AssetPage'
-import { AnalyticsPage } from './AnalyticsPage'
+import { AnalyticsPage } from './Statistic/AnalyticsPage'
 import { AccountPage } from './AccountPage'
 import { AddBillPage } from './AddBillPage'
 import { BillDetailPage } from './BillDetailPage'
@@ -182,7 +182,13 @@ struct Index {
         }
       })
     } else if (this.currentTab === 3) {
-      AnalyticsPage()
+      // 新增：把账单刷新版本号继续传给统计页。
+      // 原因：统计页现在已经有多个组件直接读取本地账单数据，
+      // 所以它也需要和首页、账单页一样，在账单变化后收到统一刷新信号。
+      // 新增功能：统计图表在新增/删除账单后可以重新读取本地存储并刷新展示。
+      AnalyticsPage({
+        billRefreshVersion: this.billRefreshVersion
+      })
     } else {
       AccountPage()
     }
