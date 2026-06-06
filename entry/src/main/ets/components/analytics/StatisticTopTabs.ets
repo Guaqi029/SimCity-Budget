@@ -5,8 +5,12 @@ export interface StatisticTopTabItem {
 
 @Component
 export struct StatisticTopTabs {
-  items: StatisticTopTabItem[] = []
-  selectedId: string = ''
+  // 这里把原来的普通字段 items / selectedId 替换成 @Prop。
+  // 删除原因：上一版虽然把点击事件回调到了父页面，但顶部组件本身没有把“当前选中项”当作响应式外部输入来接收，
+  // 所以父页面的 selectedTabId 已经变化时，这个组件内部不一定会按新的值重绘高亮。
+  // 新增功能：items 和 selectedId 现在会跟随父页面状态同步刷新，顶部绿色高亮会正确切换到当前页面对应的按钮。
+  @Prop items: StatisticTopTabItem[] = []
+  @Prop selectedId: string = ''
   onChange: (id: string) => void = (_id: string) => {}
   onMoreClick: () => void = () => {}
 
