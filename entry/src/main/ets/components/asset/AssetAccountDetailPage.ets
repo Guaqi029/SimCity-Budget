@@ -1,8 +1,12 @@
 import { AssetAccount } from '../../model/AssetAccount'
+import { BillRecord } from '../../model/BillRecord'
+import { BillTimeline, BillTimelineDayGroup } from '../bill/BillTimeline'
+import { BillTimelineMapper } from '../bill/BillTimelineMapper'
+import { BillRecordStore } from '../../storage/BillRecordStore'
 
 @Component
 export struct AssetAccountDetailPage {
-  @Prop asset: AssetAccount = {
+  @Watch('onAssetChanged') @Prop asset: AssetAccount = {
     id: '',
     type: 'custom',
     group: 'fund',
@@ -19,9 +23,14 @@ export struct AssetAccountDetailPage {
   }
 
   @State private showMenu: boolean = false
+  @State private billGroups: BillTimelineDayGroup[] = []
   onBack: () => void = () => {}
   onEdit: () => void = () => {}
   onDelete: () => void = () => {}
+
+  aboutToAppear() {
+    this.loadAssetBills()
+  }
 
   build() {
     Stack({ alignContent: Alignment.TopEnd }) {
@@ -29,11 +38,7 @@ export struct AssetAccountDetailPage {
         this.header()
         this.balanceCard()
         this.actionBar()
-
-        // 账单列表后续接入，这里只保留一个轻量空白区域。
-        Column()
-          .width('100%')
-          .layoutWeight(1)
+        this.billSection()
       }
       .width('100%')
       .height('100%')
@@ -166,7 +171,50 @@ export struct AssetAccountDetailPage {
     .justifyContent(FlexAlign.Center)
   }
 
+  @Builder
+  private billSection() {
+    Scroll() {
+      Column({ space: 8 }) {
+        Text('账户账单')
+          .fontSize(16)
+          .fontWeight(FontWeight.Medium)
+          .fontColor('#111111')
+          .width('100%')
+
+        BillTimeline({ groups: this.billGroups })
+      }
+      .width('100%')
+      .padding({ left: 16, right: 16, bottom: 18 })
+      .alignItems(HorizontalAlign.Start)
+    }
+    .width('100%')
+    .layoutWeight(1)
+    .scrollBar(BarState.Off)
+    .align(Alignment.Top)
+  }
+
   private formatMoney(value: number): string {
     return (value < 0 ? '-' : '') + Math.abs(value).toFixed(2)
+  }
+
+  private onAssetChanged() {
+    this.loadAssetBills()
+  }
+
+  private loadAssetBills() {
+    if (this.asset.id.length === 0) {
+      this.billGroups = []
+      return
+    }
+
+    BillRecordStore.load(getContext(this))
+      .then((records: BillRecord[]) => {
+        this.billGroups = BillTimelineMapper.toGroups(records, {
+          assetId: this.asset.id
+        })
+      })
+      .catch(() => {
+        this.billGroups = []
+      })
   }
 }
