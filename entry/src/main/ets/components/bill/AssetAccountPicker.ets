@@ -4,6 +4,7 @@ import { AssetAccount } from '../../model/AssetAccount'
 export struct AssetAccountPicker {
   @Prop assets: AssetAccount[] = []
   @Prop selectedAssetId: string = ''
+  @Prop allowNoAccount: boolean = true
   onSelect: (asset: AssetAccount | undefined) => void = () => {}
 
   build() {
@@ -16,7 +17,9 @@ export struct AssetAccountPicker {
             this.assetRow(asset)
           }, (asset: AssetAccount) => asset.id)
 
-          this.noAccountRow()
+          if (this.allowNoAccount) {
+            this.noAccountRow()
+          }
         }
         .width('100%')
         .height(this.assetListContentHeight())
@@ -149,7 +152,7 @@ export struct AssetAccountPicker {
   }
 
   private assetListContentHeight(): number {
-    const rowHeight = this.assets.length * 56 + 50
+    const rowHeight = this.assets.length * 56 + (this.allowNoAccount ? 50 : 0)
     return rowHeight < 430 ? 430 : rowHeight
   }
 }

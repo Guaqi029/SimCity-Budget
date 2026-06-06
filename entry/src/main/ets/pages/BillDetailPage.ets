@@ -267,6 +267,9 @@ export struct BillDetailPage {
     Column({ space: 0 }) {
       this.dateRow()
       this.accountRow()
+      if (this.bill.type === 'transfer') {
+        this.infoRow('手续费', this.transferFeeText(), this.transferFeeColor())
+      }
       this.infoRow('备注', this.remarkText(), '#999999')
       this.infoRow('标签', '点击添加', '#999999')
       this.infoRow('附件', '点击添加', '#999999')
@@ -893,6 +896,20 @@ export struct BillDetailPage {
       return this.bill.assetName
     }
     return '无账户'
+  }
+
+  private transferFeeText(): string {
+    if (!this.hasBill || this.bill.transferFee === undefined || this.bill.transferFee <= 0) {
+      return '0.00'
+    }
+    return '-' + this.bill.transferFee.toFixed(2)
+  }
+
+  private transferFeeColor(): string {
+    if (this.hasBill && this.bill.transferFee !== undefined && this.bill.transferFee > 0) {
+      return '#E07178'
+    }
+    return '#999999'
   }
 
   private remarkText(): string {

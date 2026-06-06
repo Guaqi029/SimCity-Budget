@@ -12,6 +12,8 @@ import { iconResourceById } from '../components/icon/IconLibraryConfig'
 import { BillCategoryManagerDialog } from '../components/bill/BillCategoryManagerDialog'
 
 type AddBillMode = 'expense' | 'income' | 'transfer'
+type AssetPickerTarget = 'normal' | 'transferFrom' | 'transferTo'
+type BottomSheetType = 'asset' | 'transferFee'
 
 const NO_ASSET_ID: string = '__none__'
 
@@ -26,10 +28,18 @@ export struct AddBillPage {
   @State private toastVisible: boolean = false
   @State private toastMessage: string = ''
   @State private showDateSheet: boolean = false
-  @State private showAssetSheet: boolean = false
+  @State private showBottomSheet: boolean = false
+  @State private activeBottomSheet: BottomSheetType = 'asset'
   @State private assets: AssetAccount[] = []
   @State private selectedAssetId: string = ''
   @State private selectedAssetName: string = '无账户'
+  @State private transferFromAssetId: string = ''
+  @State private transferFromAssetName: string = '请选择转出账户'
+  @State private transferToAssetId: string = ''
+  @State private transferToAssetName: string = '请选择转入账户'
+  @State private transferFeeAmount: number = 0
+  @State private transferFeeDraftText: string = ''
+  @State private assetPickerTarget: AssetPickerTarget = 'normal'
   @State private selectedAssetVersion: number = 0
   @State private selectedYear: number = new Date().getFullYear()
   @State private selectedMonth: number = new Date().getMonth()
@@ -62,7 +72,11 @@ export struct AddBillPage {
     Stack({ alignContent: Alignment.Center }) {
       Column() {
         this.header()
-        this.categoryGrid()
+        if (this.mode === 'transfer') {
+          this.transferAssetPanel()
+        } else {
+          this.categoryGrid()
+        }
         Blank()
         this.amountPanel()
         this.metaBar()
@@ -119,23 +133,72 @@ export struct AddBillPage {
     }
     .width('100%')
     .height('100%')
-    .bindSheet($$this.showAssetSheet, this.assetPickerSheet(), {
-      height: 520,
+    .bindSheet($$this.showBottomSheet, this.bottomSheetContent(), {
+      height: this.bottomSheetHeight(),
       backgroundColor: '#FFFFFF',
       preferType: SheetType.BOTTOM,
+      showClose: false,
       maskColor: '#66000000'
     })
+  }
+
+  @Builder
+  private bottomSheetContent() {
+    if (this.activeBottomSheet === 'transferFee') {
+      this.transferFeeSheet()
+    } else {
+      this.assetPickerSheet()
+    }
   }
 
   @Builder
   private assetPickerSheet() {
     AssetAccountPicker({
       assets: this.assets,
-      selectedAssetId: this.selectedAssetId,
+      selectedAssetId: this.sheetSelectedAssetId(),
+      allowNoAccount: this.assetPickerTarget === 'normal',
       onSelect: (asset: AssetAccount | undefined) => {
         this.selectAsset(asset)
       }
     })
+  }
+
+  @Builder
+  private transferFeeSheet() {
+    Column({ space: 14 }) {
+      Row() {
+        Text('手续费')
+          .fontSize(18)
+          .fontWeight(FontWeight.Medium)
+          .fontColor('#111111')
+        Blank()
+        Text('保存')
+          .fontSize(14)
+          .fontWeight(FontWeight.Medium)
+          .fontColor('#55B8A7')
+          .onClick(() => {
+            this.confirmTransferFee()
+          })
+      }
+      .width('100%')
+      .height(32)
+
+      TextInput({ placeholder: '手续费只从转出账户扣除，最多两位小数', text: this.transferFeeDraftText })
+        .type(InputType.Normal)
+        .fontSize(22)
+        .fontColor('#111111')
+        .placeholderColor('#AAAAAA')
+        .backgroundColor('#F5F6F7')
+        .height(52)
+        .borderRadius(8)
+        .padding({ left: 12, right: 12 })
+        .defaultFocus(true)
+        .onChange((value: string) => {
+          this.updateTransferFeeDraft(value)
+        })
+    }
+    .width('100%')
+    .padding({ left: 18, right: 18, top: 12, bottom: 18 })
   }
 
   @Builder
@@ -178,6 +241,9 @@ export struct AddBillPage {
     .onClick(() => {
       this.mode = mode
       this.selectedCategoryIndex = 0
+      if (mode === 'transfer') {
+        this.ensureTransferAssets()
+      }
     })
   }
 
@@ -206,6 +272,71 @@ export struct AddBillPage {
     }
     .width('100%')
     .padding({ left: 10, right: 10, top: 8 })
+  }
+
+  @Builder
+  private transferAssetPanel() {
+    Column({ space: 10 }) {
+      ForEach([this.selectedAssetVersion], () => {
+        Row({ space: 10 }) {
+          this.transferAssetCard('转出账户', true)
+          this.transferAssetCard('转入账户', false)
+        }
+        .width('100%')
+      }, (version: number) => version.toString())
+
+      Row({ space: 8 }) {
+        Text('类型')
+          .fontSize(12)
+          .fontColor('#9A9A9A')
+        Text('转账')
+          .fontSize(13)
+          .fontColor('#55B8A7')
+      }
+      .width('100%')
+      .padding({ left: 4 })
+    }
+    .width('100%')
+    .padding({ left: 14, right: 14, top: 10 })
+  }
+
+  @Builder
+  private transferAssetCard(title: string, isFrom: boolean) {
+    Column({ space: 7 }) {
+      Text(title)
+        .fontSize(12)
+        .fontColor('#888888')
+        .width('100%')
+
+      Row() {
+        Text(isFrom ? '出' : '入')
+          .fontSize(12)
+          .fontColor('#FFFFFF')
+          .textAlign(TextAlign.Center)
+          .width(24)
+          .height(24)
+          .padding({ top: 4 })
+          .backgroundColor(isFrom ? '#E07178' : '#55B8A7')
+          .borderRadius(12)
+
+        Text(this.transferAssetDisplayName(isFrom))
+          .fontSize(15)
+          .fontColor('#111111')
+          .maxLines(1)
+          .margin({ left: 9 })
+          .layoutWeight(1)
+      }
+      .width('100%')
+    }
+    .layoutWeight(1)
+    .height(76)
+    .padding({ left: 12, right: 12, top: 10 })
+    .backgroundColor('#F7F8F8')
+    .borderRadius(10)
+    .onClick(() => {
+      this.assetPickerTarget = isFrom ? 'transferFrom' : 'transferTo'
+      this.openAssetSheet()
+    })
   }
 
   @Builder
@@ -258,9 +389,13 @@ export struct AddBillPage {
         ForEach([this.dateDisplayVersion], () => {
           this.dateMetaItem()
         }, (version: number) => version.toString())
-        ForEach([this.selectedAssetVersion], () => {
-          this.assetMetaItem()
-        }, (version: number) => version.toString())
+        if (this.mode !== 'transfer') {
+          ForEach([this.selectedAssetVersion], () => {
+            this.assetMetaItem()
+          }, (version: number) => version.toString())
+        } else {
+          this.transferFeeMetaItem()
+        }
       }
       .width('100%')
       .height(47)
@@ -306,7 +441,25 @@ export struct AddBillPage {
         .maxLines(1)
     }
     .onClick(() => {
-      this.showAssetSheet = true
+      this.assetPickerTarget = 'normal'
+      this.openAssetSheet()
+    })
+  }
+
+  @Builder
+  private transferFeeMetaItem() {
+    Row({ space: 5 }) {
+      Text('费')
+        .fontSize(15)
+        .fontColor('#111111')
+      Text(this.transferFeeMetaText())
+        .fontSize(16)
+        .fontColor(this.transferFeeAmount > 0 ? '#E07178' : '#111111')
+        .maxLines(1)
+    }
+    .onClick(() => {
+      this.transferFeeDraftText = this.transferFeeAmount > 0 ? this.formatAmount(this.transferFeeAmount) : ''
+      this.openTransferFeeSheet()
     })
   }
 
@@ -679,6 +832,9 @@ export struct AddBillPage {
       this.showToast('请输入有效金额')
       return
     }
+    if (this.mode === 'transfer' && !this.validateTransferAssets()) {
+      return
+    }
 
     const now = new Date().toISOString()
     const billDate = this.selectedDateIsoString()
@@ -689,11 +845,11 @@ export struct AddBillPage {
       type: this.currentBillType(),
       assetId: this.mode === 'transfer' ? '' : this.selectedAssetId,
       assetName: this.mode === 'transfer' ? '' : this.selectedAssetName,
-      fromAssetId: this.mode === 'transfer' ? this.selectedAssetId : '',
-      fromAssetName: this.mode === 'transfer' ? this.selectedAssetName : '',
-      toAssetId: '',
-      toAssetName: '',
-      transferFee: 0,
+      fromAssetId: this.mode === 'transfer' ? this.transferFromAssetId : '',
+      fromAssetName: this.mode === 'transfer' ? this.transferFromAssetName : '',
+      toAssetId: this.mode === 'transfer' ? this.transferToAssetId : '',
+      toAssetName: this.mode === 'transfer' ? this.transferToAssetName : '',
+      transferFee: this.mode === 'transfer' ? this.transferFeeAmount : 0,
       category: category,
       categoryId: category.id,
       categoryName: category.name,
@@ -707,7 +863,7 @@ export struct AddBillPage {
 
     BillRecordStore.add(getContext(this), record)
       .then(() => {
-        return this.updateSelectedAssetBalance(amount)
+        return this.updateAssetBalanceAfterSave(amount)
       })
       .then(() => {
         this.onSaved()
@@ -716,6 +872,13 @@ export struct AddBillPage {
       .catch(() => {
         this.showToast('账单保存失败')
       })
+  }
+
+  private updateAssetBalanceAfterSave(amount: number): Promise<void> {
+    if (this.mode === 'transfer') {
+      return this.updateTransferAssetBalance(amount)
+    }
+    return this.updateSelectedAssetBalance(amount)
   }
 
   private updateSelectedAssetBalance(amount: number): Promise<void> {
@@ -729,23 +892,7 @@ export struct AddBillPage {
       const asset = this.assets[index]
       if (asset.id === this.selectedAssetId) {
         const nextBalance = this.mode === 'income' ? asset.balance + amount : asset.balance - amount
-        nextAssets.push({
-          id: asset.id,
-          type: asset.type,
-          group: asset.group,
-          name: asset.name,
-          balance: Math.round(nextBalance * 100) / 100,
-          shortName: asset.shortName,
-          icon: asset.icon,
-          color: asset.color,
-          cardNo: asset.cardNo,
-          remark: asset.remark,
-          includeInTotal: asset.includeInTotal,
-          bookScope: asset.bookScope,
-          createTime: asset.createTime,
-          updateTime: new Date().toISOString(),
-          isDeleted: asset.isDeleted
-        })
+        nextAssets.push(this.copyAssetWithBalance(asset, this.roundMoney(nextBalance)))
         changed = true
       } else {
         nextAssets.push(asset)
@@ -761,12 +908,154 @@ export struct AddBillPage {
       })
   }
 
+  private updateTransferAssetBalance(amount: number): Promise<void> {
+    const nextAssets: AssetAccount[] = []
+    let changed = false
+    for (let index = 0; index < this.assets.length; index++) {
+      const asset = this.assets[index]
+      if (asset.id === this.transferFromAssetId) {
+        nextAssets.push(this.copyAssetWithBalance(asset, this.roundMoney(asset.balance - amount - this.transferFeeAmount)))
+        changed = true
+      } else if (asset.id === this.transferToAssetId) {
+        nextAssets.push(this.copyAssetWithBalance(asset, this.roundMoney(asset.balance + amount)))
+        changed = true
+      } else {
+        nextAssets.push(asset)
+      }
+    }
+
+    if (!changed) {
+      return Promise.resolve()
+    }
+    return AssetAccountStore.save(getContext(this), nextAssets)
+      .then(() => {
+        this.assets = nextAssets
+      })
+  }
+
+  private copyAssetWithBalance(asset: AssetAccount, balance: number): AssetAccount {
+    return {
+      id: asset.id,
+      type: asset.type,
+      group: asset.group,
+      name: asset.name,
+      balance: balance,
+      shortName: asset.shortName,
+      icon: asset.icon,
+      color: asset.color,
+      cardNo: asset.cardNo,
+      remark: asset.remark,
+      includeInTotal: asset.includeInTotal,
+      bookScope: asset.bookScope,
+      createTime: asset.createTime,
+      updateTime: new Date().toISOString(),
+      isDeleted: asset.isDeleted
+    }
+  }
+
+  private roundMoney(value: number): number {
+    return Math.round(value * 100) / 100
+  }
+
+  private validateTransferAssets(): boolean {
+    if (this.transferFromAssetId.length === 0) {
+      this.showToast('请选择转出账户')
+      return false
+    }
+    if (this.transferToAssetId.length === 0) {
+      this.showToast('请选择转入账户')
+      return false
+    }
+    if (this.transferFromAssetId === this.transferToAssetId) {
+      this.showToast('转出和转入账户不能相同')
+      return false
+    }
+    return true
+  }
+
+  private updateTransferFeeDraft(value: string) {
+    const normalized = this.normalizeMoneyInput(value)
+    if (normalized !== value) {
+      this.showToast('手续费最多只能输入两位小数')
+    }
+    this.transferFeeDraftText = normalized
+  }
+
+  private confirmTransferFee() {
+    if (this.transferFeeDraftText.length === 0 || this.transferFeeDraftText === '.') {
+      this.transferFeeAmount = 0
+      this.transferFeeDraftText = ''
+      this.closeBottomSheet()
+      return
+    }
+
+    const fee = Number(this.transferFeeDraftText)
+    if (fee !== fee || fee < 0) {
+      this.showToast('请输入有效手续费')
+      return
+    }
+    this.transferFeeAmount = this.roundMoney(fee)
+    this.transferFeeDraftText = this.formatAmount(this.transferFeeAmount)
+    this.closeBottomSheet()
+  }
+
+  private normalizeMoneyInput(value: string): string {
+    let result = ''
+    let hasDot = false
+    let decimalCount = 0
+    for (let index = 0; index < value.length; index++) {
+      const char = value.substring(index, index + 1)
+      if (char >= '0' && char <= '9') {
+        if (hasDot) {
+          if (decimalCount >= 2) {
+            continue
+          }
+          decimalCount += 1
+        }
+        result += char
+      } else if (char === '.' && !hasDot) {
+        hasDot = true
+        result += char
+      }
+    }
+    if (result.length > 1 && result.substring(0, 1) === '0' && result.substring(1, 2) !== '.') {
+      while (result.length > 1 && result.substring(0, 1) === '0' && result.substring(1, 2) !== '.') {
+        result = result.substring(1)
+      }
+    }
+    return result
+  }
+
+  private transferFeeMetaText(): string {
+    if (this.transferFeeAmount <= 0) {
+      return '手续费'
+    }
+    return '手续费 ' + this.formatAmount(this.transferFeeAmount)
+  }
+
   private selectedCategory(): BillCategory {
+    if (this.mode === 'transfer') {
+      return this.transferCategory()
+    }
     const categories = this.currentCategories()
     if (this.selectedCategoryIndex < 0 || this.selectedCategoryIndex >= categories.length) {
       return this.fallbackCategory()
     }
     return categories[this.selectedCategoryIndex]
+  }
+
+  private transferCategory(): BillCategory {
+    const now = new Date().toISOString()
+    return {
+      id: 'transfer_account',
+      name: '转账',
+      type: 'transfer',
+      iconId: 'wallet',
+      createTime: now,
+      updateTime: now,
+      isSystem: true,
+      isDeleted: false
+    }
   }
 
   private fallbackCategory(): BillCategory {
@@ -807,6 +1096,7 @@ export struct AddBillPage {
     AssetAccountStore.load(getContext(this))
       .then((assets: AssetAccount[]) => {
         this.assets = assets
+        this.ensureTransferAssets()
         this.loadLastAsset()
       })
       .catch(() => {
@@ -850,12 +1140,23 @@ export struct AddBillPage {
   }
 
   private selectAsset(asset: AssetAccount | undefined) {
+    if (this.assetPickerTarget === 'transferFrom') {
+      this.applyTransferFromAsset(asset)
+      this.closeBottomSheet()
+      return
+    }
+    if (this.assetPickerTarget === 'transferTo') {
+      this.applyTransferToAsset(asset)
+      this.closeBottomSheet()
+      return
+    }
+
     this.applySelectedAsset(asset)
     BillDraftPreferenceStore.saveLastAssetId(getContext(this), asset === undefined ? NO_ASSET_ID : asset.id)
       .catch(() => {
         this.showToast('默认账户保存失败')
       })
-    this.showAssetSheet = false
+    this.closeBottomSheet()
   }
 
   private applySelectedAsset(asset: AssetAccount | undefined) {
@@ -867,6 +1168,107 @@ export struct AddBillPage {
       this.selectedAssetName = asset.shortName.length > 0 ? asset.shortName : asset.name
     }
     this.selectedAssetVersion += 1
+  }
+
+  private applyTransferFromAsset(asset: AssetAccount | undefined) {
+    if (asset === undefined) {
+      this.transferFromAssetId = ''
+      this.transferFromAssetName = '请选择转出账户'
+    } else {
+      this.transferFromAssetId = asset.id
+      this.transferFromAssetName = this.assetShortDisplayName(asset)
+      if (this.transferToAssetId === asset.id) {
+        this.applyTransferToAsset(this.firstDifferentAsset(asset.id))
+      }
+    }
+    this.selectedAssetVersion += 1
+  }
+
+  private applyTransferToAsset(asset: AssetAccount | undefined) {
+    if (asset === undefined) {
+      this.transferToAssetId = ''
+      this.transferToAssetName = '请选择转入账户'
+    } else {
+      this.transferToAssetId = asset.id
+      this.transferToAssetName = this.assetShortDisplayName(asset)
+      if (this.transferFromAssetId === asset.id) {
+        this.applyTransferFromAsset(this.firstDifferentAsset(asset.id))
+      }
+    }
+    this.selectedAssetVersion += 1
+  }
+
+  private ensureTransferAssets() {
+    if (this.assets.length === 0) {
+      this.applyTransferFromAsset(undefined)
+      this.applyTransferToAsset(undefined)
+      return
+    }
+
+    const fromAsset = this.findAsset(this.transferFromAssetId)
+    if (fromAsset === undefined) {
+      this.applyTransferFromAsset(this.assets[0])
+    } else {
+      this.applyTransferFromAsset(fromAsset)
+    }
+
+    const toAsset = this.findAsset(this.transferToAssetId)
+    if (toAsset === undefined || toAsset.id === this.transferFromAssetId) {
+      this.applyTransferToAsset(this.firstDifferentAsset(this.transferFromAssetId))
+    } else {
+      this.applyTransferToAsset(toAsset)
+    }
+  }
+
+  private firstDifferentAsset(assetId: string): AssetAccount | undefined {
+    for (let index = 0; index < this.assets.length; index++) {
+      if (this.assets[index].id !== assetId) {
+        return this.assets[index]
+      }
+    }
+    return undefined
+  }
+
+  private sheetSelectedAssetId(): string {
+    if (this.assetPickerTarget === 'transferFrom') {
+      return this.transferFromAssetId
+    }
+    if (this.assetPickerTarget === 'transferTo') {
+      return this.transferToAssetId
+    }
+    return this.selectedAssetId
+  }
+
+  private assetShortDisplayName(asset: AssetAccount): string {
+    return asset.shortName.length > 0 ? asset.shortName : asset.name
+  }
+
+  private openAssetSheet() {
+    this.activeBottomSheet = 'asset'
+    this.showBottomSheet = true
+  }
+
+  private openTransferFeeSheet() {
+    this.activeBottomSheet = 'transferFee'
+    this.showBottomSheet = true
+  }
+
+  private closeBottomSheet() {
+    this.showBottomSheet = false
+  }
+
+  private bottomSheetHeight(): number {
+    if (this.activeBottomSheet === 'transferFee') {
+      return 170
+    }
+    return 520
+  }
+
+  private transferAssetDisplayName(isFrom: boolean): string {
+    if (isFrom) {
+      return this.transferFromAssetName
+    }
+    return this.transferToAssetName
   }
 
   private findAsset(assetId: string): AssetAccount | undefined {
