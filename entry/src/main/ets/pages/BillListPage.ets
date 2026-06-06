@@ -1,5 +1,6 @@
 import { PageHeader } from '../components/PageHeader'
 import { SectionCard } from '../components/SectionCard'
+import { BillDatePicker, BillDatePickerValue } from '../components/bill/BillDatePicker'
 
 interface BillGroupItem {
   category: string
@@ -14,6 +15,11 @@ interface BillGroup {
 
 @Component
 export struct BillListPage {
+  // 新增：账单明细页自己维护当前选中的年月日，
+  // 因为顶部筛选 chip 已被替换为可交互日历，需要有页面级状态接收日历回调。
+  @State private selectedYear: number = 2026
+  @State private selectedMonth: number = 4
+  @State private selectedDay: number = 28
   onOpenDetail: () => void = () => {}
 
   private readonly groups: BillGroup[] = [
@@ -41,12 +47,25 @@ export struct BillListPage {
         subtitle: '按时间流展示当月全部收支记录，并预留详情入口'
       })
 
-      Row({ space: 10 }) {
-        this.buildFilterChip('2026-05')
-        this.buildFilterChip('支出筛选')
-        this.buildFilterChip('类别筛选')
-      }
-      .width('100%')
+      // 这里删除了原来的“月份 / 支出筛选 / 类别筛选”三个占位 chip。
+      // 删除原因：当前这一步的目标是优先把“顶部日历显示”复用现有组件做出来，
+      // 比起继续保留占位筛选，更需要先让账单页具备真实可见的月历结构。
+      // 新增功能：直接复用现有 BillDatePicker 作为内嵌月历，先完成顶部日历展示。
+      BillDatePicker({
+        embeddedMode: true,
+        year: this.selectedYear,
+        month: this.selectedMonth,
+        day: this.selectedDay,
+        hour: 0,
+        minute: 0,
+        onValueChange: (value: BillDatePickerValue) => {
+          // 新增：接收内嵌日历的实时回调，先把用户当前选中的年月日存到页面状态里。
+          // 这一轮先只做显示，后续再继续把这个状态真正联动到账单列表筛选。
+          this.selectedYear = value.year
+          this.selectedMonth = value.month
+          this.selectedDay = value.day
+        }
+      })
 
       ForEach(this.groups, (group: BillGroup) => {
         Column({ space: 10 }) {
@@ -96,13 +115,4 @@ export struct BillListPage {
     .alignItems(HorizontalAlign.Start)
   }
 
-  @Builder
-  private buildFilterChip(label: string) {
-    Text(label)
-      .fontSize(14)
-      .fontColor('#24314A')
-      .padding({ left: 16, right: 16, top: 12, bottom: 12 })
-      .backgroundColor('#EAF1F8')
-      .borderRadius(20)
-  }
 }

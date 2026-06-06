@@ -15,6 +15,10 @@ interface CalendarDayCell {
 
 @Component
 export struct BillDatePicker {
+  // 新增：让同一个日期组件同时支持两种用法。
+  // 1. embeddedMode = false：保持原来的弹层日期选择器行为，供新增账单/账单详情继续使用。
+  // 2. embeddedMode = true：作为账单明细页顶部的“内嵌月历”直接展示。
+  @Prop embeddedMode: boolean = false
   @Prop year: number = new Date().getFullYear()
   @Prop month: number = new Date().getMonth()
   @Prop day: number = new Date().getDate()
@@ -33,6 +37,9 @@ export struct BillDatePicker {
 
   onCancel: () => void = () => {}
   onConfirm: (value: BillDatePickerValue) => void = () => {}
+  // 新增：内嵌模式下不需要“确定”按钮，所以增加实时回调，
+  // 这样用户点日期、切月份时，账单页可以立刻拿到新的年月日状态。
+  onValueChange: (value: BillDatePickerValue) => void = () => {}
 
   aboutToAppear() {
     this.pickedYear = this.year
@@ -43,167 +50,228 @@ export struct BillDatePicker {
   }
 
   build() {
-    Stack({ alignContent: Alignment.Center }) {
-      Column({ space: 14 }) {
-        Row() {
-          Image($r('app.media.arrow_back'))
-            .width(22)
-            .height(22)
-            .opacity(0.9)
-            .onClick(() => {
-              this.goPreviousMonth()
-            })
-
-          Row({ space: 6 }) {
-            Text((this.pickedMonth + 1).toString() + '月')
-              .fontSize(26)
-              .fontWeight(FontWeight.Bold)
-              .fontColor('#111111')
-            Text(this.pickedYear.toString())
-              .fontSize(10)
-              .fontColor('#777777')
-              .margin({ top: 8 })
-          }
-          .margin({ left: 14 })
-          .onClick(() => {
-            this.openYearMonthPicker()
-          })
-
-          Blank()
-
-          Image($r('app.media.arrow_forward'))
-            .width(22)
-            .height(22)
-            .opacity(this.canGoNextMonth() ? 0.9 : 0.25)
-            .onClick(() => {
-              if (this.canGoNextMonth()) {
-                this.goNextMonth()
-              }
-            })
+    // 这里替换了原来“只有弹层模式”的单一路径，改成“内嵌模式 / 弹层模式”双分支。
+    // 删除单一路径的原因：账单明细页需要直接展示日历，而不是点击后再弹窗。
+    // 新增功能：同一套组件代码可以同时服务账单页和表单页，后续维护只需要改这一处。
+    if (this.embeddedMode) {
+      Stack({ alignContent: Alignment.Center }) {
+        Column({ space: 14 }) {
+          this.calendarHeader()
+          this.weekHeader()
+          this.calendarGrid()
         }
         .width('100%')
+        .padding({ left: 8, right: 8, top: 8, bottom: 8 })
+        .backgroundColor('#FFFFFF')
+        .borderRadius(10)
 
-        GridRow({ columns: 7 }) {
-          ForEach(['日', '一', '二', '三', '四', '五', '六'], (week: string) => {
-            GridCol() {
-              Text(week)
-                .fontSize(13)
-                .fontColor('#111111')
-                .textAlign(TextAlign.Center)
-                .width('100%')
-            }
-          }, (week: string) => week)
-        }
+        if (this.showYearMonthPicker) {
+          Column()
+            .width('100%')
+            .height('100%')
+            .backgroundColor('#66000000')
 
-        Column() {
-          GridRow({ columns: 7, gutter: 2 }) {
-            ForEach(this.calendarCells(), (cell: CalendarDayCell, index: number) => {
-              GridCol() {
-                this.calendarDay(cell)
-              }
-            }, (_cell: CalendarDayCell, index: number) => this.calendarVersion.toString() + '_' + index.toString())
-          }
+          ForEach([this.yearMonthPickerVersion], () => {
+            this.yearMonthPicker()
+          }, (version: number) => version.toString())
         }
-        .width('100%')
-        .gesture(
-          PanGesture({ direction: PanDirection.Horizontal, distance: 8 })
-            .onActionEnd((event: GestureEvent) => {
-              this.handleCalendarSwipe(event.offsetX)
-            })
-        )
-
-        Row() {
-          Text('◔')
-            .fontSize(17)
-            .fontColor('#111111')
-          Text('设置时间')
-            .fontSize(15)
-            .fontColor('#111111')
-            .margin({ left: 10 })
-          Blank()
-          Text('›')
-            .fontSize(28)
-            .fontColor('#999999')
-        }
-        .width('100%')
-        .height(34)
-
-        Row() {
-          Blank()
-          TextPicker({ range: this.hourOptions(), selected: this.pickedHour })
-            .width(76)
-            .height(96)
-            .selectedTextStyle({ color: '#111111', font: { size: 22, weight: FontWeight.Bold } })
-            .textStyle({ color: '#C8C8C8', font: { size: 15 } })
-            .onChange((_value: string | string[], index: number | number[]) => {
-              if (typeof index === 'number') {
-                this.pickedHour = index
-              }
-            })
-          Text(':')
-            .fontSize(26)
-            .fontWeight(FontWeight.Bold)
-            .fontColor('#111111')
-            .margin({ left: 16, right: 16 })
-          TextPicker({ range: this.minuteOptions(), selected: this.pickedMinute })
-            .width(76)
-            .height(96)
-            .selectedTextStyle({ color: '#111111', font: { size: 22, weight: FontWeight.Bold } })
-            .textStyle({ color: '#C8C8C8', font: { size: 15 } })
-            .onChange((_value: string | string[], index: number | number[]) => {
-              if (typeof index === 'number') {
-                this.pickedMinute = index
-              }
-            })
-          Blank()
-        }
-        .width('100%')
-        .height(104)
-
-        Row() {
-          Text('取消')
-            .fontSize(15)
-            .fontColor('#888888')
-            .layoutWeight(1)
-            .textAlign(TextAlign.Center)
-            .onClick(() => {
-              this.onCancel()
-            })
-          Text('确定')
-            .fontSize(15)
-            .fontColor('#55B8A7')
-            .layoutWeight(1)
-            .textAlign(TextAlign.Center)
-            .onClick(() => {
-              this.onConfirm({
-                year: this.pickedYear,
-                month: this.pickedMonth,
-                day: this.pickedDay,
-                hour: this.pickedHour,
-                minute: this.pickedMinute
-              })
-            })
-        }
-        .width('100%')
-        .height(42)
       }
       .width('100%')
-      .padding({ left: 24, right: 24, top: 18, bottom: 14 })
-      .backgroundColor('#FFFFFF')
-      .borderRadius(10)
+    } else {
+      Stack({ alignContent: Alignment.Center }) {
+        Column({ space: 14 }) {
+          this.calendarHeader()
+          this.weekHeader()
+          this.calendarGrid()
+          this.timeSection()
+          this.actionBar()
+        }
+        .width('100%')
+        .padding({ left: 24, right: 24, top: 18, bottom: 14 })
+        .backgroundColor('#FFFFFF')
+        .borderRadius(10)
 
-      if (this.showYearMonthPicker) {
-        Column()
-          .width('100%')
-          .height('100%')
-          .backgroundColor('#66000000')
+        if (this.showYearMonthPicker) {
+          Column()
+            .width('100%')
+            .height('100%')
+            .backgroundColor('#66000000')
 
-        ForEach([this.yearMonthPickerVersion], () => {
-          this.yearMonthPicker()
-        }, (version: number) => version.toString())
+          ForEach([this.yearMonthPickerVersion], () => {
+            this.yearMonthPicker()
+          }, (version: number) => version.toString())
+        }
+      }
+      .width('88%')
+    }
+  }
+
+  @Builder
+  private calendarHeader() {
+    // 新增：把原来 build() 里的顶部年月导航抽出来单独复用。
+    // 这样内嵌模式和弹层模式都能共用同一套“上月 / 下月 / 年月切换”头部。
+    Row() {
+      Image($r('app.media.arrow_back'))
+        .width(22)
+        .height(22)
+        .opacity(0.9)
+        .onClick(() => {
+          this.goPreviousMonth()
+        })
+
+      Row({ space: 6 }) {
+        Text((this.pickedMonth + 1).toString() + '月')
+          .fontSize(26)
+          .fontWeight(FontWeight.Bold)
+          .fontColor('#111111')
+        Text(this.pickedYear.toString())
+          .fontSize(10)
+          .fontColor('#777777')
+          .margin({ top: 8 })
+      }
+      .margin({ left: 14 })
+      .onClick(() => {
+        this.openYearMonthPicker()
+      })
+
+      Blank()
+
+      Image($r('app.media.arrow_forward'))
+        .width(22)
+        .height(22)
+        .opacity(this.canGoNextMonth() ? 0.9 : 0.25)
+        .onClick(() => {
+          if (this.canGoNextMonth()) {
+            this.goNextMonth()
+          }
+        })
+    }
+    .width('100%')
+  }
+
+  @Builder
+  private weekHeader() {
+    // 新增：把星期标题独立成可复用片段，避免两种模式重复写“日一二三四五六”。
+    GridRow({ columns: 7 }) {
+      ForEach(['日', '一', '二', '三', '四', '五', '六'], (week: string) => {
+        GridCol() {
+          Text(week)
+            .fontSize(13)
+            .fontColor('#111111')
+            .textAlign(TextAlign.Center)
+            .width('100%')
+        }
+      }, (week: string) => week)
+    }
+  }
+
+  @Builder
+  private calendarGrid() {
+    // 新增：把真正的月历网格独立出来，保留原有滑动切月和日期渲染逻辑，
+    // 只是把位置从原来的 build() 主体里抽离，方便内嵌模式复用。
+    Column() {
+      GridRow({ columns: 7, gutter: 2 }) {
+        ForEach(this.calendarCells(), (cell: CalendarDayCell, index: number) => {
+          GridCol() {
+            this.calendarDay(cell)
+          }
+        }, (_cell: CalendarDayCell, index: number) => this.calendarVersion.toString() + '_' + index.toString())
       }
     }
-    .width('88%')
+    .width('100%')
+    .gesture(
+      PanGesture({ direction: PanDirection.Horizontal, distance: 8 })
+        .onActionEnd((event: GestureEvent) => {
+          this.handleCalendarSwipe(event.offsetX)
+        })
+    )
+  }
+
+  @Builder
+  private timeSection() {
+    // 新增：时间滚轮区域单独封装。
+    // 这样内嵌模式可以不渲染时间选择，而弹层模式继续保留原功能。
+    Column({ space: 14 }) {
+      Row() {
+        Text('◔')
+          .fontSize(17)
+          .fontColor('#111111')
+        Text('设置时间')
+          .fontSize(15)
+          .fontColor('#111111')
+          .margin({ left: 10 })
+        Blank()
+        Text('›')
+          .fontSize(28)
+          .fontColor('#999999')
+      }
+      .width('100%')
+      .height(34)
+
+      Row() {
+        Blank()
+        TextPicker({ range: this.hourOptions(), selected: this.pickedHour })
+          .width(76)
+          .height(96)
+          .selectedTextStyle({ color: '#111111', font: { size: 22, weight: FontWeight.Bold } })
+          .textStyle({ color: '#C8C8C8', font: { size: 15 } })
+          .onChange((_value: string | string[], index: number | number[]) => {
+            if (typeof index === 'number') {
+              this.pickedHour = index
+            }
+          })
+        Text(':')
+          .fontSize(26)
+          .fontWeight(FontWeight.Bold)
+          .fontColor('#111111')
+          .margin({ left: 16, right: 16 })
+        TextPicker({ range: this.minuteOptions(), selected: this.pickedMinute })
+          .width(76)
+          .height(96)
+          .selectedTextStyle({ color: '#111111', font: { size: 22, weight: FontWeight.Bold } })
+          .textStyle({ color: '#C8C8C8', font: { size: 15 } })
+          .onChange((_value: string | string[], index: number | number[]) => {
+            if (typeof index === 'number') {
+              this.pickedMinute = index
+            }
+          })
+        Blank()
+      }
+      .width('100%')
+      .height(104)
+    }
+  }
+
+  @Builder
+  private actionBar() {
+    // 新增：底部“取消 / 确定”按钮区域单独封装。
+    // 原因是内嵌模式不需要这个操作条，弹层模式仍然需要沿用原交互。
+    Row() {
+      Text('取消')
+        .fontSize(15)
+        .fontColor('#888888')
+        .layoutWeight(1)
+        .textAlign(TextAlign.Center)
+        .onClick(() => {
+          this.onCancel()
+        })
+      Text('确定')
+        .fontSize(15)
+        .fontColor('#55B8A7')
+        .layoutWeight(1)
+        .textAlign(TextAlign.Center)
+        .onClick(() => {
+          this.onConfirm({
+            year: this.pickedYear,
+            month: this.pickedMonth,
+            day: this.pickedDay,
+            hour: this.pickedHour,
+            minute: this.pickedMinute
+          })
+        })
+    }
+    .width('100%')
+    .height(42)
   }
 
   @Builder
@@ -301,6 +369,9 @@ export struct BillDatePicker {
       if (cell.day > 0 && !cell.disabled) {
         this.pickedDay = cell.day
         this.calendarVersion += 1
+        // 新增：点击日期后立即把最新年月日同步给外层页面。
+        // 这样账单页未来可以直接基于当前选中日期刷新下面的账单列表。
+        this.emitValueChange()
       }
     })
   }
@@ -359,6 +430,8 @@ export struct BillDatePicker {
     }
     this.normalizePickedDay()
     this.calendarVersion += 1
+    // 新增：月份变化时同步通知外层，避免内嵌模式只改了内部状态但页面感知不到。
+    this.emitValueChange()
   }
 
   private goNextMonth() {
@@ -373,6 +446,8 @@ export struct BillDatePicker {
     }
     this.normalizePickedDay()
     this.calendarVersion += 1
+    // 新增：与上个月切换同理，向外同步新的日期状态。
+    this.emitValueChange()
   }
 
   private handleCalendarSwipe(offsetX: number) {
@@ -430,6 +505,20 @@ export struct BillDatePicker {
     this.normalizePickedDay()
     this.calendarVersion += 1
     this.showYearMonthPicker = false
+    // 新增：从“选择年月”弹层确认后，同步把新的年月结果通知外层页面。
+    this.emitValueChange()
+  }
+
+  private emitValueChange() {
+    // 新增：统一封装日期变化通知。
+    // 这样后续无论是点击日期、左右切月、还是切换年月，都走同一个出口，减少重复代码。
+    this.onValueChange({
+      year: this.pickedYear,
+      month: this.pickedMonth,
+      day: this.pickedDay,
+      hour: this.pickedHour,
+      minute: this.pickedMinute
+    })
   }
 
   private minYear(): number {
