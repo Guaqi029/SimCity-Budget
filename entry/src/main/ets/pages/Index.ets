@@ -6,9 +6,13 @@ import { AnalyticsPage } from './AnalyticsPage'
 import { AccountPage } from './AccountPage'
 import { AddBillPage } from './AddBillPage'
 import { BillDetailPage } from './BillDetailPage'
-import { AssetTypeOption } from '../model/AssetAccount'
+import { AssetAccount, AssetTypeOption } from '../model/AssetAccount'
+import { AssetAccountDetailPage } from '../components/asset/AssetAccountDetailPage'
 import { AssetTypeSheet } from '../components/asset/AssetTypeSheet'
 import { ASSET_TYPE_SECTIONS, DEFAULT_ASSET_TYPE_OPTION } from '../components/asset/AssetTypeConfig'
+import { AssetAccountStore } from '../storage/AssetAccountStore'
+
+type AddBillInitialMode = 'expense' | 'transfer'
 
 @Entry
 @Component
@@ -28,6 +32,41 @@ struct Index {
   @State selectedAssetTypeVersion: number = 0
   @State billRefreshVersion: number = 0
   @State selectedBillId: string = ''
+  @State addBillInitialMode: AddBillInitialMode = 'expense'
+  @State addBillInitialAssetId: string = ''
+  @State addBillInitialAssetName: string = ''
+  @State addBillBackTab: number = 0
+  @State selectedAssetForDetail: AssetAccount = {
+    id: '',
+    type: 'custom',
+    group: 'fund',
+    name: '',
+    balance: 0,
+    shortName: '',
+    icon: '',
+    color: '#55B8A7',
+    includeInTotal: true,
+    bookScope: '全部账本',
+    createTime: '',
+    updateTime: '',
+    isDeleted: false
+  }
+  @State editAssetRequest: AssetAccount = {
+    id: '',
+    type: 'custom',
+    group: 'fund',
+    name: '',
+    balance: 0,
+    shortName: '',
+    icon: '',
+    color: '#55B8A7',
+    includeInTotal: true,
+    bookScope: '全部账本',
+    createTime: '',
+    updateTime: '',
+    isDeleted: false
+  }
+  @State editAssetRequestVersion: number = 0
 
   // 底部导航配置：中间的“资产”是主功能入口之一。
   private readonly tabs: TabItem[] = [
@@ -43,13 +82,17 @@ struct Index {
     // overlayPage 优先级高于 currentTab，用于从任意 Tab 临时打开独立流程页。
     if (this.overlayPage === 'add') {
       AddBillPage({
+        initialMode: this.addBillInitialMode,
+        initialAssetId: this.addBillInitialAssetId,
+        initialAssetName: this.addBillInitialAssetName,
         onSaved: () => {
           this.billRefreshVersion += 1
         },
         onBack: () => {
-          // 关闭新增账单页后回到首页。
+          // 关闭新增账单页后回到发起入口所在的 Tab。
           this.overlayPage = ''
-          this.currentTab = 0
+          this.currentTab = this.addBillBackTab
+          this.resetAddBillInitialState()
         }
       })
     } else if (this.overlayPage === 'detail') {
@@ -67,12 +110,35 @@ struct Index {
           this.overlayPage = ''
         }
       })
+    } else if (this.overlayPage === 'assetDetail') {
+      AssetAccountDetailPage({
+        asset: this.selectedAssetForDetail,
+        onBack: () => {
+          this.closeAssetDetailPage()
+        },
+        onEdit: () => {
+          this.requestEditAsset()
+        },
+        onDelete: () => {
+          this.deleteSelectedAssetFromDetail()
+        },
+        onOpenBill: (billId: string) => {
+          this.selectedBillId = billId
+          this.overlayPage = 'detail'
+        },
+        onAddBill: (asset: AssetAccount) => {
+          this.openAddBillPage('expense', asset, 2)
+        },
+        onTransfer: (asset: AssetAccount) => {
+          this.openAddBillPage('transfer', asset, 2)
+        }
+      })
     } else if (this.currentTab === 0) {
       HomePage({
         billRefreshVersion: this.billRefreshVersion,
         onAddBill: () => {
           // 新增账单是独立页面，不占用底部 Tab 的一个位置。
-          this.overlayPage = 'add'
+          this.openAddBillPage('expense', undefined, 0)
         },
         onOpenAccount: () => {
           this.currentTab = 4
@@ -96,12 +162,23 @@ struct Index {
       AssetPage({
         selectedAssetTypeOption: this.selectedAssetTypeOption,
         selectedAssetTypeVersion: this.selectedAssetTypeVersion,
+        editAssetRequest: this.editAssetRequest,
+        editAssetRequestVersion: this.editAssetRequestVersion,
         onOpenAssetTypeSheet: () => {
           this.openAssetTypeSheet()
+        },
+        onOpenAssetDetail: (asset: AssetAccount) => {
+          this.openAssetDetailPage(asset)
         },
         onOpenBillDetail: (billId: string) => {
           this.selectedBillId = billId
           this.overlayPage = 'detail'
+        },
+        onAddBillFromAsset: (asset: AssetAccount) => {
+          this.openAddBillPage('expense', asset, 2)
+        },
+        onTransferFromAsset: (asset: AssetAccount) => {
+          this.openAddBillPage('transfer', asset, 2)
         }
       })
     } else if (this.currentTab === 3) {
@@ -221,5 +298,83 @@ struct Index {
     this.selectedAssetTypeOption = option
     this.selectedAssetTypeVersion += 1
     this.closeAssetTypeSheet()
+  }
+
+  private openAddBillPage(mode: AddBillInitialMode, asset: AssetAccount | undefined, backTab: number) {
+    this.addBillInitialMode = mode
+    this.addBillInitialAssetId = asset === undefined ? '' : asset.id
+    this.addBillInitialAssetName = asset === undefined ? '' : (asset.shortName.length > 0 ? asset.shortName : asset.name)
+    this.addBillBackTab = backTab
+    this.overlayPage = 'add'
+  }
+
+  private resetAddBillInitialState() {
+    this.addBillInitialMode = 'expense'
+    this.addBillInitialAssetId = ''
+    this.addBillInitialAssetName = ''
+    this.addBillBackTab = 0
+  }
+
+  private openAssetDetailPage(asset: AssetAccount) {
+    this.currentTab = 2
+    this.selectedAssetForDetail = asset
+    this.overlayPage = 'assetDetail'
+  }
+
+  private closeAssetDetailPage() {
+    this.overlayPage = ''
+    this.selectedAssetForDetail = this.emptyAsset()
+  }
+
+  private requestEditAsset() {
+    if (this.selectedAssetForDetail.id.length === 0) {
+      return
+    }
+    this.editAssetRequest = this.selectedAssetForDetail
+    this.editAssetRequestVersion += 1
+    this.overlayPage = ''
+    this.currentTab = 2
+  }
+
+  private deleteSelectedAssetFromDetail() {
+    if (this.selectedAssetForDetail.id.length === 0) {
+      return
+    }
+
+    const targetId = this.selectedAssetForDetail.id
+    AssetAccountStore.load(getContext(this))
+      .then((assets: AssetAccount[]) => {
+        const nextAssets: AssetAccount[] = []
+        for (let index = 0; index < assets.length; index++) {
+          if (assets[index].id !== targetId) {
+            nextAssets.push(assets[index])
+          }
+        }
+        return AssetAccountStore.save(getContext(this), nextAssets)
+      })
+      .then(() => {
+        this.closeAssetDetailPage()
+      })
+      .catch(() => {
+        this.closeAssetDetailPage()
+      })
+  }
+
+  private emptyAsset(): AssetAccount {
+    return {
+      id: '',
+      type: 'custom',
+      group: 'fund',
+      name: '',
+      balance: 0,
+      shortName: '',
+      icon: '',
+      color: '#55B8A7',
+      includeInTotal: true,
+      bookScope: '全部账本',
+      createTime: '',
+      updateTime: '',
+      isDeleted: false
+    }
   }
 }

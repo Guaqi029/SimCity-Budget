@@ -28,6 +28,8 @@ export struct AssetAccountDetailPage {
   onEdit: () => void = () => {}
   onDelete: () => void = () => {}
   onOpenBill: (billId: string) => void = () => {}
+  onAddBill: (asset: AssetAccount) => void = () => {}
+  onTransfer: (asset: AssetAccount) => void = () => {}
 
   aboutToAppear() {
     this.loadAssetBills()
@@ -43,7 +45,8 @@ export struct AssetAccountDetailPage {
       }
       .width('100%')
       .height('100%')
-      .backgroundColor('#F4F4F4')
+      // 资产详情现在作为 Index 层的独立覆盖页展示，背景直接铺满整屏。
+      .backgroundColor('#FFFFFF')
 
       if (this.showMenu) {
         Column({ space: 0 }) {
@@ -74,13 +77,14 @@ export struct AssetAccountDetailPage {
             })
         }
         .margin({ top: 58, right: 12 })
-        .backgroundColor('#FFFFFF')
         .borderRadius(8)
         .shadow({ radius: 12, color: '#22334422', offsetY: 4 })
       }
     }
     .width('100%')
     .height('100%')
+    .backgroundColor('#FFFFFF')
+    .expandSafeArea([SafeAreaType.SYSTEM], [SafeAreaEdge.TOP, SafeAreaEdge.BOTTOM])
   }
 
   @Builder
@@ -143,12 +147,16 @@ export struct AssetAccountDetailPage {
   @Builder
   private actionBar() {
     Row() {
-      this.actionItem('□+', '添加一条新记账')
+      this.actionItem('□+', '添加一条新记账', () => {
+        this.onAddBill(this.asset)
+      })
       Column()
         .width(1)
         .height(26)
         .backgroundColor('#EFEFEF')
-      this.actionItem('⇄', '转账')
+      this.actionItem('⇄', '转账', () => {
+        this.onTransfer(this.asset)
+      })
     }
     .width('100%')
     .height(58)
@@ -158,7 +166,7 @@ export struct AssetAccountDetailPage {
   }
 
   @Builder
-  private actionItem(icon: string, title: string) {
+  private actionItem(icon: string, title: string, onTap: () => void) {
     Row({ space: 10 }) {
       Text(icon)
         .fontSize(18)
@@ -170,6 +178,9 @@ export struct AssetAccountDetailPage {
     .layoutWeight(1)
     .height('100%')
     .justifyContent(FlexAlign.Center)
+    .onClick(() => {
+      onTap()
+    })
   }
 
   @Builder

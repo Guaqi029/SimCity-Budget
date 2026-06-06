@@ -25,6 +25,9 @@ export struct AddBillPage {
   @State private amountText: string = '0.00'
   @State private justCalculated: boolean = false
   @State private remark: string = ''
+  @State private tagInputMode: boolean = false
+  @State private tagDraftText: string = ''
+  @State private tags: string[] = []
   @State private toastVisible: boolean = false
   @State private toastMessage: string = ''
   @State private showDateSheet: boolean = false
@@ -48,6 +51,9 @@ export struct AddBillPage {
   @State private selectedMinute: number = new Date().getMinutes()
   @State private dateDisplayLabel: string = '今天'
   @State private dateDisplayVersion: number = 0
+  initialMode: AddBillMode = 'expense'
+  initialAssetId: string = ''
+  initialAssetName: string = ''
   onBack: () => void = () => {}
   onSaved: () => void = () => {}
   private toastTimer: number = -1
@@ -63,6 +69,7 @@ export struct AddBillPage {
   })
 
   aboutToAppear() {
+    this.applyInitialParams()
     this.loadAssets()
     this.loadCategories()
     this.refreshDateDisplayLabel()
@@ -347,23 +354,40 @@ export struct AddBillPage {
         .height(1)
         .backgroundColor('#ECECEC')
 
-      Row() {
-        Text('◇')
-          .fontSize(20)
-          .fontColor('#111111')
+      if (this.tags.length > 0) {
+        this.tagListRow()
+      }
 
-        TextInput({ placeholder: '添加备注', text: this.remark })
-          .fontSize(16)
-          .fontColor('#111111')
-          .placeholderColor('#9A9A9A')
-          .backgroundColor('#00000000')
-          .height(40)
-          .padding({ left: 0, right: 0 })
-          .margin({ left: 18 })
-          .layoutWeight(1)
-          .onChange((value: string) => {
-            this.remark = value
-          })
+      Row() {
+        this.tagModeButton()
+
+        if (this.tagInputMode) {
+          TextInput({ placeholder: '输入标签，空格确认', text: this.tagDraftText })
+            .fontSize(16)
+            .fontColor('#111111')
+            .placeholderColor('#9A9A9A')
+            .backgroundColor('#00000000')
+            .height(40)
+            .padding({ left: 0, right: 0 })
+            .margin({ left: 18 })
+            .layoutWeight(1)
+            .onChange((value: string) => {
+              this.handleTagInput(value)
+            })
+        } else {
+          TextInput({ placeholder: '添加备注', text: this.remark })
+            .fontSize(16)
+            .fontColor('#111111')
+            .placeholderColor('#9A9A9A')
+            .backgroundColor('#00000000')
+            .height(40)
+            .padding({ left: 0, right: 0 })
+            .margin({ left: 18 })
+            .layoutWeight(1)
+            .onChange((value: string) => {
+              this.remark = value
+            })
+        }
 
         Text(this.amountText)
           .fontSize(30)
@@ -379,7 +403,51 @@ export struct AddBillPage {
         .backgroundColor('#ECECEC')
     }
     .width('100%')
-    .height(64)
+    .height(this.amountPanelHeight())
+  }
+
+  @Builder
+  private tagModeButton() {
+    Row({ space: 4 }) {
+      Text('◇')
+        .fontSize(16)
+        .fontColor(this.tagInputMode ? '#FFFFFF' : '#111111')
+      Text('标签')
+        .fontSize(13)
+        .fontColor(this.tagInputMode ? '#FFFFFF' : '#111111')
+    }
+    .height(30)
+    .padding({ left: 8, right: 8, top: 5 })
+    .backgroundColor(this.tagInputMode ? '#55B8A7' : '#F2F4F5')
+    .borderRadius(15)
+    .onClick(() => {
+      this.tagInputMode = !this.tagInputMode
+    })
+  }
+
+  @Builder
+  private tagListRow() {
+    Scroll() {
+      Row({ space: 6 }) {
+        ForEach(this.tags, (tag: string, index: number) => {
+          Text(tag)
+            .fontSize(11)
+            .fontColor('#3E6F66')
+            .maxLines(1)
+            .padding({ left: 8, right: 8, top: 4, bottom: 4 })
+            .backgroundColor('#E6F5F1')
+            .borderRadius(10)
+            .onClick(() => {
+              this.removeTagAt(index)
+            })
+        }, (tag: string, index: number) => tag + index.toString())
+      }
+      .height(28)
+      .padding({ left: 18, right: 18, top: 6 })
+    }
+    .width('100%')
+    .height(34)
+    .scrollBar(BarState.Off)
   }
 
   @Builder
@@ -573,6 +641,60 @@ export struct AddBillPage {
 
   private currentCategories(): BillCategory[] {
     return BillCategoryStore.activeByType(this.categories, this.currentBillType())
+  }
+
+  private amountPanelHeight(): number {
+    return this.tags.length > 0 ? 98 : 64
+  }
+
+  private handleTagInput(value: string) {
+    if (value.indexOf(' ') >= 0 || value.indexOf('　') >= 0) {
+      let normalized = value
+      while (normalized.indexOf('　') >= 0) {
+        normalized = normalized.replace('　', ' ')
+      }
+      const parts = normalized.split(' ')
+      for (let index = 0; index < parts.length; index++) {
+        this.addTag(parts[index])
+      }
+      this.tagDraftText = ''
+      return
+    }
+    this.tagDraftText = value
+  }
+
+  private commitTagDraft() {
+    if (this.tagDraftText.trim().length > 0) {
+      this.addTag(this.tagDraftText)
+      this.tagDraftText = ''
+    }
+  }
+
+  private addTag(value: string) {
+    const tag = value.trim()
+    if (tag.length === 0 || this.hasTag(tag)) {
+      return
+    }
+    this.tags = this.tags.concat([tag])
+  }
+
+  private hasTag(tag: string): boolean {
+    for (let index = 0; index < this.tags.length; index++) {
+      if (this.tags[index] === tag) {
+        return true
+      }
+    }
+    return false
+  }
+
+  private removeTagAt(removeIndex: number) {
+    const nextTags: string[] = []
+    for (let index = 0; index < this.tags.length; index++) {
+      if (index !== removeIndex) {
+        nextTags.push(this.tags[index])
+      }
+    }
+    this.tags = nextTags
   }
 
   private isOperatorKey(key: string): boolean {
@@ -839,6 +961,7 @@ export struct AddBillPage {
     const now = new Date().toISOString()
     const billDate = this.selectedDateIsoString()
     const category = this.selectedCategory()
+    this.commitTagDraft()
     const record: BillRecord = {
       id: 'bill_' + now,
       amount: amount,
@@ -856,6 +979,7 @@ export struct AddBillPage {
       billDate: billDate,
       month: this.monthKey(this.selectedYear, this.selectedMonth),
       remark: this.remark.trim(),
+      tags: this.tags.concat([]),
       createTime: now,
       updateTime: now,
       isDeleted: false
@@ -1115,6 +1239,18 @@ export struct AddBillPage {
   }
 
   private loadLastAsset() {
+    if (this.initialAssetId.length > 0 && this.mode !== 'transfer') {
+      const initialAsset = this.findAsset(this.initialAssetId)
+      if (initialAsset !== undefined) {
+        this.applySelectedAsset(initialAsset)
+      } else {
+        this.selectedAssetId = this.initialAssetId
+        this.selectedAssetName = this.initialAssetName.length > 0 ? this.initialAssetName : '无账户'
+        this.selectedAssetVersion += 1
+      }
+      return
+    }
+
     BillDraftPreferenceStore.loadLastAssetId(getContext(this))
       .then((assetId: string) => {
         if (assetId === NO_ASSET_ID) {
@@ -1137,6 +1273,21 @@ export struct AddBillPage {
           this.applySelectedAsset(this.assets[0])
         }
       })
+  }
+
+  private applyInitialParams() {
+    this.mode = this.initialMode
+    if (this.initialAssetId.length === 0) {
+      return
+    }
+    if (this.initialMode === 'transfer') {
+      this.transferFromAssetId = this.initialAssetId
+      this.transferFromAssetName = this.initialAssetName.length > 0 ? this.initialAssetName : '请选择转出账户'
+      return
+    }
+    this.selectedAssetId = this.initialAssetId
+    this.selectedAssetName = this.initialAssetName.length > 0 ? this.initialAssetName : '无账户'
+    this.selectedAssetVersion += 1
   }
 
   private selectAsset(asset: AssetAccount | undefined) {

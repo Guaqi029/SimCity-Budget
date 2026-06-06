@@ -23,6 +23,7 @@ export interface BillRecord {
   billDate: string
   month: string
   remark?: string
+  tags?: string[]
   createTime: string
   updateTime: string
   isDeleted: boolean

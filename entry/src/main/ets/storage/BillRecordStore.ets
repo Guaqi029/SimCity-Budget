@@ -63,6 +63,7 @@ export class BillRecordStore {
       billDate: record.billDate,
       month: record.month,
       remark: record.remark === undefined ? '' : record.remark,
+      tags: BillRecordStore.normalizeTags(record.tags),
       createTime: record.createTime,
       updateTime: record.updateTime,
       isDeleted: record.isDeleted === undefined ? false : record.isDeleted
@@ -96,5 +97,18 @@ export class BillRecordStore {
       isSystem: false,
       isDeleted: false
     }
+  }
+
+  private static normalizeTags(tags?: string[]): string[] {
+    if (tags === undefined || !Array.isArray(tags)) {
+      return []
+    }
+    const result: string[] = []
+    for (let index = 0; index < tags.length; index++) {
+      if (tags[index] !== undefined && tags[index].length > 0) {
+        result.push(tags[index])
+      }
+    }
+    return result
   }
 }

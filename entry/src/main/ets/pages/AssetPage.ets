@@ -1,7 +1,6 @@
 import { AssetAccount, AssetTypeOption } from '../model/AssetAccount'
 import { AssetMainPage } from '../components/asset/AssetMainPage'
 import { AssetDetailFormPage } from '../components/asset/AssetDetailFormPage'
-import { AssetAccountDetailPage } from '../components/asset/AssetAccountDetailPage'
 import { DEFAULT_ASSET_TYPE_OPTION } from '../components/asset/AssetTypeConfig'
 import { TopMessageToast } from '../components/TopMessageToast'
 import { AssetAccountStore } from '../storage/AssetAccountStore'
@@ -39,17 +38,40 @@ export struct AssetPage {
 
   // 记录已经消费过的父级选择版本，避免同一次选择被重复处理。
   @State private handledSelectedTypeVersion: number = 0
+  @State private handledEditAssetRequestVersion: number = 0
 
   // Index 层的资产类型弹层选中结果。
   @Prop selectedAssetTypeOption: AssetTypeOption = DEFAULT_ASSET_TYPE_OPTION
   @Watch('onSelectedAssetTypeChanged') @Prop selectedAssetTypeVersion: number = 0
 
+  // 从全屏资产详情页发起的编辑请求，由版本号保证每次点击都能被消费。
+  @Prop editAssetRequest: AssetAccount = {
+    id: '',
+    type: 'custom',
+    group: 'fund',
+    name: '',
+    balance: 0,
+    shortName: '',
+    icon: '',
+    color: '#55B8A7',
+    includeInTotal: true,
+    bookScope: '全部账本',
+    createTime: '',
+    updateTime: '',
+    isDeleted: false
+  }
+  @Watch('onEditAssetRequestChanged') @Prop editAssetRequestVersion: number = 0
+
   // 资产页只发起打开请求，弹层本体由 Index 托管，才能真正贴住屏幕底部。
   onOpenAssetTypeSheet: () => void = () => {}
+  onOpenAssetDetail: (asset: AssetAccount) => void = () => {}
   onOpenBillDetail: (billId: string) => void = () => {}
+  onAddBillFromAsset: (asset: AssetAccount) => void = () => {}
+  onTransferFromAsset: (asset: AssetAccount) => void = () => {}
 
   aboutToAppear() {
     this.loadAssets()
+    this.onEditAssetRequestChanged()
   }
 
   build() {
@@ -65,7 +87,7 @@ export struct AssetPage {
           includeInTotal: this.includeInTotal,
           pageTitle: this.editingAssetId.length > 0 ? '编辑' + this.assetName + '账户' : '新增' + this.selectedOption.title + '账户',
           onBack: () => {
-            this.currentStep = this.editingAssetId.length > 0 ? 'detail' : 'list'
+            this.currentStep = 'list'
           },
           onNameChange: (value: string) => {
             this.assetName = value
@@ -100,31 +122,6 @@ export struct AssetPage {
         .margin({ top: 8 })
       }
       .width('100%')
-    } else if (this.currentStep === 'detail') {
-      Stack({ alignContent: Alignment.Top }) {
-        AssetAccountDetailPage({
-          asset: this.selectedAsset,
-          onBack: () => {
-            this.currentStep = 'list'
-          },
-          onEdit: () => {
-            this.startEditAsset()
-          },
-          onDelete: () => {
-            this.deleteSelectedAsset()
-          },
-          onOpenBill: (billId: string) => {
-            this.onOpenBillDetail(billId)
-          }
-        })
-
-        TopMessageToast({
-          visible: this.toastVisible,
-          message: this.toastMessage
-        })
-        .margin({ top: 8 })
-      }
-      .width('100%')
     } else {
       AssetMainPage({
         assets: this.assets,
@@ -134,7 +131,7 @@ export struct AssetPage {
         },
         onOpenAsset: (asset: AssetAccount) => {
           this.selectedAsset = asset
-          this.currentStep = 'detail'
+          this.onOpenAssetDetail(asset)
         }
       })
     }
@@ -160,6 +157,18 @@ export struct AssetPage {
     }
     this.handledSelectedTypeVersion = this.selectedAssetTypeVersion
     this.selectType(this.selectedAssetTypeOption)
+  }
+
+  private onEditAssetRequestChanged() {
+    if (this.editAssetRequestVersion <= this.handledEditAssetRequestVersion) {
+      return
+    }
+    this.handledEditAssetRequestVersion = this.editAssetRequestVersion
+    if (this.editAssetRequest.id.length === 0) {
+      return
+    }
+    this.selectedAsset = this.editAssetRequest
+    this.startEditAsset()
   }
 
   private selectType(option: AssetTypeOption) {
@@ -219,7 +228,8 @@ export struct AssetPage {
         this.assets = nextAssets
         this.selectedAsset = nextAsset
         this.editingAssetId = ''
-        this.currentStep = 'detail'
+        this.currentStep = 'list'
+        this.onOpenAssetDetail(nextAsset)
       })
       .catch(() => {
         this.showToast('资产账户保存失败')

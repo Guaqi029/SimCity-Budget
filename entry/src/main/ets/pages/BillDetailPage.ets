@@ -32,6 +32,7 @@ const EMPTY_BILL_RECORD: BillRecord = {
   billDate: '',
   month: '',
   remark: '',
+  tags: [],
   createTime: '',
   updateTime: '',
   isDeleted: false
@@ -45,7 +46,11 @@ export struct BillDetailPage {
   @State private showMenu: boolean = false
   @State private showDeleteConfirm: boolean = false
   @State private showDatePicker: boolean = false
-  @State private showAssetPicker: boolean = false
+  @State private showBottomSheet: boolean = false
+  @State private activeBottomSheet: string = 'asset'
+  @State private remarkDraftText: string = ''
+  @State private tagDraftText: string = ''
+  @State private draftTags: string[] = []
   @State private assets: AssetAccount[] = []
   onBack: () => void = () => {}
   onDeleted: () => void = () => {}
@@ -134,12 +139,24 @@ export struct BillDetailPage {
     .height('100%')
     .backgroundColor('#FFFFFF')
     .expandSafeArea([SafeAreaType.SYSTEM], [SafeAreaEdge.TOP, SafeAreaEdge.BOTTOM])
-    .bindSheet($$this.showAssetPicker, this.assetPickerSheet(), {
-      height: 520,
+    .bindSheet($$this.showBottomSheet, this.bottomSheetContent(), {
+      height: this.bottomSheetHeight(),
       backgroundColor: '#FFFFFF',
       preferType: SheetType.BOTTOM,
+      showClose: false,
       maskColor: '#66000000'
     })
+  }
+
+  @Builder
+  private bottomSheetContent() {
+    if (this.activeBottomSheet === 'remark') {
+      this.remarkSheet()
+    } else if (this.activeBottomSheet === 'tag') {
+      this.tagSheet()
+    } else {
+      this.assetPickerSheet()
+    }
   }
 
   @Builder
@@ -153,6 +170,121 @@ export struct BillDetailPage {
         }
       })
     }
+  }
+
+  @Builder
+  private remarkSheet() {
+    Column({ space: 14 }) {
+      Row() {
+        Text('备注')
+          .fontSize(18)
+          .fontWeight(FontWeight.Medium)
+          .fontColor('#111111')
+        Blank()
+        Text('保存')
+          .fontSize(14)
+          .fontWeight(FontWeight.Medium)
+          .fontColor('#55B8A7')
+          .onClick(() => {
+            this.confirmRemark()
+          })
+      }
+      .width('100%')
+      .height(32)
+
+      TextInput({ placeholder: '请输入备注', text: this.remarkDraftText })
+        .type(InputType.Normal)
+        .fontSize(17)
+        .fontColor('#111111')
+        .placeholderColor('#AAAAAA')
+        .backgroundColor('#F5F6F7')
+        .height(52)
+        .borderRadius(8)
+        .padding({ left: 12, right: 12 })
+        .defaultFocus(true)
+        .onChange((value: string) => {
+          this.remarkDraftText = value
+        })
+    }
+    .width('100%')
+    .padding({ left: 18, right: 18, top: 12, bottom: 18 })
+  }
+
+  @Builder
+  private tagSheet() {
+    Column({ space: 14 }) {
+      Row() {
+        Text('标签')
+          .fontSize(18)
+          .fontWeight(FontWeight.Medium)
+          .fontColor('#111111')
+        Blank()
+        Text('保存')
+          .fontSize(14)
+          .fontWeight(FontWeight.Medium)
+          .fontColor('#55B8A7')
+          .onClick(() => {
+            this.confirmTags()
+          })
+      }
+      .width('100%')
+      .height(32)
+
+      if (this.draftTags.length > 0) {
+        this.tagSheetList()
+      } else {
+        Text('暂无标签')
+          .fontSize(12)
+          .fontColor('#999999')
+          .width('100%')
+          .height(28)
+      }
+
+      TextInput({ placeholder: '输入标签，空格确认', text: this.tagDraftText })
+        .type(InputType.Normal)
+        .fontSize(16)
+        .fontColor('#111111')
+        .placeholderColor('#AAAAAA')
+        .backgroundColor('#F5F6F7')
+        .height(48)
+        .borderRadius(8)
+        .padding({ left: 12, right: 12 })
+        .defaultFocus(true)
+        .onChange((value: string) => {
+          this.handleTagDraftInput(value)
+        })
+
+      Text('点击标签可删除')
+        .fontSize(12)
+        .fontColor('#999999')
+        .width('100%')
+    }
+    .width('100%')
+    .padding({ left: 18, right: 18, top: 12, bottom: 18 })
+  }
+
+  @Builder
+  private tagSheetList() {
+    Scroll() {
+      Row({ space: 8 }) {
+        ForEach(this.draftTags, (tag: string, index: number) => {
+          Text(tag)
+            .fontSize(12)
+            .fontColor('#3E6F66')
+            .maxLines(1)
+            .padding({ left: 10, right: 10, top: 5, bottom: 5 })
+            .backgroundColor('#E6F5F1')
+            .borderRadius(12)
+            .onClick(() => {
+              this.removeDraftTagAt(index)
+            })
+        }, (tag: string, index: number) => tag + index.toString())
+      }
+      .height(34)
+    }
+    .width('100%')
+    .height(40)
+    .scrollBar(BarState.Off)
   }
 
   @Builder
@@ -270,15 +402,13 @@ export struct BillDetailPage {
       if (this.bill.type === 'transfer') {
         this.infoRow('手续费', this.transferFeeText(), this.transferFeeColor())
       }
-      this.infoRow('备注', this.remarkText(), '#999999')
-      this.infoRow('标签', '点击添加', '#999999')
+      this.remarkRow()
+      this.tagsRow()
       this.infoRow('附件', '点击添加', '#999999')
-      this.switchRow('不计入收支')
       this.switchRow('不计入预算')
-      // this.infoRow('地点信息', '无', '#999999')
+      this.infoRow('地点信息', '无', '#999999')
       this.infoRow('记录时间', this.createTimeText())
       // this.infoRow('记录方式', '手动记账')
-      // this.linkRow('关联账单')
     }
     .width('100%')
     .padding({ left: 18, right: 18, top: 20, bottom: 10 })
@@ -324,6 +454,46 @@ export struct BillDetailPage {
   }
 
   @Builder
+  private remarkRow() {
+    Row() {
+      Text('备注')
+        .fontSize(17)
+        .fontColor('#111111')
+      Blank()
+      Text(this.remarkText())
+        .fontSize(17)
+        .fontColor('#999999')
+        .maxLines(1)
+        .textAlign(TextAlign.End)
+    }
+    .width('100%')
+    .height(62)
+    .onClick(() => {
+      this.openRemarkSheet()
+    })
+  }
+
+  @Builder
+  private tagsRow() {
+    Row() {
+      Text('标签')
+        .fontSize(17)
+        .fontColor('#111111')
+      Blank()
+      Text(this.tagsText())
+        .fontSize(17)
+        .fontColor(this.tagsTextColor())
+        .maxLines(1)
+        .textAlign(TextAlign.End)
+    }
+    .width('100%')
+    .height(62)
+    .onClick(() => {
+      this.openTagSheet()
+    })
+  }
+
+  @Builder
   private accountRow() {
     Row() {
       Text(this.billAccountLabel())
@@ -351,7 +521,7 @@ export struct BillDetailPage {
     .height(62)
     .onClick(() => {
       if (this.bill.type !== 'transfer') {
-        this.showAssetPicker = true
+        this.openAssetPickerSheet()
       }
     })
   }
@@ -557,13 +727,13 @@ export struct BillDetailPage {
 
   private updateBillAsset(asset: AssetAccount | undefined) {
     if (!this.hasBill || this.bill.type === 'transfer') {
-      this.showAssetPicker = false
+      this.closeBottomSheet()
       return
     }
 
     const nextAssetId = asset === undefined ? '' : asset.id
     if ((this.bill.assetId === undefined ? '' : this.bill.assetId) === nextAssetId) {
-      this.showAssetPicker = false
+      this.closeBottomSheet()
       return
     }
 
@@ -575,10 +745,131 @@ export struct BillDetailPage {
       })
       .then(() => {
         this.bill = nextBill
-        this.showAssetPicker = false
+        this.closeBottomSheet()
         this.loadAssets()
         this.onUpdated()
       })
+  }
+
+  private openAssetPickerSheet() {
+    this.activeBottomSheet = 'asset'
+    this.showBottomSheet = true
+  }
+
+  private openRemarkSheet() {
+    if (!this.hasBill) {
+      return
+    }
+    this.remarkDraftText = this.bill.remark === undefined ? '' : this.bill.remark
+    this.activeBottomSheet = 'remark'
+    this.showBottomSheet = true
+  }
+
+  private confirmRemark() {
+    if (!this.hasBill) {
+      this.closeBottomSheet()
+      return
+    }
+
+    const now = new Date().toISOString()
+    const nextBill = this.copyBillWithRemark(this.bill, this.remarkDraftText.trim(), now)
+    this.saveUpdatedBill(nextBill)
+      .then(() => {
+        this.bill = nextBill
+        this.closeBottomSheet()
+        this.onUpdated()
+      })
+  }
+
+  private openTagSheet() {
+    if (!this.hasBill) {
+      return
+    }
+    this.draftTags = this.bill.tags === undefined ? [] : this.bill.tags.concat([])
+    this.tagDraftText = ''
+    this.activeBottomSheet = 'tag'
+    this.showBottomSheet = true
+  }
+
+  private confirmTags() {
+    if (!this.hasBill) {
+      this.closeBottomSheet()
+      return
+    }
+
+    this.commitTagDraft()
+    const now = new Date().toISOString()
+    const nextBill = this.copyBillWithTags(this.bill, this.draftTags, now)
+    this.saveUpdatedBill(nextBill)
+      .then(() => {
+        this.bill = nextBill
+        this.closeBottomSheet()
+        this.onUpdated()
+      })
+  }
+
+  private closeBottomSheet() {
+    this.showBottomSheet = false
+  }
+
+  private bottomSheetHeight(): number {
+    if (this.activeBottomSheet === 'remark') {
+      return 170
+    }
+    if (this.activeBottomSheet === 'tag') {
+      return 260
+    }
+    return 520
+  }
+
+  private handleTagDraftInput(value: string) {
+    if (value.indexOf(' ') >= 0 || value.indexOf('　') >= 0) {
+      let normalized = value
+      while (normalized.indexOf('　') >= 0) {
+        normalized = normalized.replace('　', ' ')
+      }
+      const parts = normalized.split(' ')
+      for (let index = 0; index < parts.length; index++) {
+        this.addDraftTag(parts[index])
+      }
+      this.tagDraftText = ''
+      return
+    }
+    this.tagDraftText = value
+  }
+
+  private commitTagDraft() {
+    if (this.tagDraftText.trim().length > 0) {
+      this.addDraftTag(this.tagDraftText)
+      this.tagDraftText = ''
+    }
+  }
+
+  private addDraftTag(value: string) {
+    const tag = value.trim()
+    if (tag.length === 0 || this.hasDraftTag(tag)) {
+      return
+    }
+    this.draftTags = this.draftTags.concat([tag])
+  }
+
+  private hasDraftTag(tag: string): boolean {
+    for (let index = 0; index < this.draftTags.length; index++) {
+      if (this.draftTags[index] === tag) {
+        return true
+      }
+    }
+    return false
+  }
+
+  private removeDraftTagAt(removeIndex: number) {
+    const nextTags: string[] = []
+    for (let index = 0; index < this.draftTags.length; index++) {
+      if (index !== removeIndex) {
+        nextTags.push(this.draftTags[index])
+      }
+    }
+    this.draftTags = nextTags
   }
 
   private saveUpdatedBill(nextBill: BillRecord): Promise<void> {
@@ -668,6 +959,7 @@ export struct BillDetailPage {
       billDate: date.toISOString(),
       month: this.monthKey(date),
       remark: record.remark,
+      tags: record.tags === undefined ? [] : record.tags.concat([]),
       createTime: record.createTime,
       updateTime: updateTime,
       isDeleted: record.isDeleted
@@ -692,6 +984,57 @@ export struct BillDetailPage {
       billDate: record.billDate,
       month: record.month,
       remark: record.remark,
+      tags: record.tags === undefined ? [] : record.tags.concat([]),
+      createTime: record.createTime,
+      updateTime: updateTime,
+      isDeleted: record.isDeleted
+    }
+  }
+
+  private copyBillWithRemark(record: BillRecord, remark: string, updateTime: string): BillRecord {
+    return {
+      id: record.id,
+      amount: record.amount,
+      type: record.type,
+      assetId: record.assetId,
+      assetName: record.assetName,
+      fromAssetId: record.fromAssetId,
+      fromAssetName: record.fromAssetName,
+      toAssetId: record.toAssetId,
+      toAssetName: record.toAssetName,
+      transferFee: record.transferFee,
+      category: record.category,
+      categoryId: record.categoryId,
+      categoryName: record.categoryName,
+      billDate: record.billDate,
+      month: record.month,
+      remark: remark,
+      tags: record.tags === undefined ? [] : record.tags.concat([]),
+      createTime: record.createTime,
+      updateTime: updateTime,
+      isDeleted: record.isDeleted
+    }
+  }
+
+  private copyBillWithTags(record: BillRecord, tags: string[], updateTime: string): BillRecord {
+    return {
+      id: record.id,
+      amount: record.amount,
+      type: record.type,
+      assetId: record.assetId,
+      assetName: record.assetName,
+      fromAssetId: record.fromAssetId,
+      fromAssetName: record.fromAssetName,
+      toAssetId: record.toAssetId,
+      toAssetName: record.toAssetName,
+      transferFee: record.transferFee,
+      category: record.category,
+      categoryId: record.categoryId,
+      categoryName: record.categoryName,
+      billDate: record.billDate,
+      month: record.month,
+      remark: record.remark,
+      tags: tags.concat([]),
       createTime: record.createTime,
       updateTime: updateTime,
       isDeleted: record.isDeleted
@@ -741,6 +1084,7 @@ export struct BillDetailPage {
           billDate: record.billDate,
           month: record.month,
           remark: record.remark,
+          tags: record.tags === undefined ? [] : record.tags.concat([]),
           createTime: record.createTime,
           updateTime: now,
           isDeleted: true
@@ -910,6 +1254,20 @@ export struct BillDetailPage {
       return '#E07178'
     }
     return '#999999'
+  }
+
+  private tagsText(): string {
+    if (!this.hasBill || this.bill.tags === undefined || this.bill.tags.length === 0) {
+      return '点击添加'
+    }
+    return this.bill.tags.join(' ')
+  }
+
+  private tagsTextColor(): string {
+    if (!this.hasBill || this.bill.tags === undefined || this.bill.tags.length === 0) {
+      return '#999999'
+    }
+    return '#55B8A7'
   }
 
   private remarkText(): string {
