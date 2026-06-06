@@ -1,43 +1,30 @@
 import { PageHeader } from '../components/PageHeader'
-import { SectionCard } from '../components/SectionCard'
 import { BillDatePicker, BillDatePickerValue } from '../components/bill/BillDatePicker'
-
-interface BillGroupItem {
-  category: string
-  remark: string
-  amount: string
-}
-
-interface BillGroup {
-  date: string
-  items: BillGroupItem[]
-}
+import { BillRecordTimeline } from '../components/bill/BillRecordTimeline'
+import { BillRecord } from '../model/BillRecord'
+import { BillRecordStore } from '../storage/BillRecordStore'
 
 @Component
 export struct BillListPage {
+  // 新增：沿用首页已经在使用的刷新版本号机制。
+  // 原因：新增账单 / 删除账单后，Index 层已经会递增 billRefreshVersion，
+  // 所以账单明细页直接复用这个信号，就能在最小改动下感知本地存储数据变化。
+  @Watch('onBillRefreshChanged') @Prop billRefreshVersion: number = 0
+
   // 新增：账单明细页自己维护当前选中的年月日，
   // 因为顶部筛选 chip 已被替换为可交互日历，需要有页面级状态接收日历回调。
   @State private selectedYear: number = 2026
   @State private selectedMonth: number = 4
   @State private selectedDay: number = 28
+  // 这里把原来的“本地演示 records 常量”替换成了页面状态 billRecords。
+  // 删除原因：你现在要求直接读取真实本地存储，继续保留演示数组会让页面和真实数据脱节。
+  // 新增功能：账单页会像首页一样，从 BillRecordStore.load() 读取真实账单列表。
+  @State private billRecords: BillRecord[] = []
   onOpenDetail: () => void = () => {}
 
-  private readonly groups: BillGroup[] = [
-    {
-      date: '2026-05-28',
-      items: [
-        { category: '餐饮', remark: '晚餐', amount: '-¥35.00' },
-        { category: '交通', remark: '地铁', amount: '-¥18.00' }
-      ]
-    },
-    {
-      date: '2026-05-27',
-      items: [
-        { category: '学习', remark: '资料书', amount: '-¥128.00' },
-        { category: '收入', remark: '兼职收入', amount: '+¥1200.00' }
-      ]
-    }
-  ]
+  aboutToAppear() {
+    this.loadBills()
+  }
 
   build() {
     Column({ space: 16 }) {
@@ -67,52 +54,51 @@ export struct BillListPage {
         }
       })
 
-      ForEach(this.groups, (group: BillGroup) => {
-        Column({ space: 10 }) {
-          Text(group.date)
-            .fontSize(15)
-            .fontWeight(FontWeight.Medium)
-            .fontColor('#6B7A99')
-
-          ForEach(group.items, (item: BillGroupItem) => {
-            Row() {
-              Column({ space: 4 }) {
-                Text(item.category + ' · ' + item.remark)
-                  .fontSize(17)
-                  .fontWeight(FontWeight.Bold)
-                  .fontColor('#18233A')
-
-                Text('长按可编辑 / 删除，点击进入详情页')
-                  .fontSize(12)
-                  .fontColor('#95A2BC')
-              }
-              .alignItems(HorizontalAlign.Start)
-
-              Blank()
-
-              Text(item.amount)
-                .fontSize(18)
-                .fontWeight(FontWeight.Bold)
-                .fontColor(item.amount.startsWith('+') ? '#24A06B' : '#18233A')
-            }
-            .width('100%')
-            .padding(18)
-            .backgroundColor('#FFFFFF')
-            .borderRadius(24)
-            .onClick(() => this.onOpenDetail())
-          }, (item: BillGroupItem) => item.category + item.remark + item.amount)
+      // 这里删除了原来手写的 groups + ForEach 列表渲染。
+      // 删除原因：仓库里已经有现成的 BillRecordTimeline / BillTimeline / BillTimelineMapper 这一整套账单时间线组件，
+      // 如果继续手写列表，会和已有组件能力重复，后面维护成本更高。
+      // 新增功能：直接复用 BillRecordTimeline，并把顶部日历当前选中的年月日转换成 filter.day，
+      // 这样用户切换日历日期后，下方账单列表会自动只展示该天的账单。
+      BillRecordTimeline({
+        records: this.billRecords,
+        filter: {
+          day: this.selectedDateKey()
+        },
+        onOpenBill: (_billId: string) => {
+          this.onOpenDetail()
         }
-        .width('100%')
-        .alignItems(HorizontalAlign.Start)
-      }, (group: BillGroup) => group.date)
-
-      SectionCard({
-        title: '后续协作接口',
-        description: '这里后续接入数据库分页、筛选条件、账单编辑、删除和详情跳转逻辑。'
       })
+
     }
     .width('100%')
     .alignItems(HorizontalAlign.Start)
   }
 
+  // 新增：和首页保持一致，收到 Index 层的账单刷新信号后重新读取本地存储。
+  private onBillRefreshChanged() {
+    this.loadBills()
+  }
+
+  // 新增：把读取真实账单存储的逻辑集中在一个函数里。
+  // 这样 aboutToAppear 和 Watch 刷新都复用同一入口，避免重复写 BillRecordStore.load()。
+  private loadBills() {
+    BillRecordStore.load(getContext(this))
+      .then((records: BillRecord[]) => {
+        this.billRecords = records
+      })
+      .catch(() => {
+        this.billRecords = []
+      })
+  }
+
+  // 把 BillDatePicker 回传的 year / month / day 组装成 BillTimelineMapper 可识别的 yyyy-MM-dd。
+  // 这里单独抽成函数，后面如果账单页还要做“整月筛选 / 日期区间筛选”，可以继续复用。
+  private selectedDateKey(): string {
+    return this.selectedYear.toString() + '-' + this.pad2(this.selectedMonth + 1) + '-' + this.pad2(this.selectedDay)
+  }
+
+  // 本地补一个两位数格式化，避免为了这一处联动额外改动其他工具类。
+  private pad2(value: number): string {
+    return value < 10 ? '0' + value.toString() : value.toString()
+  }
 }
