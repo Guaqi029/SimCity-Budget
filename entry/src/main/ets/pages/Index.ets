@@ -6,6 +6,7 @@ import { AnalyticsPage } from './Statistic/AnalyticsPage'
 import { AccountPage } from './AccountPage'
 import { AddBillPage } from './AddBillPage'
 import { BillDetailPage } from './BillDetailPage'
+import { BudgetPage } from './BudgetPage'
 import { AssetAccount, AssetTypeOption } from '../model/AssetAccount'
 import { AssetAccountDetailPage } from '../components/asset/AssetAccountDetailPage'
 import { AssetTypeSheet } from '../components/asset/AssetTypeSheet'
@@ -31,6 +32,7 @@ struct Index {
   @State selectedAssetTypeOption: AssetTypeOption = DEFAULT_ASSET_TYPE_OPTION
   @State selectedAssetTypeVersion: number = 0
   @State billRefreshVersion: number = 0
+  @State homeRefreshVersion: number = 0
   @State selectedBillId: string = ''
   @State addBillInitialMode: AddBillInitialMode = 'expense'
   @State addBillInitialAssetId: string = ''
@@ -133,9 +135,20 @@ struct Index {
           this.openAddBillPage('transfer', asset, 2)
         }
       })
+    } else if (this.overlayPage === 'budget') {
+      BudgetPage({
+        onBack: () => {
+          this.overlayPage = ''
+          this.refreshHomeAfterOverlayClosed()
+        },
+        onChanged: () => {
+          this.homeRefreshVersion += 1
+        }
+      })
     } else if (this.currentTab === 0) {
       HomePage({
         billRefreshVersion: this.billRefreshVersion,
+        homeRefreshVersion: this.homeRefreshVersion,
         onAddBill: () => {
           // 新增账单是独立页面，不占用底部 Tab 的一个位置。
           this.openAddBillPage('expense', undefined, 0)
@@ -146,6 +159,9 @@ struct Index {
         onOpenBillDetail: (billId: string) => {
           this.selectedBillId = billId
           this.overlayPage = 'detail'
+        },
+        onOpenBudget: () => {
+          this.overlayPage = 'budget'
         }
       })
     } else if (this.currentTab === 1) {
@@ -319,6 +335,12 @@ struct Index {
     this.addBillInitialAssetId = ''
     this.addBillInitialAssetName = ''
     this.addBillBackTab = 0
+  }
+
+  private refreshHomeAfterOverlayClosed() {
+    setTimeout(() => {
+      this.homeRefreshVersion += 1
+    }, 0)
   }
 
   private openAssetDetailPage(asset: AssetAccount) {

@@ -24,6 +24,8 @@ export interface BillRecord {
   month: string
   remark?: string
   tags?: string[]
+  // 支出账单是否计入预算；旧数据缺省时按计入预算处理。
+  includeInBudget?: boolean
   createTime: string
   updateTime: string
   isDeleted: boolean

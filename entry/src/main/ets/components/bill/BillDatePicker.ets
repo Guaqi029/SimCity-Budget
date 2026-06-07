@@ -13,6 +13,147 @@ interface CalendarDayCell {
   disabled: boolean
 }
 
+interface YearMonthPickerValue {
+  year: number
+  month: number
+}
+
+@CustomDialog
+struct BillYearMonthPickerDialog {
+  controller?: CustomDialogController
+  @Prop year: number = new Date().getFullYear()
+  @Prop month: number = new Date().getMonth()
+  @State private draftYear: number = new Date().getFullYear()
+  @State private draftMonth: number = new Date().getMonth()
+  @State private pickerVersion: number = 0
+  onConfirm: (value: YearMonthPickerValue) => void = () => {}
+
+  aboutToAppear() {
+    this.draftYear = this.year
+    this.draftMonth = this.month
+    this.normalizeDraftMonth()
+  }
+
+  build() {
+    Column({ space: 12 }) {
+      Text('选择年月')
+        .fontSize(17)
+        .fontWeight(FontWeight.Bold)
+        .fontColor('#111111')
+
+      Row() {
+        Blank()
+        ForEach([this.pickerVersion], () => {
+          TextPicker({ range: this.yearOptions(), selected: this.draftYear - this.minYear() })
+            .width(96)
+            .height(116)
+            .selectedTextStyle({ color: '#111111', font: { size: 20, weight: FontWeight.Bold } })
+            .textStyle({ color: '#BBBBBB', font: { size: 14 } })
+            .onChange((_value: string | string[], index: number | number[]) => {
+              if (typeof index === 'number') {
+                this.draftYear = this.minYear() + index
+                this.normalizeDraftMonth()
+                this.pickerVersion += 1
+              }
+            })
+        }, (version: number) => 'year_' + version.toString())
+        Text('年')
+          .fontSize(15)
+          .fontColor('#555555')
+          .margin({ left: 4, right: 14 })
+        ForEach([this.pickerVersion], () => {
+          TextPicker({ range: this.monthOptions(), selected: this.draftMonth })
+            .width(82)
+            .height(116)
+            .selectedTextStyle({ color: '#111111', font: { size: 20, weight: FontWeight.Bold } })
+            .textStyle({ color: '#BBBBBB', font: { size: 14 } })
+            .onChange((_value: string | string[], index: number | number[]) => {
+              if (typeof index === 'number') {
+                this.draftMonth = index
+                this.normalizeDraftMonth()
+              }
+            })
+        }, (version: number) => 'month_' + version.toString())
+        Text('月')
+          .fontSize(15)
+          .fontColor('#555555')
+          .margin({ left: 4 })
+        Blank()
+      }
+      .width('100%')
+
+      Row() {
+        Text('取消')
+          .fontSize(15)
+          .fontColor('#888888')
+          .layoutWeight(1)
+          .textAlign(TextAlign.Center)
+          .onClick(() => {
+            if (this.controller !== undefined) {
+              this.controller.close()
+            }
+          })
+        Text('确定')
+          .fontSize(15)
+          .fontColor('#55B8A7')
+          .layoutWeight(1)
+          .textAlign(TextAlign.Center)
+          .onClick(() => {
+            this.onConfirm({
+              year: this.draftYear,
+              month: this.draftMonth
+            })
+            if (this.controller !== undefined) {
+              this.controller.close()
+            }
+          })
+      }
+      .width('100%')
+      .height(36)
+    }
+    .width('86%')
+    .padding({ left: 18, right: 18, top: 16, bottom: 10 })
+    .backgroundColor('#FFFFFF')
+    .borderRadius(10)
+  }
+
+  private minYear(): number {
+    return 1970
+  }
+
+  private yearOptions(): string[] {
+    const options: string[] = []
+    const now = new Date()
+    for (let year = this.minYear(); year <= now.getFullYear(); year++) {
+      options.push(year.toString())
+    }
+    return options
+  }
+
+  private monthOptions(): string[] {
+    const options: string[] = []
+    const now = new Date()
+    const maxMonth = this.draftYear === now.getFullYear() ? now.getMonth() : 11
+    for (let month = 0; month <= maxMonth; month++) {
+      options.push((month + 1).toString())
+    }
+    return options
+  }
+
+  private normalizeDraftMonth() {
+    const now = new Date()
+    if (this.draftYear > now.getFullYear()) {
+      this.draftYear = now.getFullYear()
+    }
+    if (this.draftYear === now.getFullYear() && this.draftMonth > now.getMonth()) {
+      this.draftMonth = now.getMonth()
+    }
+    if (this.draftMonth < 0) {
+      this.draftMonth = 0
+    }
+  }
+}
+
 @Component
 export struct BillDatePicker {
   // 新增：让同一个日期组件同时支持两种用法。
@@ -30,16 +171,13 @@ export struct BillDatePicker {
   @State private pickedHour: number = new Date().getHours()
   @State private pickedMinute: number = new Date().getMinutes()
   @State private calendarVersion: number = 0
-  @State private showYearMonthPicker: boolean = false
-  @State private draftYear: number = new Date().getFullYear()
-  @State private draftMonth: number = new Date().getMonth()
-  @State private yearMonthPickerVersion: number = 0
 
   onCancel: () => void = () => {}
   onConfirm: (value: BillDatePickerValue) => void = () => {}
   // 新增：内嵌模式下不需要“确定”按钮，所以增加实时回调，
   // 这样用户点日期、切月份时，账单页可以立刻拿到新的年月日状态。
   onValueChange: (value: BillDatePickerValue) => void = () => {}
+  private yearMonthDialogController?: CustomDialogController
 
   aboutToAppear() {
     this.pickedYear = this.year
@@ -54,55 +192,27 @@ export struct BillDatePicker {
     // 删除单一路径的原因：账单明细页需要直接展示日历，而不是点击后再弹窗。
     // 新增功能：同一套组件代码可以同时服务账单页和表单页，后续维护只需要改这一处。
     if (this.embeddedMode) {
-      Stack({ alignContent: Alignment.Center }) {
-        Column({ space: 14 }) {
-          this.calendarHeader()
-          this.weekHeader()
-          this.calendarGrid()
-        }
-        .width('100%')
-        .padding({ left: 8, right: 8, top: 8, bottom: 8 })
-        .backgroundColor('#FFFFFF')
-        .borderRadius(10)
-
-        if (this.showYearMonthPicker) {
-          Column()
-            .width('100%')
-            .height('100%')
-            .backgroundColor('#66000000')
-
-          ForEach([this.yearMonthPickerVersion], () => {
-            this.yearMonthPicker()
-          }, (version: number) => version.toString())
-        }
+      Column({ space: 14 }) {
+        this.calendarHeader()
+        this.weekHeader()
+        this.calendarGrid()
       }
       .width('100%')
+      .padding({ left: 8, right: 8, top: 8, bottom: 8 })
+      .backgroundColor('#FFFFFF')
+      .borderRadius(10)
     } else {
-      Stack({ alignContent: Alignment.Center }) {
-        Column({ space: 14 }) {
-          this.calendarHeader()
-          this.weekHeader()
-          this.calendarGrid()
-          this.timeSection()
-          this.actionBar()
-        }
-        .width('100%')
-        .padding({ left: 24, right: 24, top: 18, bottom: 14 })
-        .backgroundColor('#FFFFFF')
-        .borderRadius(10)
-
-        if (this.showYearMonthPicker) {
-          Column()
-            .width('100%')
-            .height('100%')
-            .backgroundColor('#66000000')
-
-          ForEach([this.yearMonthPickerVersion], () => {
-            this.yearMonthPicker()
-          }, (version: number) => version.toString())
-        }
+      Column({ space: 14 }) {
+        this.calendarHeader()
+        this.weekHeader()
+        this.calendarGrid()
+        this.timeSection()
+        this.actionBar()
       }
       .width('88%')
+      .padding({ left: 24, right: 24, top: 18, bottom: 14 })
+      .backgroundColor('#FFFFFF')
+      .borderRadius(10)
     }
   }
 
@@ -275,78 +385,6 @@ export struct BillDatePicker {
   }
 
   @Builder
-  private yearMonthPicker() {
-    Column({ space: 12 }) {
-      Text('选择年月')
-        .fontSize(17)
-        .fontWeight(FontWeight.Bold)
-        .fontColor('#111111')
-
-      Row() {
-        Blank()
-        TextPicker({ range: this.yearOptions(), selected: this.draftYear - this.minYear() })
-          .width(96)
-          .height(116)
-          .selectedTextStyle({ color: '#111111', font: { size: 20, weight: FontWeight.Bold } })
-          .textStyle({ color: '#BBBBBB', font: { size: 14 } })
-          .onChange((_value: string | string[], index: number | number[]) => {
-            if (typeof index === 'number') {
-              this.draftYear = this.minYear() + index
-              this.normalizeDraftMonth()
-              this.yearMonthPickerVersion += 1
-            }
-          })
-        Text('年')
-          .fontSize(15)
-          .fontColor('#555555')
-          .margin({ left: 4, right: 14 })
-        TextPicker({ range: this.monthOptions(), selected: this.draftMonth })
-          .width(82)
-          .height(116)
-          .selectedTextStyle({ color: '#111111', font: { size: 20, weight: FontWeight.Bold } })
-          .textStyle({ color: '#BBBBBB', font: { size: 14 } })
-          .onChange((_value: string | string[], index: number | number[]) => {
-            if (typeof index === 'number') {
-              this.draftMonth = index
-              this.normalizeDraftMonth()
-            }
-          })
-        Text('月')
-          .fontSize(15)
-          .fontColor('#555555')
-          .margin({ left: 4 })
-        Blank()
-      }
-      .width('100%')
-
-      Row() {
-        Text('取消')
-          .fontSize(15)
-          .fontColor('#888888')
-          .layoutWeight(1)
-          .textAlign(TextAlign.Center)
-          .onClick(() => {
-            this.showYearMonthPicker = false
-          })
-        Text('确定')
-          .fontSize(15)
-          .fontColor('#55B8A7')
-          .layoutWeight(1)
-          .textAlign(TextAlign.Center)
-          .onClick(() => {
-            this.applyDraftYearMonth()
-          })
-      }
-      .width('100%')
-      .height(36)
-    }
-    .width('86%')
-    .padding({ left: 18, right: 18, top: 16, bottom: 10 })
-    .backgroundColor('#FFFFFF')
-    .borderRadius(10)
-  }
-
-  @Builder
   private calendarDay(cell: CalendarDayCell) {
     Column({ space: 2 }) {
       Text(cell.day > 0 ? cell.day.toString() : '')
@@ -451,9 +489,6 @@ export struct BillDatePicker {
   }
 
   private handleCalendarSwipe(offsetX: number) {
-    if (this.showYearMonthPicker) {
-      return
-    }
     if (offsetX > 36) {
       this.goPreviousMonth()
     } else if (offsetX < -36 && this.canGoNextMonth()) {
@@ -492,19 +527,27 @@ export struct BillDatePicker {
   }
 
   private openYearMonthPicker() {
-    this.draftYear = this.pickedYear
-    this.draftMonth = this.pickedMonth
-    this.normalizeDraftMonth()
-    this.yearMonthPickerVersion += 1
-    this.showYearMonthPicker = true
+    const controller = new CustomDialogController({
+      builder: BillYearMonthPickerDialog({
+        year: this.pickedYear,
+        month: this.pickedMonth,
+        onConfirm: (value: YearMonthPickerValue) => {
+          this.applyYearMonth(value.year, value.month)
+        }
+      }),
+      alignment: DialogAlignment.Center,
+      customStyle: true,
+      autoCancel: true
+    })
+    this.yearMonthDialogController = controller
+    controller.open()
   }
 
-  private applyDraftYearMonth() {
-    this.pickedYear = this.draftYear
-    this.pickedMonth = this.draftMonth
+  private applyYearMonth(year: number, month: number) {
+    this.pickedYear = year
+    this.pickedMonth = month
     this.normalizePickedDay()
     this.calendarVersion += 1
-    this.showYearMonthPicker = false
     // 新增：从“选择年月”弹层确认后，同步把新的年月结果通知外层页面。
     this.emitValueChange()
   }
@@ -519,42 +562,6 @@ export struct BillDatePicker {
       hour: this.pickedHour,
       minute: this.pickedMinute
     })
-  }
-
-  private minYear(): number {
-    return 1970
-  }
-
-  private yearOptions(): string[] {
-    const options: string[] = []
-    const now = new Date()
-    for (let year = this.minYear(); year <= now.getFullYear(); year++) {
-      options.push(year.toString())
-    }
-    return options
-  }
-
-  private monthOptions(): string[] {
-    const options: string[] = []
-    const now = new Date()
-    const maxMonth = this.draftYear === now.getFullYear() ? now.getMonth() : 11
-    for (let month = 0; month <= maxMonth; month++) {
-      options.push((month + 1).toString())
-    }
-    return options
-  }
-
-  private normalizeDraftMonth() {
-    const now = new Date()
-    if (this.draftYear > now.getFullYear()) {
-      this.draftYear = now.getFullYear()
-    }
-    if (this.draftYear === now.getFullYear() && this.draftMonth > now.getMonth()) {
-      this.draftMonth = now.getMonth()
-    }
-    if (this.draftMonth < 0) {
-      this.draftMonth = 0
-    }
   }
 
   private lunarText(day: number): string {

@@ -28,6 +28,7 @@ export struct AddBillPage {
   @State private tagInputMode: boolean = false
   @State private tagDraftText: string = ''
   @State private tags: string[] = []
+  @State private includeInBudget: boolean = true
   @State private toastVisible: boolean = false
   @State private toastMessage: string = ''
   @State private showDateSheet: boolean = false
@@ -248,6 +249,7 @@ export struct AddBillPage {
     .onClick(() => {
       this.mode = mode
       this.selectedCategoryIndex = 0
+      this.includeInBudget = mode === 'expense'
       if (mode === 'transfer') {
         this.ensureTransferAssets()
       }
@@ -461,6 +463,9 @@ export struct AddBillPage {
           ForEach([this.selectedAssetVersion], () => {
             this.assetMetaItem()
           }, (version: number) => version.toString())
+          if (this.mode === 'expense') {
+            this.budgetMetaItem()
+          }
         } else {
           this.transferFeeMetaItem()
         }
@@ -528,6 +533,22 @@ export struct AddBillPage {
     .onClick(() => {
       this.transferFeeDraftText = this.transferFeeAmount > 0 ? this.formatAmount(this.transferFeeAmount) : ''
       this.openTransferFeeSheet()
+    })
+  }
+
+  @Builder
+  private budgetMetaItem() {
+    Row({ space: 5 }) {
+      Text('预')
+        .fontSize(15)
+        .fontColor(this.includeInBudget ? '#111111' : '#999999')
+      Text(this.includeInBudget ? '计入预算' : '不计预算')
+        .fontSize(16)
+        .fontColor(this.includeInBudget ? '#111111' : '#999999')
+        .maxLines(1)
+    }
+    .onClick(() => {
+      this.includeInBudget = !this.includeInBudget
     })
   }
 
@@ -980,6 +1001,7 @@ export struct AddBillPage {
       month: this.monthKey(this.selectedYear, this.selectedMonth),
       remark: this.remark.trim(),
       tags: this.tags.concat([]),
+      includeInBudget: this.mode === 'expense' ? this.includeInBudget : false,
       createTime: now,
       updateTime: now,
       isDeleted: false
@@ -1277,6 +1299,7 @@ export struct AddBillPage {
 
   private applyInitialParams() {
     this.mode = this.initialMode
+    this.includeInBudget = this.initialMode === 'expense'
     if (this.initialAssetId.length === 0) {
       return
     }

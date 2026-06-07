@@ -129,9 +129,13 @@ export struct BillDetailPage {
               this.updateBillDate(value)
             }
           })
+          .onClick(() => {})
         }
         .width('100%')
         .height('100%')
+        .onClick(() => {
+          this.showDatePicker = false
+        })
       }
       
     }
@@ -960,6 +964,7 @@ export struct BillDetailPage {
       month: this.monthKey(date),
       remark: record.remark,
       tags: record.tags === undefined ? [] : record.tags.concat([]),
+      includeInBudget: record.includeInBudget === undefined ? true : record.includeInBudget,
       createTime: record.createTime,
       updateTime: updateTime,
       isDeleted: record.isDeleted
@@ -985,6 +990,7 @@ export struct BillDetailPage {
       month: record.month,
       remark: record.remark,
       tags: record.tags === undefined ? [] : record.tags.concat([]),
+      includeInBudget: record.includeInBudget === undefined ? true : record.includeInBudget,
       createTime: record.createTime,
       updateTime: updateTime,
       isDeleted: record.isDeleted
@@ -1010,6 +1016,7 @@ export struct BillDetailPage {
       month: record.month,
       remark: remark,
       tags: record.tags === undefined ? [] : record.tags.concat([]),
+      includeInBudget: record.includeInBudget === undefined ? true : record.includeInBudget,
       createTime: record.createTime,
       updateTime: updateTime,
       isDeleted: record.isDeleted
@@ -1035,6 +1042,7 @@ export struct BillDetailPage {
       month: record.month,
       remark: record.remark,
       tags: tags.concat([]),
+      includeInBudget: record.includeInBudget === undefined ? true : record.includeInBudget,
       createTime: record.createTime,
       updateTime: updateTime,
       isDeleted: record.isDeleted
@@ -1085,6 +1093,7 @@ export struct BillDetailPage {
           month: record.month,
           remark: record.remark,
           tags: record.tags === undefined ? [] : record.tags.concat([]),
+          includeInBudget: record.includeInBudget === undefined ? true : record.includeInBudget,
           createTime: record.createTime,
           updateTime: now,
           isDeleted: true

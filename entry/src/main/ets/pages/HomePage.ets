@@ -3,17 +3,28 @@ import { InfoCard } from '../components/InfoCard'
 import { BillRecordTimeline } from '../components/bill/BillRecordTimeline'
 import { BillTimelineMapper } from '../components/bill/BillTimelineMapper'
 import { BillRecord } from '../model/BillRecord'
+import { MonthlyBudget } from '../model/Budget'
 import { BillRecordStore } from '../storage/BillRecordStore'
+import { BudgetStore } from '../storage/BudgetStore'
 
 @Component
 export struct HomePage {
   @Watch('onBillRefreshChanged') @Prop billRefreshVersion: number = 0
+  @Watch('onHomeRefreshChanged') @Prop homeRefreshVersion: number = 0
   @State private billRecords: BillRecord[] = []
   @State private todayExpense: number = 0
   @State private monthExpense: number = 0
+  @State private monthBudget: MonthlyBudget = {
+    month: '',
+    totalBudget: 0,
+    categoryBudgets: [],
+    createTime: '',
+    updateTime: ''
+  }
   onAddBill: () => void = () => {}
   onOpenAccount: () => void = () => {}
   onOpenBillDetail: (billId: string) => void = () => {}
+  onOpenBudget: () => void = () => {}
 
   aboutToAppear() {
     this.loadBills()
@@ -63,13 +74,7 @@ export struct HomePage {
 
           GridRow({ columns: 2, gutter: 12 }) {
             GridCol() {
-              InfoCard({ title: '今日支出', value: '¥' + this.todayExpense.toFixed(2), description: '合理范围内' })
-            }
-            GridCol() {
-              InfoCard({ title: '本月累计', value: '¥' + this.monthExpense.toFixed(2), description: '合理线 ¥1806.45' })
-            }
-            GridCol() {
-              InfoCard({ title: '剩余预算', value: '¥1612.00', description: '总预算 ¥2000.00' })
+              this.budgetInfoCard()
             }
             GridCol() {
               InfoCard({ title: '城市等级', value: '繁荣', description: '消费克制，小镇持续发展' })
@@ -121,24 +126,109 @@ export struct HomePage {
     this.loadBills()
   }
 
+  @Builder
+  private budgetInfoCard() {
+    Column({ space: 10 }) {
+      Text('剩余预算')
+        .fontSize(14)
+        .fontColor('#6B7A99')
+
+      Text(this.budgetRemainingText())
+        .fontSize(24)
+        .fontWeight(FontWeight.Bold)
+        .fontColor(this.monthBudget.totalBudget > 0 && this.monthBudget.totalBudget - this.budgetUsed() < 0 ? '#E07178' : '#18233A')
+
+      Text('总预算 ' + this.formatMoney(this.monthBudget.totalBudget))
+        .fontSize(12)
+        .fontColor('#95A2BC')
+    }
+    .alignItems(HorizontalAlign.Start)
+    .padding(16)
+    .width('100%')
+    .backgroundColor('#F8FBFF')
+    .borderRadius(20)
+    .onClick(() => {
+      this.onOpenBudget()
+    })
+  }
+
+  private onHomeRefreshChanged() {
+    this.loadBills()
+  }
+
   private loadBills() {
     BillRecordStore.load(getContext(this))
       .then((records: BillRecord[]) => {
-        const now = new Date()
-        this.billRecords = records
-        this.todayExpense = BillTimelineMapper.calculateExpense(records, {
-          day: BillTimelineMapper.dateKey(now)
-        })
-        this.monthExpense = BillTimelineMapper.calculateExpense(records, {
-          startDate: BillTimelineMapper.monthStartKey(now),
-          endDate: BillTimelineMapper.monthEndKey(now)
-        })
+        return BudgetStore.load(getContext(this))
+          .then((budgets: MonthlyBudget[]) => {
+            this.applyHomeData(records, budgets)
+          })
       })
       .catch(() => {
         this.billRecords = []
         this.todayExpense = 0
         this.monthExpense = 0
+        this.monthBudget = {
+          month: this.monthKey(new Date()),
+          totalBudget: 0,
+          categoryBudgets: [],
+          createTime: '',
+          updateTime: ''
+        }
       })
+  }
+
+  private applyHomeData(records: BillRecord[], budgets: MonthlyBudget[]) {
+    const now = new Date()
+    const month = this.monthKey(now)
+    this.billRecords = records
+    this.todayExpense = BillTimelineMapper.calculateExpense(records, {
+      day: BillTimelineMapper.dateKey(now)
+    })
+    this.monthExpense = BillTimelineMapper.calculateExpense(records, {
+      startDate: BillTimelineMapper.monthStartKey(now),
+      endDate: BillTimelineMapper.monthEndKey(now)
+    })
+    this.monthBudget = BudgetStore.findByMonth(budgets, month)
+  }
+
+  private budgetRemainingText(): string {
+    if (this.monthBudget.totalBudget <= 0) {
+      return '未设置'
+    }
+    return this.formatMoney(this.monthBudget.totalBudget - this.budgetUsed())
+  }
+
+  private budgetUsed(): number {
+    let total = 0
+    const month = this.monthKey(new Date())
+    for (let index = 0; index < this.billRecords.length; index++) {
+      const record = this.billRecords[index]
+      if (!record.isDeleted && record.type === 'expense' && record.includeInBudget !== false && this.recordMonth(record) === month) {
+        total += record.amount
+      }
+    }
+    return Math.round(total * 100) / 100
+  }
+
+  private recordMonth(record: BillRecord): string {
+    if (record.month !== undefined && record.month.length > 0) {
+      return record.month
+    }
+    const date = new Date(record.billDate)
+    return this.monthKey(date)
+  }
+
+  private monthKey(date: Date): string {
+    return date.getFullYear().toString() + '-' + this.pad2(date.getMonth() + 1)
+  }
+
+  private formatMoney(value: number): string {
+    return '¥' + (Math.round(value * 100) / 100).toFixed(2)
+  }
+
+  private pad2(value: number): string {
+    return value < 10 ? '0' + value.toString() : value.toString()
   }
 
   @Builder

@@ -64,6 +64,7 @@ export class BillRecordStore {
       month: record.month,
       remark: record.remark === undefined ? '' : record.remark,
       tags: BillRecordStore.normalizeTags(record.tags),
+      includeInBudget: record.includeInBudget === undefined ? true : record.includeInBudget,
       createTime: record.createTime,
       updateTime: record.updateTime,
       isDeleted: record.isDeleted === undefined ? false : record.isDeleted
