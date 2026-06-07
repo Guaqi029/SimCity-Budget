@@ -1,5 +1,6 @@
 import { StatisticMonthWheel } from '../../components/analytics/StatisticMonthWheel'
 import { StatisticMonthBarChart } from '../../components/analytics/StatisticMonthBarChart'
+import { StatisticMonthRatioChart } from '../../components/analytics/StatisticMonthRatioChart'
 import { StatisticMonthSummaryCard } from '../../components/analytics/StatisticMonthSummaryCard'
 
 @Component
@@ -48,9 +49,15 @@ export struct StatisticMonthPage {
         billRefreshVersion: this.billRefreshVersion
       })
 
+      StatisticMonthRatioChart({
+        year: this.selectedYear,
+        month: this.selectedMonth,
+        billRefreshVersion: this.billRefreshVersion
+      })
+
       Column()
         .width('100%')
-        .height(240)
+        .height(140)
         .backgroundColor('#00000000')
     }
     .width('100%')
