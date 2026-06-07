@@ -1,4 +1,5 @@
 import { StatisticAssetSummaryChart } from '../../components/analytics/StatisticAssetSummaryChart'
+import { StatisticBudgetRatioCard } from '../../components/analytics/StatisticBudgetRatioCard'
 import { StatisticSevenDayBarChart } from '../../components/analytics/StatisticSevenDayBarChart'
 import { StatisticTopTabItem, StatisticTopTabs } from '../../components/analytics/StatisticTopTabs'
 import { StatisticMonthPage } from './StatisticMonthPage'
@@ -48,6 +49,10 @@ export struct AnalyticsPage {
       })
 
       StatisticAssetSummaryChart({
+        billRefreshVersion: this.billRefreshVersion
+      })
+
+      StatisticBudgetRatioCard({
         billRefreshVersion: this.billRefreshVersion
       })
     } else if (this.selectedTabId === 'month') {
