@@ -1,4 +1,5 @@
 import { StatisticYearSummaryCard } from '../../components/analytics/StatisticYearSummaryCard'
+import { StatisticYearBarChart } from '../../components/analytics/StatisticYearBarChart'
 import { StatisticYearWheel } from '../../components/analytics/StatisticYearWheel'
 
 @Component
@@ -19,9 +20,14 @@ export struct StatisticYearPage {
         billRefreshVersion: this.billRefreshVersion
       })
 
+      StatisticYearBarChart({
+        year: this.selectedYear,
+        billRefreshVersion: this.billRefreshVersion
+      })
+
       Column()
         .width('100%')
-        .height(280)
+        .height(180)
         .backgroundColor('#00000000')
     }
     .width('100%')
