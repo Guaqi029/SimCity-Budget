@@ -1,4 +1,5 @@
 import { StatisticMonthWheel } from '../../components/analytics/StatisticMonthWheel'
+import { StatisticMonthBarChart } from '../../components/analytics/StatisticMonthBarChart'
 import { StatisticMonthSummaryCard } from '../../components/analytics/StatisticMonthSummaryCard'
 
 @Component
@@ -38,9 +39,18 @@ export struct StatisticMonthPage {
         billRefreshVersion: this.billRefreshVersion
       })
 
+      // 新增：这里把月统计的第三个真实组件接到页面里。
+      // 原因：你现在要开始逐个完成月统计页的主体内容，所以在月汇总卡之后，紧接着挂上“按当月天数动态渲染”的收支条形图。
+      // 新增功能：图表会随着当前选中年月、账单刷新信号以及“支出 / 收入”切换实时重算。
+      StatisticMonthBarChart({
+        year: this.selectedYear,
+        month: this.selectedMonth,
+        billRefreshVersion: this.billRefreshVersion
+      })
+
       Column()
         .width('100%')
-        .height(420)
+        .height(240)
         .backgroundColor('#00000000')
     }
     .width('100%')
