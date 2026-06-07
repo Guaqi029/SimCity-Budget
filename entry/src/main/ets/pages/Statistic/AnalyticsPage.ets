@@ -54,7 +54,12 @@ export struct AnalyticsPage {
         billRefreshVersion: this.billRefreshVersion
       })
     } else if (this.selectedTabId === 'month') {
-      StatisticMonthPage()
+      // 新增：把账单刷新版本继续透传给月统计页。
+      // 原因：月统计页里的月汇总卡已经开始直接读取本地账单数据，
+      // 所以新增/删除账单后，月统计页也需要跟日常统计页一样收到统一刷新信号。
+      StatisticMonthPage({
+        billRefreshVersion: this.billRefreshVersion
+      })
     } else if (this.selectedTabId === 'year') {
       StatisticYearPage()
     } else {
