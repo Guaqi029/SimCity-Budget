@@ -1,7 +1,6 @@
 import { StatisticAssetSummaryChart } from '../../components/analytics/StatisticAssetSummaryChart'
 import { StatisticSevenDayBarChart } from '../../components/analytics/StatisticSevenDayBarChart'
 import { StatisticTopTabItem, StatisticTopTabs } from '../../components/analytics/StatisticTopTabs'
-import { StatisticCustomPage } from './StatisticCustomPage'
 import { StatisticMonthPage } from './StatisticMonthPage'
 import { StatisticYearPage } from './StatisticYearPage'
 
@@ -16,8 +15,7 @@ export struct AnalyticsPage {
   private readonly tabs: StatisticTopTabItem[] = [
     { id: 'daily', label: '日常' },
     { id: 'month', label: '月统计' },
-    { id: 'year', label: '年统计' },
-    { id: 'custom', label: '自定义' }
+    { id: 'year', label: '年统计' }
   ]
 
   build() {
@@ -33,9 +31,8 @@ export struct AnalyticsPage {
         }
       })
 
-      // 这里把原来的“统计页只有一套固定内容”的结构替换成按顶部 tab 动态切换页面内容。
-      // 删除原因：你现在希望“日常 / 月统计 / 年统计 / 自定义”不仅是样式切换，而是真正具备页面跳转能力。
-      // 新增功能：顶部按钮点击后会切换到对应的统计子页面，当前先初始化 3 个占位页面，后面可以直接继续填真实内容。
+      // 这里把统计页主体内容绑定到顶部 tab 的三个真实子页面。
+      // 新增功能：顶部按钮点击后会在“日常 / 月统计 / 年统计”之间同步切换内容。
       this.renderSelectedPage()
     }
     .width('100%')
@@ -64,8 +61,6 @@ export struct AnalyticsPage {
       StatisticYearPage({
         billRefreshVersion: this.billRefreshVersion
       })
-    } else {
-      StatisticCustomPage()
     }
   }
 }

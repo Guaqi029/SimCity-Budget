@@ -22,7 +22,9 @@ export struct StatisticTopTabs {
             .fontSize(15)
             .fontWeight(this.selectedId === item.id ? FontWeight.Medium : FontWeight.Regular)
             .fontColor(this.selectedId === item.id ? '#FFFFFF' : '#2A3142')
-            .padding({ left: 16, right: 16, top: 4, bottom: 4 })
+            .width(100)
+            .textAlign(TextAlign.Center)
+            .padding({ top: 8, bottom: 8 })
             .backgroundColor(this.selectedId === item.id ? '#56BFAF' : '#FFFFFF')
             .borderRadius(12)
             .onClick(() => {
@@ -30,9 +32,10 @@ export struct StatisticTopTabs {
             })
         }, (item: StatisticTopTabItem) => item.id)
       }
+      .justifyContent(FlexAlign.Start)
     }
     .width('100%')
-    .padding({ left: 10, right: 10, top: 10, bottom: 10 })
+    .padding({ left: 12, right: 12, top: 12, bottom: 12 })
     .backgroundColor('#FFFFFF')
     .borderRadius(12)
     .shadow({
