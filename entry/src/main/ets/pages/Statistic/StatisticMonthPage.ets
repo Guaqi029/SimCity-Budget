@@ -1,5 +1,6 @@
 import { StatisticMonthWheel } from '../../components/analytics/StatisticMonthWheel'
 import { StatisticMonthBarChart } from '../../components/analytics/StatisticMonthBarChart'
+import { StatisticMonthExpenseCategoryList } from '../../components/analytics/StatisticMonthExpenseCategoryList'
 import { StatisticMonthRatioChart } from '../../components/analytics/StatisticMonthRatioChart'
 import { StatisticMonthSummaryCard } from '../../components/analytics/StatisticMonthSummaryCard'
 
@@ -55,9 +56,15 @@ export struct StatisticMonthPage {
         billRefreshVersion: this.billRefreshVersion
       })
 
+      StatisticMonthExpenseCategoryList({
+        year: this.selectedYear,
+        month: this.selectedMonth,
+        billRefreshVersion: this.billRefreshVersion
+      })
+
       Column()
         .width('100%')
-        .height(140)
+        .height(80)
         .backgroundColor('#00000000')
     }
     .width('100%')
