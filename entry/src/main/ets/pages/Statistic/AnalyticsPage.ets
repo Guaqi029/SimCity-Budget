@@ -61,7 +61,9 @@ export struct AnalyticsPage {
         billRefreshVersion: this.billRefreshVersion
       })
     } else if (this.selectedTabId === 'year') {
-      StatisticYearPage()
+      StatisticYearPage({
+        billRefreshVersion: this.billRefreshVersion
+      })
     } else {
       StatisticCustomPage()
     }
