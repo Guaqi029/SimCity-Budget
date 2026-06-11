@@ -1,7 +1,9 @@
+export type IconResource = Resource | string
+
 export interface IconLibraryItem {
   id: string
   name: string
-  resource: Resource
+  resource: IconResource
 }
 
 // 图标库配置：后续要增加图标，只需要在这里追加一项。
@@ -46,14 +48,14 @@ export const ICON_LIBRARY_ITEMS: IconLibraryItem[] = [
   { id: 'arrow_forward', name: '前进', resource: $r('app.media.arrow_forward') },
   { id: 'arrow_up', name: '向上', resource: $r('app.media.arrow_up') },
   { id: 'arrow_down', name: '向下', resource: $r('app.media.arrow_down') },
-  { id: 'build_house_1', name: '房屋', resource: $r('app.media.build_nice_house_1') },
-  { id: 'build_house_2', name: '建筑', resource: $r('app.media.build_nice_house_2') },
-  { id: 'tent_1', name: '帐篷', resource: $r('app.media.build_poor_tent_1') },
+  { id: 'build_house_1', name: '房屋', resource: $rawfile('kenney/build_nice_house_1.png') },
+  { id: 'build_house_2', name: '建筑', resource: $rawfile('kenney/build_nice_house_2.png') },
+  { id: 'tent_1', name: '帐篷', resource: $rawfile('kenney/build_poor_tent_1.png') },
   { id: 'app_icon', name: '记账岛', resource: $r('app.media.icon') },
   { id: 'public_benifit', name: '公益', resource: $r('app.media.icon_public_benefit')  }
 ]
 
-export function iconResourceById(iconId: string): Resource {
+export function iconResourceById(iconId: string): IconResource {
   for (let index = 0; index < ICON_LIBRARY_ITEMS.length; index++) {
     if (ICON_LIBRARY_ITEMS[index].id === iconId) {
       return ICON_LIBRARY_ITEMS[index].resource

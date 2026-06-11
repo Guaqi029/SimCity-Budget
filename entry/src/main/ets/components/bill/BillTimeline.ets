@@ -1,8 +1,10 @@
+import { IconResource } from '../icon/IconLibraryConfig'
+
 export interface BillTimelineItem {
   id: string
   type: 'income' | 'expense' | 'transfer'
   icon: string
-  iconResource?: Resource
+  iconResource?: IconResource
   title: string
   remark: string
   category: string
