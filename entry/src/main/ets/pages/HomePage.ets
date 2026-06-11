@@ -84,15 +84,10 @@ export struct HomePage {
 
   @Builder
   private homeHeroSection() {
-    const heroHeight = this.heroSectionHeight()
-    const cardHeight = this.heroCardHeight()
-    const cardBottom = this.heroCardBottomInset()
-    const sceneHeight = this.citySceneHeight()
-
     Stack({ alignContent: Alignment.Bottom }) {
       Column()
         .width('100%')
-        .height(heroHeight)
+        .height(this.heroSectionHeight())
         .linearGradient({
           angle: 180,
           colors: [['#EAF7FF', 0.0], ['#D7F0FF', 0.42], ['#C7E7FF', 1.0]]
@@ -114,27 +109,34 @@ export struct HomePage {
         .width('100%')
         .padding({ right: 8 })
 
-        this.buildIslandScene(sceneHeight)
+        this.buildIslandScene(this.citySceneHeight())
       }
       .width('100%')
-      .height(heroHeight)
+      .height(this.heroSectionHeight())
       .justifyContent(FlexAlign.SpaceBetween)
-      .padding({ left: 20, right: 20, top: 22, bottom: cardHeight + 34 })
+      .padding({ left: 20, right: 20, top: 22, bottom: this.heroCardHeight() + 34 })
 
       Row({ space: 12 }) {
-        this.budgetInfoCard()
-          .layoutWeight(6)
-          .height(cardHeight)
+        // 替换：不再把 layoutWeight 链在 Builder 调用后面，而是由外层容器承接。
+        // 删除原因：Builder 调用返回的不是可继续链式设置属性的组件实例，直接接 `.layoutWeight()` 会触发 `Property 'layoutWeight' does not exist on type 'void'`。
+        // 新增功能：预算卡和城市级别卡继续保持左右分栏，但由包裹容器安全地控制比例和高度。
+        Column() {
+          this.budgetInfoCard()
+        }
+        .layoutWeight(6)
+        .height(this.heroCardHeight())
 
-        this.cityLevelCard()
-          .layoutWeight(4)
-          .height(cardHeight)
+        Column() {
+          this.cityLevelCard()
+        }
+        .layoutWeight(4)
+        .height(this.heroCardHeight())
       }
       .width('100%')
-      .padding({ left: 18, right: 18, bottom: cardBottom })
+      .padding({ left: 18, right: 18, bottom: this.heroCardBottomInset() })
     }
     .width('100%')
-    .height(heroHeight)
+    .height(this.heroSectionHeight())
   }
 
   private onBillRefreshChanged() {
@@ -270,23 +272,16 @@ export struct HomePage {
 
   @Builder
   private buildIslandScene(sceneHeight: number) {
-    const skylineHeight = Math.max(132, sceneHeight * 0.88)
-    const islandHeight = Math.max(104, sceneHeight * 0.7)
-    const buildingBottom = Math.max(32, sceneHeight * 0.16)
-    const villageTop = Math.max(88, sceneHeight * 0.4)
-    const windAreaBottom = Math.max(80, sceneHeight * 0.3)
-    const balloonBottom = Math.max(124, sceneHeight * 0.48)
-
     Stack({ alignContent: Alignment.Bottom }) {
       Column()
         .width('100%')
-        .height(skylineHeight)
+        .height(this.skylineHeight(sceneHeight))
         .backgroundColor('#66D9F0')
         .borderRadius(34)
 
       Column()
         .width('92%')
-        .height(islandHeight)
+        .height(this.islandHeight(sceneHeight))
         .margin({ bottom: 18 })
         .linearGradient({
           angle: 180,
@@ -300,7 +295,7 @@ export struct HomePage {
         this.buildMiniBuilding(sceneHeight * 0.45, '#8ED0FF')
         this.buildMiniBuilding(sceneHeight * 0.4, '#79B8F2')
       }
-      .margin({ bottom: buildingBottom })
+      .margin({ bottom: this.buildingBottom(sceneHeight) })
 
       Row({ space: 18 }) {
         this.buildTinyHouse('#F6C16B')
@@ -308,7 +303,7 @@ export struct HomePage {
         this.buildTinyHouse('#8EDC9D')
         this.buildTinyHouse('#7CC4FF')
       }
-      .margin({ top: villageTop, left: 26 })
+      .margin({ top: this.villageTop(sceneHeight), left: 26 })
       .width('100%')
       .justifyContent(FlexAlign.Start)
 
@@ -318,7 +313,7 @@ export struct HomePage {
         .padding({ left: 12, right: 12, top: 8, bottom: 8 })
         .backgroundColor('#F4FBFF')
         .borderRadius(16)
-        .margin({ bottom: windAreaBottom, left: 210 })
+        .margin({ bottom: this.windAreaBottom(sceneHeight), left: 210 })
         .width('100%')
         .textAlign(TextAlign.Start)
 
@@ -328,7 +323,7 @@ export struct HomePage {
         .padding({ left: 12, right: 12, top: 8, bottom: 8 })
         .backgroundColor('#FFF8E4')
         .borderRadius(16)
-        .margin({ bottom: balloonBottom, left: 236 })
+        .margin({ bottom: this.balloonBottom(sceneHeight), left: 236 })
         .width('100%')
         .textAlign(TextAlign.Start)
     }
@@ -416,5 +411,29 @@ export struct HomePage {
 
   private citySceneHeight(): number {
     return this.heroSectionHeight() - this.heroCardHeight() - 118
+  }
+
+  private skylineHeight(sceneHeight: number): number {
+    return Math.max(132, sceneHeight * 0.88)
+  }
+
+  private islandHeight(sceneHeight: number): number {
+    return Math.max(104, sceneHeight * 0.7)
+  }
+
+  private buildingBottom(sceneHeight: number): number {
+    return Math.max(32, sceneHeight * 0.16)
+  }
+
+  private villageTop(sceneHeight: number): number {
+    return Math.max(88, sceneHeight * 0.4)
+  }
+
+  private windAreaBottom(sceneHeight: number): number {
+    return Math.max(80, sceneHeight * 0.3)
+  }
+
+  private balloonBottom(sceneHeight: number): number {
+    return Math.max(124, sceneHeight * 0.48)
   }
 }
